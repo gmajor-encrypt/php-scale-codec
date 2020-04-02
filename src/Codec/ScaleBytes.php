@@ -17,15 +17,21 @@ class ScaleBytes
 
     /**
      * ScaleBytes constructor.
-     * @param $hexData
+     * @param string|array $hexData
      */
-    public function __construct(string $hexData)
+    public function __construct($hexData)
     {
-        $data = ctype_xdigit($hexData);
-        if ($data === false) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
+        if (is_string($hexData)) {
+            $data = ctype_xdigit($hexData);
+            if ($data === false) {
+                throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
+            }
+            $this->data = Utiles::hexToBytes($hexData);
+        } elseif (is_array($hexData)) {
+            $this->data = $hexData;
+        } else {
+            throw new \InvalidArgumentException(sprintf('"%s" not support for ScaleBytes', gettype($hexData)));
         }
-        $this->data = Utiles::hexToBytes($hexData);
     }
 
     /**

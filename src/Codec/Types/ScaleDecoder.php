@@ -35,7 +35,7 @@ class ScaleDecoder implements CodecInterface
 
     /**
      *
-     * @var $metadata
+     * @var array $metadata
      */
     protected $metadata;
 
@@ -43,6 +43,11 @@ class ScaleDecoder implements CodecInterface
      * @var string $rawData
      */
     protected $rawData;
+
+    /**
+     * @var array $typeStruct
+     */
+    protected $typeStruct;
 
     /**
      * ScaleDecoder constructor.
@@ -70,27 +75,35 @@ class ScaleDecoder implements CodecInterface
      */
     protected function buildStructMapping()
     {
-
+        if (!empty($this->typeString) && $this->typeString[0] == '(' && $this->typeString[1] == ')') {
+            $typeStruct = [];
+            foreach (explode("", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
+                $typeStruct["col$key"] = str_replace(';', ',', trim($element));
+            }
+            $this->typeStruct = $typeStruct;
+        }
     }
-
 
     /**
      * @param string $typeString
+     * @param ScaleBytes $codecData
+     * @return mixed
      */
-    protected function process(string $typeString)
+    protected function process(string $typeString, ScaleBytes $codecData)
     {
-
+        $codecInstant = self::createTypeByTypeString($typeString);
+        $codecInstant->typeString = $typeString;
+        $codecInstant->init($codecData);
+        return $codecInstant->decode();
     }
-
 
     /**
      * createTypeByTypeString
      *
      * @param string $typeString
-     * @param array $arg
-     * @return mixed
+     * @return ScaleDecoder
      */
-    protected function createTypeByTypeString(string $typeString, ...$arg)
+    protected function createTypeByTypeString(string $typeString)
     {
         $typeString = self::convertType($typeString);
         $match = array();
@@ -170,7 +183,7 @@ class ScaleDecoder implements CodecInterface
      * @param string $typeString
      * @return string
      */
-    private function convertType(string $typeString)
+    private static function convertType(string $typeString)
     {
         if ($typeString == '()') {
             return "Null";
@@ -179,8 +192,12 @@ class ScaleDecoder implements CodecInterface
     }
 
 
+    /**
+     * @return mixed
+     */
     public function decode()
     {
+        return null;
         // TODO: Implement decode() method.
     }
 

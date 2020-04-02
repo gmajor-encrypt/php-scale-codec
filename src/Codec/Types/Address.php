@@ -12,8 +12,8 @@ class Address extends ScaleDecoder
 {
     public function decode()
     {
-        $accountLength = Utiles::bytesToHex($this->data->nextBytes(1));
-        switch ($accountLength) {
+        $accountLength = $this->data->nextBytes(1);
+        switch (Utiles::bytesToHex($accountLength)) {
             case "ff":
                 $this->value = ["account_id" => Utiles::bytesToHex($this->data->nextBytes(32))];
                 return;

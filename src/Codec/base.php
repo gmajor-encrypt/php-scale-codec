@@ -8,7 +8,7 @@ class Base
 
 //  protected static $defaultScaleTypes = array("Compact", "CompactU32", "Option", "Bytes", "String", "HexBytes", "U8", "U16", "U32", "U64", "U128", "H256", "Struct", "Bool", "Enum", "Set");
 
-    protected static $defaultScaleTypes = array("Address");
+    protected static $defaultScaleTypes = array("Address", "Bytes");
 
     /**
      * Create a new generator
@@ -17,7 +17,7 @@ class Base
      *
      * @return Generator
      */
-    public static function create($network = self::DEFAULT_NETWORK)
+    public static function create($network = "")
     {
         $generator = new Generator();
         foreach (static::$defaultScaleTypes as $scaleType) {

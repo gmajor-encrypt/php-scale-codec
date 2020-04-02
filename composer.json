@@ -1,0 +1,22 @@
+{
+  "name": "gmajor/substrate-codec-php",
+  "description": "For substrate scale codec",
+  "keywords": [
+    "substrate",
+    "codec"
+  ],
+  "type": "library",
+  "license": "GUN",
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Codec\\": "src/Codec/"
+    }
+  }
+}

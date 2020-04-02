@@ -1,0 +1,58 @@
+<?php
+
+namespace Codec;
+
+
+class ScaleBytes
+{
+    /**
+     * @var array $data
+     */
+    public $data;
+
+    /**
+     * @var integer $offset
+     */
+    public $offset;
+
+    /**
+     * ScaleBytes constructor.
+     * @param $hexData
+     */
+    public function __construct(string $hexData)
+    {
+        $data = ctype_xdigit($hexData);
+        if ($data === false) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
+        }
+        $this->data = Utiles::hexToBytes($hexData);
+    }
+
+    /**
+     * @param $length
+     * @return array
+     */
+    public function nextBytes($length)
+    {
+        $data = array_slice($this->data, $this->offset, $this->offset + $length);
+        $this->offset = $this->offset + $length;
+        return $data;
+    }
+
+    /**
+     * reset ScaleBytes
+     */
+    protected function reset()
+    {
+        $this->offset = 0;
+    }
+
+    /**
+     * remainBytesLength
+     * @return int
+     */
+    protected function remainBytesLength()
+    {
+        return count($this->data) - $this->offset;
+    }
+}

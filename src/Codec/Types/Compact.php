@@ -16,6 +16,9 @@ class Compact extends ScaleDecoder
      */
     protected $compactBytes;
 
+    /**
+     * @return array|int|mixed
+     */
     public function decode()
     {
         self::checkCompactBytes();
@@ -23,12 +26,17 @@ class Compact extends ScaleDecoder
             $data = $this->process($this->subType, new ScaleBytes($this->compactBytes));
             if (is_int($data) && $this->compactLength <= 4) {
                 return intval($data / 4);
+            } else {
+                return $data;
             }
         }
         return $this->compactBytes;
     }
 
 
+    /**
+     * checkCompactBytes
+     */
     protected function checkCompactBytes()
     {
         $compactBytes = $this->nextBytes(1);

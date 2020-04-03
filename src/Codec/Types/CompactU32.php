@@ -14,9 +14,9 @@ class CompactU32 extends \Compact
     {
         self::checkCompactBytes();
         if ($this->compactLength <= 4) {
-            return intval(unpack("V", Utiles::bytesToHex($this->compactBytes))[1] / 4);
+            return intval(Utiles::bytesToLittleInt($this->compactBytes) / 4);
         } else {
-            return unpack("V", Utiles::bytesToHex($this->compactBytes))[1];
+            return Utiles::bytesToLittleInt($this->compactBytes);
         }
     }
 }

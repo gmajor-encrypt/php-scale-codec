@@ -43,19 +43,6 @@ class Utiles
         return hex2bin($hexString);
     }
 
-    /**
-     * @param array $bytes
-     * @return string
-     */
-    public static function bytesToCHex(array $bytes)
-    {
-        $hex = "";
-        foreach ($bytes as $byte) {
-            $hex .= sprintf("\\x" . dechex($byte));
-        }
-        return $hex;
-    }
-
 
     /**
      * BytesToLittleInt
@@ -63,19 +50,19 @@ class Utiles
      * @return int
      *
      *
-     * v - unsigned short (always 16 bit, little endian byte order)
-     * V - unsigned long (always 32 bit, little endian byte order)
-     * P - unsigned long long (always 64 bit, little endian byte order)
      */
     public static function bytesToLittleInt(array $byteArray)
     {
         switch (count($byteArray)) {
             case 1:
                 return $byteArray[1];
-            case 2:
-                return unpack("v", self::bytesToCHex($byteArray))[1];
-            case 4:
-                return unpack("V", self::bytesToCHex($byteArray))[1];
+            case 2: // uint16
+                return $byteArray[1] | $byteArray[2] << 8;
+            case 4: // uint32
+                return $byteArray[1] | $byteArray[2] << 8 | $byteArray[3] << 16 | $byteArray[4] << 24;
+            case 8: // uint64
+                return $byteArray[1] | $byteArray[2] << 8 | $byteArray[3] << 16 | $byteArray[4] << 24 |
+                    $byteArray[5] << 32 | $byteArray[6] << 40 | $byteArray[7] << 48 | $byteArray[8] << 56;
         }
         return 0;
     }

@@ -31,6 +31,7 @@ class ScaleBytesTest extends TestCase
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("fc")), 252);
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("fdff")), 65533);
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("feffffff")), 4294967294);
+        $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("ffffffff00000000")), 4294967295);
     }
 }
 

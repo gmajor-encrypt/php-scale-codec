@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Codec\ScaleBytes;
 use Codec\Base;
 
-class ScaleBytesTest extends TestCase
+final class ScaleBytesTest extends TestCase
 {
     public function testNewScaleBytes()
     {

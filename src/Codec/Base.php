@@ -2,6 +2,7 @@
 
 namespace Codec;
 
+
 class Base
 {
     const DEFAULT_NETWORK = 'default';

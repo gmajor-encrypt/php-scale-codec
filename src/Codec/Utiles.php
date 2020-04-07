@@ -27,10 +27,15 @@ class Utiles
         return bin2hex($bin);
     }
 
+    /**
+     * @param $hexString
+     * @return array
+     */
     public static function hexToBytes($hexString)
     {
         $string = hex2bin($hexString);
-        return unpack('C*', $string);
+        $value = unpack('C*', $string);
+        return is_array($value) ? array_values($value) : [];
     }
 
     public static function string2Hex($string)
@@ -45,6 +50,16 @@ class Utiles
 
 
     /**
+     * @param $hexString string
+     * @return string|string[]|null
+     */
+    public static function trimHex($hexString)
+    {
+        return preg_replace('/0x[0-9a-fA-F]/', '', $hexString);
+    }
+
+
+    /**
      * BytesToLittleInt
      * @param array $byteArray
      * @return int
@@ -55,14 +70,14 @@ class Utiles
     {
         switch (count($byteArray)) {
             case 1:
-                return $byteArray[1];
+                return $byteArray[0];
             case 2: // uint16
-                return $byteArray[1] | $byteArray[2] << 8;
+                return $byteArray[0] | $byteArray[1] << 8;
             case 4: // uint32
-                return $byteArray[1] | $byteArray[2] << 8 | $byteArray[3] << 16 | $byteArray[4] << 24;
+                return $byteArray[0] | $byteArray[1] << 8 | $byteArray[2] << 16 | $byteArray[3] << 24;
             case 8: // uint64
-                return $byteArray[1] | $byteArray[2] << 8 | $byteArray[3] << 16 | $byteArray[4] << 24 |
-                    $byteArray[5] << 32 | $byteArray[6] << 40 | $byteArray[7] << 48 | $byteArray[8] << 56;
+                return $byteArray[0] | $byteArray[1] << 8 | $byteArray[2] << 16 | $byteArray[3] << 24 |
+                    $byteArray[4] << 32 | $byteArray[5] << 40 | $byteArray[6] << 48 | $byteArray[7] << 56;
         }
         return 0;
     }

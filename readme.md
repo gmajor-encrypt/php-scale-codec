@@ -1,5 +1,7 @@
 ### Substrate scale codec
 
+[![Travis CI](https://api.travis-ci.org/gmajor-encrypt/php-scale-codec.svg)](https://travis-ci.org/github/gmajor-encrypt/php-scale-codec)
+
 ---
 PHP SCALE Codec For substrate
 

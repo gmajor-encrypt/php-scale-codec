@@ -4,7 +4,7 @@ namespace Codec\Types;
 
 use Codec\Utiles;
 
-class CompactU32 extends \Compact
+class CompactU32 extends Compact
 {
 
     /**

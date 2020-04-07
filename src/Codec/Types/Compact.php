@@ -1,5 +1,6 @@
 <?php
 
+namespace Codec\Types;
 
 use Codec\ScaleBytes;
 use Codec\Types\ScaleDecoder;
@@ -60,13 +61,14 @@ class Compact extends ScaleDecoder
             case 1:
                 $this->compactBytes = $compactBytes;
                 break;
-            case in_array($this->compactLength, [1, 2]):
+            case in_array($this->compactLength, [2, 4]):
                 array_push($compactBytes, ...$this->nextBytes($this->compactLength - 1));
                 $this->compactBytes = $compactBytes;
                 break;
             default:
                 $this->compactBytes = $this->nextBytes($this->compactLength - 1);
         }
+
     }
 
 }

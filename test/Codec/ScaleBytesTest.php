@@ -13,7 +13,7 @@ class ScaleBytesTest extends TestCase
     {
 
         $scaleBytes = new ScaleBytes("00");
-        $this->assertEquals([1 => 0], $scaleBytes->data);
+        $this->assertEquals([0], $scaleBytes->data);
     }
 
     public function testDecode()
@@ -32,6 +32,33 @@ class ScaleBytesTest extends TestCase
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("fdff")), 65533);
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("feffffff")), 4294967294);
         $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("ffffffff00000000")), 4294967295);
+    }
+
+    public function testCompactU32()
+    {
+        $generator = Base::create();
+
+        $scaleBytes = new ScaleBytes("18");
+        $codec = $generator->CompactU32($scaleBytes);
+        $this->assertEquals(6, $codec->decode());
+
+        $scaleBytes2 = new ScaleBytes("c15d");
+        $codec = $generator->CompactU32($scaleBytes2);
+        $this->assertEquals(6000, $codec->decode());
+
+        $scaleBytes4 = new ScaleBytes("02093d00");
+        $codec = $generator->CompactU32($scaleBytes4);
+        $this->assertEquals(1000000, $codec->decode());
+
+    }
+
+    public function testOptionNull()
+    {
+        $generator = Base::create();
+
+        $scaleBytes = new ScaleBytes("00");
+        $codec = $generator->Option($scaleBytes);
+        $this->assertEquals(null, $codec->decode());
     }
 }
 

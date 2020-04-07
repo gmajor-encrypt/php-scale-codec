@@ -8,7 +8,7 @@ class Base
 
 //  protected static $defaultScaleTypes = array("Compact", "CompactU32", "Option", "Bytes", "String", "HexBytes", "U8", "U16", "U32", "U64", "U128", "H256", "Struct", "Bool", "Enum", "Set");
 
-    protected static $defaultScaleTypes = array("Address", "Bytes");
+    protected static $defaultScaleTypes = array("Address", "Bytes", "CompactU32", "Compact", "Option");
 
     /**
      * Create a new generator

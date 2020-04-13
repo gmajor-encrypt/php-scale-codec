@@ -3,47 +3,65 @@
 namespace Codec;
 
 
-class Utiles
+class Utils
 {
-    public static function string2ByteArray($string)
+
+    /**
+     * @param string $str
+     * @return array|false
+     */
+    public static function string2ByteArray($str)
     {
-        return unpack('C*', $string);
+        return unpack('C*', $str);
     }
 
-    public static function byteArray2String($byteArray)
+
+    /**
+     * @param $bytes
+     * @return string
+     */
+    public static function byteArray2String($bytes)
     {
-        $chars = array_map("chr", $byteArray);
+        $chars = array_map("chr", $bytes);
         return join($chars);
     }
 
     /**
-     * @param array $byteArray
+     * @param array $bytes
      * @return string
      */
-    public static function bytesToHex($byteArray)
+    public static function bytesToHex($bytes)
     {
-        $chars = array_map("chr", $byteArray);
+        $chars = array_map("chr", $bytes);
         $bin = join($chars);
         return bin2hex($bin);
     }
 
     /**
-     * @param $hexString
+     * @param $hex
      * @return array
      */
-    public static function hexToBytes($hexString)
+    public static function hexToBytes($hex)
     {
-        $string = hex2bin($hexString);
+        $string = hex2bin($hex);
         $value = unpack('C*', $string);
         return is_array($value) ? array_values($value) : [];
     }
 
-    public static function string2Hex($string)
+    /**
+     * @param string $string
+     * @return string
+     */
+    public static function string2Hex(string $string)
     {
         return bin2hex($string);
     }
 
-    public static function hex2String($hexString)
+    /**
+     * @param string $hexString
+     * @return bool|string
+     */
+    public static function hex2String(string $hexString)
     {
         return hex2bin($hexString);
     }

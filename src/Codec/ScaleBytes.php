@@ -26,7 +26,7 @@ class ScaleBytes
             if ($data === false) {
                 throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
             }
-            $this->data = Utiles::hexToBytes($hexData);
+            $this->data = Utils::hexToBytes($hexData);
         } elseif (is_array($hexData)) {
             $this->data = $hexData;
         } else {

@@ -7,9 +7,23 @@ class Base
 {
     const DEFAULT_NETWORK = 'default';
 
-//  protected static $defaultScaleTypes = array("Compact", "CompactU32", "Option", "Bytes", "String", "HexBytes", "U8", "U16", "U32", "U64", "U128", "H256", "Struct", "Bool", "Enum", "Set");
-
-    protected static $defaultScaleTypes = array("Address", "Bytes", "CompactU32", "Compact", "Option");
+    // todo  "U64", "U128", "H256"
+    protected static $defaultScaleTypes = array(
+        "Compact",
+        "CompactU32",
+        "Option",
+        "Bytes",
+        "String",
+        "HexBytes",
+        "U8",
+        "U16",
+        "U32",
+        "Struct",
+        "Bool",
+        "Enum",
+        "Set",
+        "Address",
+    );
 
     /**
      * Create a new generator
@@ -39,10 +53,13 @@ class Base
         if ($providerClass = self::findScaleCodecClassname($scaleType, $network)) {
             return $providerClass;
         }
+
         // fallback to default locale
         if ($providerClass = self::findScaleCodecClassname($scaleType, static::DEFAULT_NETWORK)) {
             return $providerClass;
         }
+
+        $scaleType = self::convertPhpType($scaleType);
         // fallback to no locale
         if ($providerClass = self::findScaleCodecClassname($scaleType)) {
             return $providerClass;
@@ -61,6 +78,19 @@ class Base
         if (class_exists($providerClass, true)) {
             return $providerClass;
         }
+    }
+
+    /**
+     * convertPhpType
+     * @param $scaleType
+     * @return mixed
+     */
+    private static function convertPhpType($scaleType)
+    {
+        if (in_array($scaleType, ["Bool", "String"])) {
+            return sprintf("T%s", $scaleType);
+        }
+        return $scaleType;
     }
 }
 

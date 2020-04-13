@@ -2,7 +2,7 @@
 
 namespace Codec\Types;
 
-use Codec\Utiles;
+use Codec\Utils;
 
 class CompactU32 extends Compact
 {
@@ -14,9 +14,9 @@ class CompactU32 extends Compact
     {
         self::checkCompactBytes();
         if ($this->compactLength <= 4) {
-            return intval(Utiles::bytesToLittleInt($this->compactBytes) / 4);
+            return intval(Utils::bytesToLittleInt($this->compactBytes) / 4);
         } else {
-            return Utiles::bytesToLittleInt($this->compactBytes);
+            return Utils::bytesToLittleInt($this->compactBytes);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Codec\Test;
 
-use Codec\Utiles;
+use Codec\Utils;
 use PHPUnit\Framework\TestCase;
 use Codec\ScaleBytes;
 use Codec\Base;
@@ -16,7 +16,7 @@ final class ScaleBytesTest extends TestCase
         $this->assertEquals([0], $scaleBytes->data);
     }
 
-    public function testDecode()
+    public function testAddressDecode()
     {
         $scaleBytes = new ScaleBytes("ff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318");
         $generator = Base::create();
@@ -28,10 +28,10 @@ final class ScaleBytesTest extends TestCase
 
     public function testBytesToLittleInt()
     {
-        $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("fc")), 252);
-        $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("fdff")), 65533);
-        $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("feffffff")), 4294967294);
-        $this->assertEquals(Utiles::bytesToLittleInt(Utiles::hexToBytes("ffffffff00000000")), 4294967295);
+        $this->assertEquals(Utils::bytesToLittleInt(Utils::hexToBytes("fc")), 252);
+        $this->assertEquals(Utils::bytesToLittleInt(Utils::hexToBytes("fdff")), 65533);
+        $this->assertEquals(Utils::bytesToLittleInt(Utils::hexToBytes("feffffff")), 4294967294);
+        $this->assertEquals(Utils::bytesToLittleInt(Utils::hexToBytes("ffffffff00000000")), 4294967295);
     }
 
     public function testCompactU32()

@@ -4,7 +4,8 @@ namespace Codec\Types;
 
 use Codec\Generator;
 use Codec\ScaleBytes;
-use Codec\Utiles;
+use Codec\Utils;
+use SebastianBergmann\CodeCoverage\Util;
 
 class ScaleDecoder implements CodecInterface
 {
@@ -86,13 +87,17 @@ class ScaleDecoder implements CodecInterface
 
     /**
      * @param string $typeString
-     * @param ScaleBytes $codecData
+     * @param ScaleBytes $codecData |null
+     * @param array $option
      * @return mixed
      */
-    protected function process(string $typeString, ScaleBytes $codecData)
+    protected function process(string $typeString, ScaleBytes $codecData = null, array $option = [])
     {
         $codecInstant = self::createTypeByTypeString($typeString);
         $codecInstant->typeString = $typeString;
+        if ($codecData == null) {
+            $codecData = $this->data;
+        }
         $codecInstant->init($codecData);
         return $codecInstant->decode();
     }
@@ -149,7 +154,7 @@ class ScaleDecoder implements CodecInterface
     protected function nextBytes($length)
     {
         $data = $this->data->nextBytes($length);
-        $this->rawData = $this->rawData . (Utiles::bytesToHex($data));
+        $this->rawData = $this->rawData . (Utils::bytesToHex($data));
         return $data;
     }
 
@@ -159,8 +164,7 @@ class ScaleDecoder implements CodecInterface
      */
     protected function nextU8()
     {
-        $data = $this->nextBytes(1);
-        return unpack("C", Utiles::bytesToHex($data))[1];
+        return Utils::bytesToLittleInt($this->nextBytes(1));
     }
 
     /**

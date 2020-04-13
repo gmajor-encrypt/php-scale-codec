@@ -1,8 +1,9 @@
 <?php
 
+namespace Codec\Types;
 
 use Codec\Types\ScaleDecoder;
-use Codec\Utiles;
+use Codec\Utils;
 
 class HexBytes extends ScaleDecoder
 {
@@ -10,6 +11,6 @@ class HexBytes extends ScaleDecoder
     function decode()
     {
         $length = $this->process("CompactU32", $this->data);
-        return sprintf('0x%s', Utiles::bytesToHex($this->nextBytes($length)));
+        return sprintf('0x%s', Utils::bytesToHex($this->nextBytes($length)));
     }
 }

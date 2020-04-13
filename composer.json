@@ -6,7 +6,7 @@
     "codec"
   ],
   "type": "library",
-  "license": "GUN",
+  "license": "MIT",
   "minimum-stability": "dev",
   "require": {
     "php": "^7.0"

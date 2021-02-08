@@ -6,7 +6,18 @@ use Codec\ScaleBytes;
 
 interface CodecInterface
 {
+    /**
+     * decode
+     *
+     * @return mixed
+     */
     public function decode();
 
-    public function encode();
+    /**
+     * encode
+     *
+     * @param mixed $param
+     * @return mixed
+     */
+    public function encode($param);
 }

@@ -31,9 +31,4 @@ class Address extends ScaleDecoder
         }
         $this->value = ["account_index" => Utils::bytesToHex($accountIndex)];
     }
-
-    public function encode()
-    {
-        return $this->data;
-    }
 }

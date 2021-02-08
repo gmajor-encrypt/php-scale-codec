@@ -5,7 +5,6 @@ namespace Codec\Types;
 use Codec\Generator;
 use Codec\ScaleBytes;
 use Codec\Utils;
-use SebastianBergmann\CodeCoverage\Util;
 
 class ScaleDecoder implements CodecInterface
 {
@@ -87,7 +86,7 @@ class ScaleDecoder implements CodecInterface
 
     /**
      * @param string $typeString
-     * @param ScaleBytes $codecData |null
+     * @param ScaleBytes|null $codecData |null
      * @param array $option
      * @return mixed
      */
@@ -108,7 +107,7 @@ class ScaleDecoder implements CodecInterface
      * @param string $typeString
      * @return ScaleDecoder
      */
-    protected function createTypeByTypeString(string $typeString)
+    public function createTypeByTypeString(string $typeString)
     {
         $typeString = self::convertType($typeString);
         $match = array();
@@ -116,22 +115,19 @@ class ScaleDecoder implements CodecInterface
         if ($typeString[-1] == '>') {
             $codecInstant = $this->generator->getRegistry(strtolower($typeString));
             if (!is_null($codecInstant)) {
-                $codecInstant->init($this->data);
                 return $codecInstant;
             }
             preg_match("/^([^<]*)<(.+)>$/", $typeString, $match);
         }
-
         if (count($match) > 0) {
-            $codecInstant = $this->generator->getRegistry(strtolower($match[0]));
+            $codecInstant = $this->generator->getRegistry(strtolower($match[1]));
             if (!is_null($codecInstant)) {
-                $codecInstant->init($this->data);
+                $codecInstant->subType = $match[2];
                 return $codecInstant;
             }
         } else {
             $codecInstant = $this->generator->getRegistry(strtolower($typeString));
             if (!is_null($codecInstant)) {
-                $codecInstant->init($this->data);
                 return $codecInstant;
             }
         }
@@ -151,7 +147,7 @@ class ScaleDecoder implements CodecInterface
      * @param $length
      * @return array
      */
-    protected function nextBytes($length)
+    protected function nextBytes($length): array
     {
         $data = $this->data->nextBytes($length);
         $this->rawData = $this->rawData . (Utils::bytesToHex($data));
@@ -205,8 +201,8 @@ class ScaleDecoder implements CodecInterface
         // TODO: Implement decode() method.
     }
 
-    public function encode()
+    public function encode($param)
     {
-        // TODO: Implement encode() method.
+        return null;
     }
 }

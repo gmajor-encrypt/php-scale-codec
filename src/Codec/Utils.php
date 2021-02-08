@@ -99,4 +99,26 @@ class Utils
         }
         return 0;
     }
+
+    /**
+     * @param int $value
+     * @param int $length
+     * @return string
+     */
+    public static function LittleIntToBytes(int $value,int $length){
+        switch ($length){
+            case 1:
+                return self::bytesToHex(array($value));
+            case 2:
+                return self::bytesToHex(array($value,$value>>8));
+            case 3:
+                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>32));
+            case 4:
+                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>24));
+            case 8:
+                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>24,$value>>32,$value>>40,$value>>48,$value>>56));
+            default:
+                return new \OutOfRangeException(sprintf('LittleIntToBytes'));
+        }
+    }
 }

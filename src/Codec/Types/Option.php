@@ -15,4 +15,13 @@ class Option extends ScaleDecoder
         }
         return null;
     }
+
+    function encode($param)
+    {
+        if(!empty($param) and !empty($this->subType)){
+            $instant = $this->createTypeByTypeString($this->subType);
+            return "01".$instant->encode($param);
+        }
+        return "00";
+    }
 }

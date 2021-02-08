@@ -16,4 +16,13 @@ class TBool extends ScaleDecoder
     {
         return $this->nextBool();
     }
+
+    /**
+     * @param mixed $param
+     * @return string
+     */
+    function encode($param)
+    {
+        return $param == true ? "01" : "00";
+    }
 }

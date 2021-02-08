@@ -3,7 +3,7 @@
 namespace Codec\Types;
 
 use Codec\ScaleBytes;
-use Codec\Types\ScaleDecoder;
+use Codec\Utils;
 
 class Compact extends ScaleDecoder
 {
@@ -41,6 +41,9 @@ class Compact extends ScaleDecoder
     protected function checkCompactBytes()
     {
         $compactBytes = $this->nextBytes(1);
+        if (count($compactBytes) == 0) {
+            return new \OutOfRangeException(sprintf('OutOfRangeException Compact'));
+        }
         $mod = $compactBytes[0] % 4;
 
         switch ($mod) {
@@ -68,7 +71,35 @@ class Compact extends ScaleDecoder
             default:
                 $this->compactBytes = $this->nextBytes($this->compactLength - 1);
         }
+    }
 
+
+    /**
+     * Compact encode
+     *
+     * @param mixed $param
+     * @return \OutOfRangeException|string|null
+     */
+    public function encode($param)
+    {
+        $value = intval($param);
+        if ($value < 2**6) {
+            return Utils::LittleIntToBytes($value<<2, 1);
+        } elseif ($value < 2**14) {
+            return Utils::LittleIntToBytes($value<<2 | 1, 2);
+        }elseif ($value<2**30){
+            return Utils::LittleIntToBytes($value<<2 | 2, 4);
+        }elseif($value<2**536) {
+            foreach (range(4, 67) as $i) {
+                if( 2 ** (8 * ($i - 1)) <= $value && $value< 2 ** (8 * $i)){
+                    return Utils::LittleIntToBytes(($i-4)<<2 | 3, 1) . Utils::LittleIntToBytes($value, $i);
+                }
+
+            }
+
+        }else{
+            return new \OutOfRangeException(sprintf('Compact encode'));
+        }
     }
 
 }

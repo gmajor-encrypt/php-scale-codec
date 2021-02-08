@@ -7,7 +7,7 @@ class Base
 {
     const DEFAULT_NETWORK = 'default';
 
-    // todo  "U64", "U128", "H256"
+    // todo "BTreeMap","Int","U64", "U128","Raw","Tuple","U8aFixed","Vec","U8aFixed"
     protected static $defaultScaleTypes = array(
         "Compact",
         "CompactU32",
@@ -48,7 +48,7 @@ class Base
      * @param string $network
      * @return string
      */
-    protected static function getScaleCodecClassname($scaleType, $network = '')
+    public static function getScaleCodecClassname($scaleType, $network = '')
     {
         if ($providerClass = self::findScaleCodecClassname($scaleType, $network)) {
             return $providerClass;
@@ -78,6 +78,7 @@ class Base
         if (class_exists($providerClass, true)) {
             return $providerClass;
         }
+        return "";
     }
 
     /**

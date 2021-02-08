@@ -11,10 +11,10 @@ class Generator
     protected $registers = array();
 
     /**
-     * @param $provider
      * @param string $scaleType
+     * @param $provider
      */
-    public function addScaleType($scaleType, $provider)
+    public function addScaleType(string $scaleType, $provider)
     {
         $this->scale_type[strtolower($scaleType)] = $provider;
     }
@@ -39,24 +39,23 @@ class Generator
      *
      * @return mixed
      */
-    public function __call($method, $attributes)
+    public function __call(string $method, array $attributes)
     {
-        if (count($attributes) !== 1) {
-            return new \InvalidArgumentException(sprintf('InvalidArgumentException "%s"', $method));
-        }
         $instant = self::getRegistry($method);
         if($instant == null) {
             return null;
         }
-        $instant->init($attributes[0]);
+        if(count($attributes)>0){
+            $instant->init($attributes[0]);
+        }
         return $instant;
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return mixed
      */
-    public function getRegistry($type)
+    public function getRegistry(string $type)
     {
         if (isset($this->scale_type[strtolower($type)])) {
             return $this->scale_type[strtolower($type)];

@@ -73,7 +73,7 @@ class Utils
      */
     public static function trimHex($hexString)
     {
-        return preg_replace('/0x[0-9a-fA-F]/', '', $hexString);
+        return preg_replace('/0x/', '', $hexString);
     }
 
 

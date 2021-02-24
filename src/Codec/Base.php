@@ -7,7 +7,7 @@ class Base
 {
     const DEFAULT_NETWORK = 'default';
 
-    // todo "BTreeMap","Int","U64", "U128","Raw","Tuple","U8aFixed","Vec","U8aFixed"
+    // todo "BTreeMap","Int","U64", "U128","Raw","Tuple","U8aFixed","U8aFixed"
     protected static $defaultScaleTypes = array(
         "Compact",
         "CompactU32",
@@ -23,6 +23,7 @@ class Base
         "Enum",
         "Set",
         "Address",
+        "Vec"
     );
 
     /**
@@ -32,7 +33,7 @@ class Base
      *
      * @return Generator
      */
-    public static function create($network = "")
+    public static function create ($network = "")
     {
         $generator = new Generator();
         foreach (static::$defaultScaleTypes as $scaleType) {
@@ -48,7 +49,7 @@ class Base
      * @param string $network
      * @return string
      */
-    public static function getScaleCodecClassname($scaleType, $network = '')
+    public static function getScaleCodecClassname ($scaleType, $network = '')
     {
         if ($providerClass = self::findScaleCodecClassname($scaleType, $network)) {
             return $providerClass;
@@ -72,7 +73,7 @@ class Base
      * @param string $network
      * @return string
      */
-    protected static function findScaleCodecClassname($scaleType, $network = '')
+    protected static function findScaleCodecClassname ($scaleType, $network = '')
     {
         $providerClass = 'Codec\\' . ($network ? sprintf('Types\%s\%s', $scaleType, $network) : sprintf('Types\%s', $scaleType));
         if (class_exists($providerClass, true)) {
@@ -83,10 +84,11 @@ class Base
 
     /**
      * convertPhpType
+     *
      * @param $scaleType
      * @return mixed
      */
-    private static function convertPhpType($scaleType)
+    private static function convertPhpType ($scaleType)
     {
         if (in_array($scaleType, ["Bool", "String"])) {
             return sprintf("T%s", $scaleType);

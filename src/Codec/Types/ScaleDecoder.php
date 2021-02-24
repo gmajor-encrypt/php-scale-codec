@@ -21,7 +21,7 @@ class ScaleDecoder implements CodecInterface
     /**
      * @var string $typeString
      */
-    protected $typeString;
+    public $typeString;
 
     /**
      * @var string $subType
@@ -51,9 +51,10 @@ class ScaleDecoder implements CodecInterface
 
     /**
      * ScaleDecoder constructor.
+     *
      * @param Generator $generator
      */
-    public function __construct(Generator $generator)
+    public function __construct (Generator $generator)
     {
         $this->generator = $generator;
     }
@@ -63,17 +64,19 @@ class ScaleDecoder implements CodecInterface
      * @param string $subType
      * @param $metadata
      */
-    public function init(ScaleBytes $data, string $subType = "", $metadata = null)
+    public function init (ScaleBytes $data, string $subType = "", $metadata = null)
     {
         $this->data = $data;
-        $this->subType = $subType;
+        if (!empty($subType)) {
+            $this->subType = $subType;
+        }
         $this->metadata = $metadata;
     }
 
     /**
      * buildStructMapping
      */
-    protected function buildStructMapping()
+    protected function buildStructMapping ()
     {
         if (!empty($this->typeString) && $this->typeString[0] == '(' && $this->typeString[1] == ')') {
             $typeStruct = [];
@@ -90,7 +93,7 @@ class ScaleDecoder implements CodecInterface
      * @param array $option
      * @return mixed
      */
-    protected function process(string $typeString, ScaleBytes $codecData = null, array $option = [])
+    public function process (string $typeString, ScaleBytes $codecData = null, array $option = [])
     {
         $codecInstant = self::createTypeByTypeString($typeString);
         $codecInstant->typeString = $typeString;
@@ -107,7 +110,7 @@ class ScaleDecoder implements CodecInterface
      * @param string $typeString
      * @return ScaleDecoder
      */
-    public function createTypeByTypeString(string $typeString)
+    public function createTypeByTypeString (string $typeString)
     {
         $typeString = self::convertType($typeString);
         $match = array();
@@ -147,7 +150,7 @@ class ScaleDecoder implements CodecInterface
      * @param $length
      * @return array
      */
-    protected function nextBytes($length): array
+    protected function nextBytes ($length): array
     {
         $data = $this->data->nextBytes($length);
         $this->rawData = $this->rawData . (Utils::bytesToHex($data));
@@ -156,18 +159,20 @@ class ScaleDecoder implements CodecInterface
 
     /**
      * nextU8
+     *
      * @return int
      */
-    protected function nextU8()
+    protected function nextU8 ()
     {
         return Utils::bytesToLittleInt($this->nextBytes(1));
     }
 
     /**
      * nextBool
+     *
      * @return bool
      */
-    protected function nextBool()
+    protected function nextBool ()
     {
         $data = $this->nextBytes(1);
         if (!in_array($data[0], [0, 1])) {
@@ -183,7 +188,7 @@ class ScaleDecoder implements CodecInterface
      * @param string $typeString
      * @return string
      */
-    private static function convertType(string $typeString)
+    private static function convertType (string $typeString)
     {
         if ($typeString == '()') {
             return "Null";
@@ -195,13 +200,13 @@ class ScaleDecoder implements CodecInterface
     /**
      * @return mixed
      */
-    public function decode()
+    public function decode ()
     {
         return null;
         // TODO: Implement decode() method.
     }
 
-    public function encode($param)
+    public function encode ($param)
     {
         return null;
     }

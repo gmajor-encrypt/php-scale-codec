@@ -9,7 +9,9 @@
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
-    "php": "^7.1"
+    "php": "^7.1",
+    "bitwasp/buffertools": "dev-master",
+    "ext-gmp": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8.35 || ^5.7",

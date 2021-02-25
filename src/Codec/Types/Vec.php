@@ -16,4 +16,22 @@ class Vec extends ScaleDecoder
         }
         return $value;
     }
+
+
+    function encode ($param)
+    {
+        if (!is_array($param)) {
+            return new \InvalidArgumentException(sprintf('%v not array', $param));
+        }
+
+        $instant = $this->createTypeByTypeString("CompactU32");
+        $length = $instant->encode(count($param));
+
+        $value = $length;
+        foreach ($param as $index => $item) {
+            $subInstant = $this->createTypeByTypeString($this->subType);
+            $value = $value . $subInstant->encode($item);
+        }
+        return $value;
+    }
 }

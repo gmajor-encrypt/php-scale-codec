@@ -18,7 +18,7 @@ class U32 extends Uint
         if ($value >= 0 && $value <= 2**32 - 1) {
             return Utils::LittleIntToBytes($value, 4);
         }
-        return new \InvalidArgumentException(sprintf('%s range out U16', $value));
+        return new \InvalidArgumentException(sprintf('%s range out U32', $value));
     }
 }
 

@@ -144,7 +144,21 @@ final class TypeTest extends TestCase
         $value = $codec->process("Vec<u8>", new ScaleBytes("08ffff"));
         $this->assertEquals("ffff", Utils::bytesToHex($value));
 
+
+        $codec = $codec->createTypeByTypeString("Vec<u8>");
+        $this->assertEquals("08ffff", $codec->encode(Utils::hexToBytes("ffff")));
+
     }
+
+//    public function testU128 ()
+//    {
+//        $generator = Base::create();
+//        $codec = new ScaleDecoder($generator);
+//        $value = $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
+//        echo $value;
+////        $this->assertEquals("ffff", Utils::bytesToHex($value));
+//
+//    }
 }
 
 

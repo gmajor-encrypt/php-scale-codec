@@ -7,7 +7,7 @@ class Base
 {
     const DEFAULT_NETWORK = 'default';
 
-    // todo "BTreeMap","Int","U64", "U128","Raw","Tuple","U8aFixed","U8aFixed"
+    // todo "BTreeMap","Int","Raw","Tuple","U8aFixed","U8aFixed"
     protected static $defaultScaleTypes = array(
         "Compact",
         "CompactU32",
@@ -23,7 +23,9 @@ class Base
         "Enum",
         "Set",
         "Address",
-        "Vec"
+        "Vec",
+        "U64",
+//        "U128",
     );
 
     /**

@@ -7,7 +7,7 @@ use Codec\Types\ScaleDecoder;
 class Struct extends ScaleDecoder
 {
 
-    function decode()
+    function decode ()
     {
         $result = array();
         foreach ($this->typeStruct as $index => $item) {
@@ -15,4 +15,17 @@ class Struct extends ScaleDecoder
         }
         return $result;
     }
+
+    function encode ($param)
+    {
+        $value = "";
+        foreach ($this->typeStruct as $index => $dataType) {
+            if (!array_key_exists($index, $param)) {
+                return new \InvalidArgumentException(sprintf('%v not in Struct', $index));
+            }
+            $subInstant = $this->createTypeByTypeString($dataType);
+            $value = $value . $subInstant->encode($param[$index]);
+        }
+    }
+
 }

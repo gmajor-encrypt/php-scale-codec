@@ -10,7 +10,7 @@ use Codec\Utils;
 
 class Address extends ScaleDecoder
 {
-    public function decode()
+    public function decode ()
     {
         $accountLength = $this->data->nextBytes(1);
         switch (Utils::bytesToHex($accountLength)) {
@@ -30,5 +30,11 @@ class Address extends ScaleDecoder
                 $accountIndex = $accountLength;
         }
         $this->value = ["account_index" => Utils::bytesToHex($accountIndex)];
+    }
+
+    // todo
+    function encode ($param)
+    {
+
     }
 }

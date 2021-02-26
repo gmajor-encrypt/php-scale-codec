@@ -7,7 +7,6 @@ class Base
 {
     const DEFAULT_NETWORK = 'default';
 
-    // todo "BTreeMap","Int","Raw","Tuple","U8aFixed","U8aFixed"
     protected static $defaultScaleTypes = array(
         "Compact",
         "CompactU32",
@@ -25,7 +24,10 @@ class Base
         "Address",
         "Vec",
         "U64",
-//        "U128",
+        "Int",
+        "BTreeMap",
+        "VecU8Fixed"
+//      "U128",
     );
 
     /**
@@ -92,7 +94,7 @@ class Base
      */
     private static function convertPhpType ($scaleType)
     {
-        if (in_array($scaleType, ["Bool", "String"])) {
+        if (in_array($scaleType, ["Bool", "String", "Int"])) {
             return sprintf("T%s", $scaleType);
         }
         return $scaleType;

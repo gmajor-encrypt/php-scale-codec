@@ -1,6 +1,6 @@
 ![grants_badge](./grants_badge.png)
 
-### Substrate scale codec
+### Substrate scale codec(WIP)
 
 [![Travis CI](https://api.travis-ci.org/gmajor-encrypt/php-scale-codec.svg)](https://travis-ci.org/github/gmajor-encrypt/php-scale-codec)
 

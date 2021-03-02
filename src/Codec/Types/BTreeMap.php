@@ -24,7 +24,29 @@ class BTreeMap extends ScaleDecoder
 
     function encode ($param)
     {
+        if (!is_array($param)) {
+            return new \InvalidArgumentException(sprintf('%v not array', $param));
+        }
 
+        $instant = $this->createTypeByTypeString("CompactU32");
+        $length = $instant->encode(count($param));
+        $subData = "";
+
+        foreach ($param as $index => $item) {
+            $subType = explode($this->subType, ",");
+            if (count($subType) != 2) {
+                return new \InvalidArgumentException(sprintf('%v sub_type invalid', $this->typeString));
+            }
+            // key
+            $subKeyInstant = $this->createTypeByTypeString($subType[0]);
+            $subData = $subData . $subKeyInstant->encode($item);
+
+            // value
+            $subValueInstant = $this->createTypeByTypeString($subType[1]);
+            $subData = $subData . $subValueInstant->encode($item);
+
+        }
+        return $length . $subData;
 
     }
 

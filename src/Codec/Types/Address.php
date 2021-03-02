@@ -15,26 +15,28 @@ class Address extends ScaleDecoder
         $accountLength = $this->data->nextBytes(1);
         switch (Utils::bytesToHex($accountLength)) {
             case "ff":
-                $this->value = ["account_id" => Utils::bytesToHex($this->data->nextBytes(32))];
-                return;
+                return Utils::bytesToHex($this->data->nextBytes(32));
             case "fc":
-                $accountIndex = $this->data->nextBytes(2);
+                $this->data->nextBytes(2);
                 break;
             case "fe":
-                $accountIndex = $this->data->nextBytes(8);
+                $this->data->nextBytes(8);
                 break;
             case "fd":
-                $accountIndex = $this->data->nextBytes(4);
+                $this->data->nextBytes(4);
                 break;
-            default:
-                $accountIndex = $accountLength;
         }
-        $this->value = ["account_index" => Utils::bytesToHex($accountIndex)];
+        return "";
     }
 
-    // todo
+
     function encode ($param)
     {
-
+        $value = Utils::trimHex($param);
+        if (strlen($value) == 64) {
+            return "0xff" . $value;
+        } else {
+            return new \InvalidArgumentException(sprintf('Address not support AccountIndex or param not AccountId'));
+        }
     }
 }

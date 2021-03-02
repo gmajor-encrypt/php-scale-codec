@@ -8,11 +8,12 @@ class Set extends ScaleDecoder
 {
     /**
      * Enum $value list
+     *
      * @var array
      */
     protected $valueList;
 
-    function decode()
+    function decode ()
     {
         $setIndex = $this->process("U8");
         $value = array();
@@ -25,5 +26,20 @@ class Set extends ScaleDecoder
         }
         return $value;
 
+    }
+
+    function encode ($param)
+    {
+        $value = 0;
+        if (!is_array($value)) {
+            return new \InvalidArgumentException(sprintf('%v not array', $param));
+        }
+        foreach ($this->valueList as $index => $item) {
+            if (in_array($index, $value)) {
+                $value += $item;
+            }
+        }
+        $subInstant = $this->createTypeByTypeString("U8");
+        return $subInstant->encode($value);
     }
 }

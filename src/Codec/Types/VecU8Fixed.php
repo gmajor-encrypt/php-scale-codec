@@ -26,7 +26,7 @@ class VecU8Fixed extends ScaleDecoder
     {
         $value = Utils::trimHex($param);
         if (strlen($value) != ($this->FixedLength) * 2) {
-            return new \InvalidArgumentException(sprintf('%v not fixed width $v', $value, $this->FixedLength));
+            return new \InvalidArgumentException(sprintf('%v not fixed width %v', $value, $this->FixedLength));
         }
         return $value;
     }

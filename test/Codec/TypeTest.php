@@ -51,8 +51,7 @@ final class TypeTest extends TestCase
         $scaleBytes = new ScaleBytes("ff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318");
         $generator = Base::create();
         $codec = $generator->Address($scaleBytes);
-        $codec->decode();
-        $this->assertEquals("1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318", $codec->value["account_id"]);
+        $this->assertEquals("1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318", $codec->decode());
     }
 
 
@@ -150,15 +149,17 @@ final class TypeTest extends TestCase
 
     }
 
-//    public function testU128 ()
-//    {
-//        $generator = Base::create();
-//        $codec = new ScaleDecoder($generator);
-//        $value = $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
-//        echo $value;
-////        $this->assertEquals("ffff", Utils::bytesToHex($value));
-//
-//    }
+    public function testU128 ()
+    {
+        $generator = Base::create();
+        $codec = new ScaleDecoder($generator);
+        $value = $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
+        $this->assertEquals(739571955075788261, $value);
+
+        $codec = $codec->createTypeByTypeString("U128");
+        $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
+
+    }
 }
 
 

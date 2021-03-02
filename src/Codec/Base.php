@@ -27,8 +27,8 @@ class Base
         "Int",
         "BTreeMap",
         "VecU8Fixed",
-        "AccountId"
-//      "U128",
+        "AccountId",
+        "U128",
     );
 
     /**

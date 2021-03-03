@@ -14,21 +14,27 @@ class Enum extends ScaleDecoder
      */
     protected $valueList;
 
+
     function decode ()
     {
-        $index = Utils::byteArray2String($this->nextBytes(1));
-
+        $EnumIndex = hexdec(Utils::bytesToHex($this->nextBytes(1)));
         if (!empty($this->typeStruct)) {
-            if (count($this->typeStruct) > $index) {
-                $enumSubType = $this->typeStruct[$index];
-                return $this->process("Struct", $this->data, ["typeStruct" => $enumSubType]);
+//          $typeStruct = ["a" => "string", "b" => "bytes"];
+            if (count($this->typeStruct) > $EnumIndex) {
+                $index = 0;
+                foreach ($this->typeStruct as $key => $item) {
+                    if ($EnumIndex == $index) {
+                        return $this->process($item);
+                    }
+                    $index++;
+                }
             }
-            throw new \InvalidArgumentException(sprintf('%s range out enum', $index));
+            throw new \InvalidArgumentException(sprintf('%s range out enum', $EnumIndex));
         } else {
-            if (count($this->valueList) > $index) {
-                return $this->valueList[$index];
+            if (count($this->valueList) > $EnumIndex) {
+                return $this->valueList[$EnumIndex];
             }
-            throw new \InvalidArgumentException(sprintf('%s range out enum', $index));
+            throw new \InvalidArgumentException(sprintf('%s range out enum', $EnumIndex));
         }
     }
 
@@ -39,17 +45,19 @@ class Enum extends ScaleDecoder
                 return new \InvalidArgumentException(sprintf('%v not array', $param));
             }
             foreach ($param as $enumKey => $enumValue) {
-                foreach ($this->typeStruct as $index => $item) {
-                    if ($index == $enumKey) {
+                $index = 0;
+                foreach ($this->typeStruct as $key => $item) {
+                    if ($key == $enumKey) {
                         $instant = $this->createTypeByTypeString($item);
-                        return $instant->encode($param);
+                        return Utils::LittleIntToBytes($index, 1) . $instant->encode($enumValue);
                     }
+                    $index++;
                 }
             }
         } else {
             foreach ($this->valueList as $index => $item) {
-                if ($item == $index) {
-                    return dechex($index);
+                if ($param === $item) {
+                    return Utils::LittleIntToBytes($index, 1);
                 }
             }
         }

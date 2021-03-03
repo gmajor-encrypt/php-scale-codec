@@ -29,6 +29,9 @@ class Base
         "VecU8Fixed",
         "AccountId",
         "U128",
+        "StorageHasher",
+        "H256",
+        "GenericMultiAddress"
     );
 
     /**

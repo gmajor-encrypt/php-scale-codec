@@ -160,6 +160,24 @@ final class TypeTest extends TestCase
         $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
 
     }
+
+    public function testEnum ()
+    {
+        $generator = Base::create();
+        $codec = new ScaleDecoder($generator);
+        $value = $codec->process("StorageHasher", new ScaleBytes("05"));
+        $this->assertEquals("Twox64Concat", $value);
+
+        $codec = $codec->createTypeByTypeString("StorageHasher");
+        $this->assertEquals("05", $codec->encode("Twox64Concat"));
+
+        $value = $codec->process("GenericMultiAddress", new ScaleBytes("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"));
+        $this->assertEquals("a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270", $value);
+
+        $codec = $codec->createTypeByTypeString("GenericMultiAddress");
+        $this->assertEquals("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270", $codec->encode(["Id" => "a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"]));
+
+    }
 }
 
 

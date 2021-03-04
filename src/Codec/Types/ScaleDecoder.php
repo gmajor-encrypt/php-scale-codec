@@ -47,7 +47,7 @@ class ScaleDecoder implements CodecInterface
     /**
      * @var array $typeStruct
      */
-    protected $typeStruct;
+    public $typeStruct;
 
     /**
      * ScaleDecoder constructor.

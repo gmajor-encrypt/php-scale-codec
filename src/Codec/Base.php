@@ -14,16 +14,13 @@ class Base
         "Bytes",
         "String",
         "HexBytes",
-        "U8",
-        "U16",
-        "U32",
+        "U8", "U16", "U32", "U64",
         "Struct",
         "Bool",
         "Enum",
         "Set",
         "Address",
         "Vec",
-        "U64",
         "Int",
         "BTreeMap",
         "VecU8Fixed",
@@ -31,7 +28,8 @@ class Base
         "U128",
         "StorageHasher",
         "H256",
-        "GenericMultiAddress"
+        "GenericMultiAddress",
+        "I8", "I16", "I32", "I64"
     );
 
     /**

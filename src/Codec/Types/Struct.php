@@ -26,6 +26,7 @@ class Struct extends ScaleDecoder
             $subInstant = $this->createTypeByTypeString($dataType);
             $value = $value . $subInstant->encode($param[$index]);
         }
+        return $value;
     }
 
 }

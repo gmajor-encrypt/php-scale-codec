@@ -2,10 +2,6 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
-use Codec\Utils;
-
-//Todo
 class TInt extends ScaleDecoder
 {
 
@@ -17,7 +13,6 @@ class TInt extends ScaleDecoder
 
     function decode ()
     {
-
     }
 
     function encode ($param)

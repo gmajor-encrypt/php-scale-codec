@@ -178,6 +178,29 @@ final class TypeTest extends TestCase
         $this->assertEquals("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270", $codec->encode(["Id" => "a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"]));
 
     }
+
+    public function testInt ()
+    {
+        $generator = Base::create();
+        $codec = new ScaleDecoder($generator);
+        $value = $codec->process("I16", new ScaleBytes("2efb"));
+        $this->assertEquals(-1234, $value);
+
+        $codec = $codec->createTypeByTypeString("I16");
+        $this->assertEquals("2efb", $codec->encode(-1234));
+    }
+
+    public function testStruct ()
+    {
+        $generator = Base::create();
+        $codec = new ScaleDecoder($generator);
+        $codec = $codec->createTypeByTypeString("Struct");
+        $codec->typeStruct = ["a" => "Compact<u32>", "b" => "Compact<u32>"];
+        $codec->init(new ScaleBytes("0c00"));
+        $this->assertEquals(["a" => 3, "b" => 0], $codec->decode());
+
+        $this->assertEquals("0c00", $codec->encode(["a" => 3, "b" => 0]));
+    }
 }
 
 

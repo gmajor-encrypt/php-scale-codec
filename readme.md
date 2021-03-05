@@ -58,6 +58,12 @@ echo $encode->encode(100);
 
 More examples can refer to the test file https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/TypeTest.php
 
+## Test
+
+```
+make test
+```
+
 
 ## Resources
 

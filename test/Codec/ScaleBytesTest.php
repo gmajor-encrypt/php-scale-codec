@@ -33,6 +33,17 @@ final class ScaleBytesTest extends TestCase
 
     }
 
+    public function testDechex ()
+    {
+        $this->assertEquals("c", dechex(12));
+        $this->assertEquals("64", dechex(100));
+    }
+
+
+    public function testPadLeft ()
+    {
+        $this->assertEquals(Utils::padLeft("e52d2254c67c43", 64), "00000000000000000000000000000000000000000000000000e52d2254c67c43");
+    }
 }
 
 

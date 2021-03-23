@@ -39,10 +39,6 @@ class ScaleDecoder implements CodecInterface
      */
     protected $metadata;
 
-    /**
-     * @var string $rawData
-     */
-    protected $rawData;
 
     /**
      * @var array $typeStruct
@@ -153,7 +149,6 @@ class ScaleDecoder implements CodecInterface
     protected function nextBytes ($length): array
     {
         $data = $this->data->nextBytes($length);
-        $this->rawData = $this->rawData . (Utils::bytesToHex($data));
         return $data;
     }
 

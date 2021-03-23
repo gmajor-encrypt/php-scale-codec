@@ -10,7 +10,7 @@ class Utils
      * @param string $str
      * @return array|false
      */
-    public static function string2ByteArray($str)
+    public static function string2ByteArray ($str)
     {
         return unpack('C*', $str);
     }
@@ -20,7 +20,7 @@ class Utils
      * @param $bytes
      * @return string
      */
-    public static function byteArray2String($bytes)
+    public static function byteArray2String ($bytes)
     {
         $chars = array_map("chr", $bytes);
         return join($chars);
@@ -30,7 +30,7 @@ class Utils
      * @param array $bytes
      * @return string
      */
-    public static function bytesToHex($bytes)
+    public static function bytesToHex ($bytes)
     {
         $chars = array_map("chr", $bytes);
         $bin = join($chars);
@@ -41,7 +41,7 @@ class Utils
      * @param $hex
      * @return array
      */
-    public static function hexToBytes($hex)
+    public static function hexToBytes ($hex)
     {
         $string = hex2bin($hex);
         $value = unpack('C*', $string);
@@ -52,7 +52,7 @@ class Utils
      * @param string $string
      * @return string
      */
-    public static function string2Hex(string $string)
+    public static function string2Hex (string $string)
     {
         return bin2hex($string);
     }
@@ -61,7 +61,7 @@ class Utils
      * @param string $hexString
      * @return bool|string
      */
-    public static function hex2String(string $hexString)
+    public static function hex2String (string $hexString)
     {
         return hex2bin($hexString);
     }
@@ -71,7 +71,7 @@ class Utils
      * @param $hexString string
      * @return string|string[]|null
      */
-    public static function trimHex($hexString)
+    public static function trimHex ($hexString)
     {
         return preg_replace('/0x/', '', $hexString);
     }
@@ -79,12 +79,13 @@ class Utils
 
     /**
      * BytesToLittleInt
+     *
      * @param array $byteArray
      * @return int
      *
      *
      */
-    public static function bytesToLittleInt(array $byteArray)
+    public static function bytesToLittleInt (array $byteArray)
     {
         switch (count($byteArray)) {
             case 1:
@@ -105,20 +106,32 @@ class Utils
      * @param int $length
      * @return string
      */
-    public static function LittleIntToBytes(int $value,int $length){
-        switch ($length){
+    public static function LittleIntToBytes (int $value, int $length)
+    {
+        switch ($length) {
             case 1:
                 return self::bytesToHex(array($value));
             case 2:
-                return self::bytesToHex(array($value,$value>>8));
+                return self::bytesToHex(array($value, $value >> 8));
             case 3:
-                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>32));
+                return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 32));
             case 4:
-                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>24));
+                return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 24));
             case 8:
-                return self::bytesToHex(array($value,$value>>8,$value>>16,$value>>24,$value>>32,$value>>40,$value>>48,$value>>56));
+                return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 24, $value >> 32, $value >> 40, $value >> 48, $value >> 56));
             default:
                 return new \OutOfRangeException(sprintf('LittleIntToBytes'));
         }
+    }
+
+    /**
+     * @param string $val
+     * @param int $length
+     * @return mixed
+     */
+    public static function padLeft (string $val, int $length)
+    {
+        $fillUp = $length - strlen($val);
+        return str_repeat("0", $fillUp) . $val;
     }
 }

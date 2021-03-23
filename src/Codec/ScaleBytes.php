@@ -2,7 +2,6 @@
 
 namespace Codec;
 
-
 class ScaleBytes
 {
     /**
@@ -40,7 +39,7 @@ class ScaleBytes
      */
     public function nextBytes($length)
     {
-        $data = array_slice($this->data, $this->offset, $this->offset + $length);
+        $data = array_slice($this->data, $this->offset, $length);
         $this->offset = $this->offset + $length;
         return $data;
     }

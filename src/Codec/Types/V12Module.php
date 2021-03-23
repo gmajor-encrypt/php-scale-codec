@@ -9,8 +9,6 @@ class V12Module extends ScaleDecoder
 
     public $prefix;
 
-    public $call_index;
-
     public $storage;
 
     public $calls;
@@ -28,11 +26,43 @@ class V12Module extends ScaleDecoder
     {
         $this->name = $this->process("String");
 
-        $storage = $this->process("Option<ModuleStorage>");
+        $storage = $this->process("Option<Vec<ModuleStorage>>");
         if (!empty($storage)) {
             $this->storage = $storage["items"];
             $this->prefix = $storage["prefix"];
         }
+
+        $calls = $this->process("Option<Vec<MetadataModuleCall>>");
+        if (!empty($calls)) {
+            $this->calls = $calls;
+        }
+
+        $events = $this->process("Option<Vec<MetadataModuleEvent>>");
+        if (!empty($events)) {
+            $this->events = $events;
+        }
+
+        $constants = $this->process("Vec<ModuleConstants>");
+        if (!empty($constants)) {
+            $this->constants = $constants;
+        }
+
+        $errors = $this->process("Vec<MetadataModuleError>");
+        if (!empty($errors)) {
+            $this->errors = $errors;
+        }
+
+        $this->index = $this->process("U8");
+
+        return [
+            "name" => $this->name,
+            "prefix" => $this->prefix,
+            "calls" => $this->calls,
+            "events" => $this->events,
+            "errors" => $this->errors,
+            "constants" => $this->constants,
+            "index" => $this->index,
+        ];
     }
 }
 

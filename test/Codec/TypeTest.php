@@ -88,6 +88,11 @@ final class TypeTest extends TestCase
         $codec = new ScaleDecoder($generator);
         $codec = $codec->createTypeByTypeString("option<Compact<u32>>");
         $this->assertEquals("01fc", $codec->encode(63));
+
+        $this->assertEquals(true, $codec->process("Option<bool>", new ScaleBytes("01")));
+        $this->assertEquals(false, $codec->process("Option<bool>", new ScaleBytes("02")));
+        $this->assertEquals("01", $codec->createTypeByTypeString("Option<bool>")->encode(true));
+        $this->assertEquals("02", $codec->createTypeByTypeString("Option<bool>")->encode(false));
     }
 
 

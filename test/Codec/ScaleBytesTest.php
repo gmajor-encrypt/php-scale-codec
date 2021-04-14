@@ -29,7 +29,7 @@ final class ScaleBytesTest extends TestCase
     public function testBigDecimal ()
     {
         $u128 = new Uint128(ByteOrder::LE);
-        echo $u128->readBits(new Parser("e52d2254c67c430a0000000000000000"));
+        $this->assertEquals(739571955075788261, $u128->readBits(new Parser("e52d2254c67c430a0000000000000000")));
 
     }
 

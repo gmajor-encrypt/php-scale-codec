@@ -12,7 +12,6 @@ class Base
         "Option",
         "Bytes",
         "String",
-        "HexBytes",
         "U8", "U16", "U32", "U64",
         "Struct",
         "Bool",

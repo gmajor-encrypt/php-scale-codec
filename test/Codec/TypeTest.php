@@ -103,20 +103,13 @@ final class TypeTest extends TestCase
     }
 
 
-    public function testHexBytes ()
+    public function testBytes ()
     {
         $generator = Base::create();
 
         $scaleBytes = new ScaleBytes("08ffff");
-        $codec = $generator->HexBytes($scaleBytes);
-        $this->assertEquals("ffff", $codec->decode());
-        $encode = $generator->HexBytes();
-        $this->assertEquals("08ffff", $encode->encode("0xffff"));
-
-        $scaleBytes = new ScaleBytes("08ffff");
         $codec = $generator->Bytes($scaleBytes);
         $this->assertEquals("ffff", $codec->decode());
-
         $encode = $generator->Bytes();
         $this->assertEquals("08ffff", $encode->encode("0xffff"));
     }

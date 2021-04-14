@@ -1,11 +1,10 @@
 language: php
 
-dist: precise
+dist: xenial
 
 php:
   - 7.3
   - 8.0.2
-  - nightly
 
 sudo: false
 

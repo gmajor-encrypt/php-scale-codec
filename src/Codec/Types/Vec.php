@@ -9,7 +9,7 @@ class Vec extends ScaleDecoder
 
     function decode ()
     {
-        $VecLength = $this->process("CompactU32", $this->data);
+        $VecLength = $this->process("Compact<u32>", $this->data);
         $value = [];
         for ($i = 0; $i < $VecLength; $i++) {
             array_push($value, $this->process($this->subType));
@@ -24,7 +24,7 @@ class Vec extends ScaleDecoder
             return new \InvalidArgumentException(sprintf('%v not array', $param));
         }
 
-        $instant = $this->createTypeByTypeString("CompactU32");
+        $instant = $this->createTypeByTypeString("Compact");
         $length = $instant->encode(count($param));
 
         $value = $length;

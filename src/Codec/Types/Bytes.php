@@ -13,7 +13,7 @@ class Bytes extends ScaleDecoder
      */
     function decode ()
     {
-        $length = $this->process("CompactU32", $this->data);
+        $length = $this->process("Compact<u32>", $this->data);
         return sprintf('%s', Utils::bytesToHex($this->nextBytes($length)));
     }
 
@@ -25,7 +25,7 @@ class Bytes extends ScaleDecoder
     function encode ($param)
     {
         $value = Utils::trimHex($param);
-        $instant = $this->createTypeByTypeString("CompactU32");
+        $instant = $this->createTypeByTypeString("Compact");
         $length = $instant->encode(count(Utils::hexToBytes($value)));
         return $length . $value;
     }

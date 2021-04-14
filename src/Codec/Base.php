@@ -9,7 +9,6 @@ class Base
 
     protected static $defaultScaleTypes = array(
         "Compact",
-        "CompactU32",
         "Option",
         "Bytes",
         "String",

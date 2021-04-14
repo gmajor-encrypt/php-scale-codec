@@ -13,13 +13,13 @@ class TString extends ScaleDecoder
      */
     function decode ()
     {
-        $value = $this->nextBytes($this->process('CompactU32'));
+        $value = $this->nextBytes($this->process('Compact<u32>'));
         return Utils::byteArray2String($value);
     }
 
     function encode ($param)
     {
-        $instant = $this->createTypeByTypeString("CompactU32");
+        $instant = $this->createTypeByTypeString("Compact");
         $length = $instant->encode(strlen($param));
         return $length . Utils::string2Hex($param);
     }

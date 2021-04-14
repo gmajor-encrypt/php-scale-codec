@@ -66,26 +66,12 @@ final class TypeTest extends TestCase
     public function testCompact ()
     {
         $generator = Base::create();
-
-        $scaleBytes = new ScaleBytes("04");
-        $codec = $generator->CompactU32($scaleBytes);
-        $this->assertEquals(1, $codec->decode());
-
-        $encode = $generator->Compact();
-        $this->assertEquals("fc", $encode->encode(63));
-
-
-        $scaleBytes2 = new ScaleBytes("c15d");
-        $codec = $generator->CompactU32($scaleBytes2);
-        $this->assertEquals(6000, $codec->decode());
-        $this->assertEquals("c15d", $encode->encode(6000));
-
-        $scaleBytes4 = new ScaleBytes("02093d00");
-        $codec = $generator->CompactU32($scaleBytes4);
-        $this->assertEquals(1000000, $codec->decode());
-        $this->assertEquals("02093d00", $encode->encode(1000000));
-
-        $this->assertEquals("130080cd103d71bc22", $encode->encode(2503000000000000000));
+        $codec = new ScaleDecoder($generator);
+        $this->assertEquals("fc", $generator->Compact()->encode(63));
+        $this->assertEquals("02093d00", $generator->Compact()->encode(1000000));
+        $this->assertEquals("130080cd103d71bc22", $generator->Compact()->encode(2503000000000000000));
+        $this->assertEquals(1, $codec->process("Compact<u32>", new ScaleBytes("04")));
+        $this->assertEquals(1000000, $codec->process("Compact<u32>", new ScaleBytes("02093d00")));
     }
 
     public function testOptionNull ()

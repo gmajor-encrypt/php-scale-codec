@@ -2,9 +2,9 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class Vec extends ScaleDecoder
+class Vec extends ScaleInstance
 {
 
     function decode ()

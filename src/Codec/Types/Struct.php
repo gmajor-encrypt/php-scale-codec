@@ -2,9 +2,9 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class Struct extends ScaleDecoder
+class Struct extends ScaleInstance
 {
 
     function decode ()

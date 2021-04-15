@@ -2,10 +2,10 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
-class VecU8Fixed extends ScaleDecoder
+class VecU8Fixed extends ScaleInstance
 {
     /**
      * @var $FixedLength

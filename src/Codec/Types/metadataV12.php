@@ -5,7 +5,7 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
-class metadataV12 extends ScaleDecoder
+class metadataV12 extends ScaleInstance
 {
 
     // Todo

@@ -2,9 +2,9 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class Set extends ScaleDecoder
+class Set extends ScaleInstance
 {
     /**
      * Enum $value list

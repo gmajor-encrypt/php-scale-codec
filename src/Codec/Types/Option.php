@@ -2,10 +2,10 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
-class Option extends ScaleDecoder
+class Option extends ScaleInstance
 {
     function decode ()
     {

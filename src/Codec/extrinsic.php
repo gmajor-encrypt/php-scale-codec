@@ -2,9 +2,9 @@
 
 namespace Codec;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class extrinsic extends ScaleDecoder
+class extrinsic extends ScaleInstance
 {
     // Todo
 

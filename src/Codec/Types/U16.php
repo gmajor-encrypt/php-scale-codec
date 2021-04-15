@@ -2,7 +2,7 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 class U16 extends Uint

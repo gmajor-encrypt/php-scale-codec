@@ -5,7 +5,7 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
-class Metadata extends ScaleDecoder
+class Metadata extends ScaleInstance
 {
     public $version;
 

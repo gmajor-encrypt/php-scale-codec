@@ -2,9 +2,9 @@
 
 namespace Codec;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class event extends ScaleDecoder
+class event extends ScaleInstance
 {
     // Todo
 }

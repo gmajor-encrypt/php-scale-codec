@@ -5,7 +5,7 @@ namespace Codec\Test;
 use Codec\Utils;
 use PHPUnit\Framework\TestCase;
 use Codec\ScaleBytes;
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Base;
 
 final class TypeTest extends TestCase
@@ -21,9 +21,8 @@ final class TypeTest extends TestCase
     {
         $generator = Base::create();
 
-        $scaleBytes = new ScaleBytes("64");
-        $codec = $generator->U8($scaleBytes);
-        $this->assertEquals(100, $codec->decode());
+        $codec = new ScaleInstance($generator);
+        $this->assertEquals(100, $codec->process("U8", new ScaleBytes("64")));
 
         $encode = $generator->U8();
         $this->assertEquals("64", $encode->encode(100));
@@ -66,7 +65,7 @@ final class TypeTest extends TestCase
     public function testCompact ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $this->assertEquals("fc", $generator->Compact()->encode(63));
         $this->assertEquals("02093d00", $generator->Compact()->encode(1000000));
         $this->assertEquals("130080cd103d71bc22", $generator->Compact()->encode(2503000000000000000));
@@ -85,7 +84,7 @@ final class TypeTest extends TestCase
         $encode = $generator->Option();
         $this->assertEquals("00", $encode->encode(null));
 
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $codec = $codec->createTypeByTypeString("option<Compact<u32>>");
         $this->assertEquals("01fc", $codec->encode(63));
 
@@ -123,7 +122,7 @@ final class TypeTest extends TestCase
     public function testVec ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $value = $codec->process("Vec<u8>", new ScaleBytes("08ffff"));
         $this->assertEquals("ffff", Utils::bytesToHex($value));
 
@@ -136,7 +135,7 @@ final class TypeTest extends TestCase
     public function testU128 ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $value = $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
         $this->assertEquals(739571955075788261, $value);
 
@@ -148,7 +147,7 @@ final class TypeTest extends TestCase
     public function testEnum ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $value = $codec->process("StorageHasher", new ScaleBytes("05"));
         $this->assertEquals("Twox64Concat", $value);
 
@@ -166,7 +165,7 @@ final class TypeTest extends TestCase
     public function testInt ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $value = $codec->process("I16", new ScaleBytes("2efb"));
         $this->assertEquals(-1234, $value);
 
@@ -177,7 +176,7 @@ final class TypeTest extends TestCase
     public function testStruct ()
     {
         $generator = Base::create();
-        $codec = new ScaleDecoder($generator);
+        $codec = new ScaleInstance($generator);
         $codec = $codec->createTypeByTypeString("Struct");
         $codec->typeStruct = ["a" => "Compact<u32>", "b" => "Compact<u32>"];
         $codec->init(new ScaleBytes("0c00"));

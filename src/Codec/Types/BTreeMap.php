@@ -2,9 +2,9 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class BTreeMap extends ScaleDecoder
+class BTreeMap extends ScaleInstance
 {
 
     function decode ()

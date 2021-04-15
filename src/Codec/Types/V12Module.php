@@ -3,7 +3,7 @@
 namespace Codec\Types;
 
 
-class V12Module extends ScaleDecoder
+class V12Module extends ScaleInstance
 {
     public $name;
 

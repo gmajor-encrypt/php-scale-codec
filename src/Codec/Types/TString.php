@@ -2,11 +2,11 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Utils;
 use SebastianBergmann\CodeCoverage\Util;
 
-class TString extends ScaleDecoder
+class TString extends ScaleInstance
 {
     /**
      * @return mixed|void

@@ -4,11 +4,11 @@
 namespace Codec\Types;
 
 use Codec\ScaleBytes;
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 
-class AccountId extends ScaleDecoder
+class AccountId extends ScaleInstance
 {
     public function decode ()
     {

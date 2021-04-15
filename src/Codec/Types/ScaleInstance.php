@@ -6,7 +6,7 @@ use Codec\Generator;
 use Codec\ScaleBytes;
 use Codec\Utils;
 
-class ScaleDecoder implements CodecInterface
+class ScaleInstance implements CodecInterface
 {
     /**
      * @var Generator
@@ -104,7 +104,7 @@ class ScaleDecoder implements CodecInterface
      * createTypeByTypeString
      *
      * @param string $typeString
-     * @return ScaleDecoder
+     * @return ScaleInstance
      */
     public function createTypeByTypeString (string $typeString)
     {

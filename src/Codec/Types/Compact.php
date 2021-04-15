@@ -5,7 +5,7 @@ namespace Codec\Types;
 use Codec\ScaleBytes;
 use Codec\Utils;
 
-class Compact extends ScaleDecoder
+class Compact extends ScaleInstance
 {
     /**
      * @var integer $compactLength

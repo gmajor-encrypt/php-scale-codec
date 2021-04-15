@@ -2,9 +2,9 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleDecoder;
+use Codec\Types\ScaleInstance;
 
-class Uint extends ScaleDecoder
+class Uint extends ScaleInstance
 {
 
 }

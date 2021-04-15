@@ -2,7 +2,7 @@
 
 namespace Codec\Types;
 
-class TInt extends ScaleDecoder
+class TInt extends ScaleInstance
 {
 
     /**

@@ -16,11 +16,13 @@ class ScaleBytes
 
     /**
      * ScaleBytes constructor.
+     *
      * @param string|array $hexData
      */
-    public function __construct($hexData)
+    public function __construct ($hexData)
     {
         if (is_string($hexData)) {
+            $hexData = Utils::trimHex($hexData);
             $data = ctype_xdigit($hexData);
             if ($data === false) {
                 throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
@@ -37,7 +39,7 @@ class ScaleBytes
      * @param $length
      * @return array
      */
-    public function nextBytes($length)
+    public function nextBytes ($length)
     {
         $data = array_slice($this->data, $this->offset, $length);
         $this->offset = $this->offset + $length;
@@ -47,16 +49,17 @@ class ScaleBytes
     /**
      * reset ScaleBytes
      */
-    protected function reset()
+    protected function reset ()
     {
         $this->offset = 0;
     }
 
     /**
      * remainBytesLength
+     *
      * @return int
      */
-    protected function remainBytesLength()
+    protected function remainBytesLength ()
     {
         return count($this->data) - $this->offset;
     }

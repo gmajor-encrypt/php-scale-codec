@@ -15,6 +15,9 @@ final class TypeTest extends TestCase
 
         $scaleBytes = new ScaleBytes("00");
         $this->assertEquals([0], $scaleBytes->data);
+
+        $this->expectDeprecationMessage('"wa" is not a hex string');
+        new ScaleBytes("wa");
     }
 
     public function testUint ()

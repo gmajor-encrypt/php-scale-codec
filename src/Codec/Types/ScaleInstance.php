@@ -51,6 +51,7 @@ class ScaleInstance implements CodecInterface
      * enum
      */
     public $valueList;
+
     /**
      * ScaleDecoder constructor.
      *
@@ -80,13 +81,12 @@ class ScaleInstance implements CodecInterface
      */
     protected function buildStructMapping ()
     {
-        if (!empty($this->typeString) && $this->typeString[0] == '(' && $this->typeString[1] == ')') {
-            $typeStruct = [];
-            foreach (explode("", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
-                $typeStruct["col$key"] = str_replace(';', ',', trim($element));
-            }
-            $this->typeStruct = $typeStruct;
+        $typeStruct = [];
+        foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
+            $colKey = $key + 1;
+            $typeStruct["col$colKey"] = str_replace(';', ',', trim($element));
         }
+        $this->typeStruct = $typeStruct;
     }
 
     /**
@@ -141,6 +141,7 @@ class ScaleInstance implements CodecInterface
             $struct = $this->generator->getRegistry('struct');
             $struct->typeString = $typeString;
             $struct->buildStructMapping();
+            return $struct;
         }
 
 

@@ -84,7 +84,10 @@ final class TypeTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals("ffff", Utils::bytesToHex($codec->process("Vec<u8>", new ScaleBytes("08ffff"))));
         $this->assertEquals("08ffff", $codec->createTypeByTypeString("Vec<u8>")->encode(Utils::hexToBytes("ffff")));
-
+        $this->assertEquals([
+            ["col1" => 716, "col2" => 47054848, "col3" => 0],
+            ["col1" => 256, "col2" => 0, "col3" => 0]], $codec->process("Vec<(u32, u32, u16)>", new ScaleBytes("08cc0200000000ce0200000001")));
+        $this->assertEquals("1001000000020000000300000004000000", $codec->createTypeByTypeString("Vec<u32>")->encode([1, 2, 3, 4]));
     }
 
     public function testU128 ()

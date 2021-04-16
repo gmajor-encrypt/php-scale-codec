@@ -7,19 +7,11 @@ use Codec\Utils;
 
 class Enum extends ScaleInstance
 {
-    /**
-     * Enum $value list
-     *
-     * @var array
-     */
-    protected $valueList;
-
 
     function decode ()
     {
         $EnumIndex = hexdec(Utils::bytesToHex($this->nextBytes(1)));
         if (!empty($this->typeStruct)) {
-//          $typeStruct = ["a" => "string", "b" => "bytes"];
             if (count($this->typeStruct) > $EnumIndex) {
                 $index = 0;
                 foreach ($this->typeStruct as $key => $item) {

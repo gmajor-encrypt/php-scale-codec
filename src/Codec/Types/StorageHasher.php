@@ -6,14 +6,6 @@ use Codec\Generator;
 
 class StorageHasher extends Enum
 {
-    /**
-     * Enum $value list
-     *
-     * @var array
-     */
-    protected $valueList;
-
-
     public function __construct (Generator $generator)
     {
         parent::__construct($generator);

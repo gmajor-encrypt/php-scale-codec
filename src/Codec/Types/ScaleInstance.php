@@ -45,6 +45,12 @@ class ScaleInstance implements CodecInterface
      */
     public $typeStruct;
 
+
+    /**
+     * @var array $typeStruct
+     * enum
+     */
+    public $valueList;
     /**
      * ScaleDecoder constructor.
      *

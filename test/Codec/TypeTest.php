@@ -102,6 +102,13 @@ final class TypeTest extends TestCase
     public function testEnum ()
     {
         $codec = new ScaleInstance(Base::create());
+
+        $codec = $codec->createTypeByTypeString("Enum");
+        $codec->valueList = [0, 1, 49, 50];
+        $codec->init(new ScaleBytes("02"));
+        $this->assertEquals(49, $codec->decode());
+        $this->assertEquals("02", $codec->encode(49));
+
         $this->assertEquals("Twox64Concat", $codec->process("StorageHasher", new ScaleBytes("05")));
         $this->assertEquals("05", $codec->createTypeByTypeString("StorageHasher")->encode("Twox64Concat"));
         $this->assertEquals("a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270",

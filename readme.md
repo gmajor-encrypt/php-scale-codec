@@ -33,12 +33,10 @@ require_once 'vendor/autoload.php';
 <?php
 use Codec\ScaleBytes;
 use Codec\Base;
+use Codec\Types\ScaleInstance;
 
-$generator = Base::create();
-
-$scaleBytes = new ScaleBytes("64");
-$codec = $generator->U8($scaleBytes);
-echo $codec;
+$codec = new ScaleInstance(Base::create());
+echo $codec->process("U8", new ScaleBytes("64"));
 ```
 
 
@@ -47,10 +45,10 @@ echo $codec;
 ```php
 <?php
 use Codec\Base;
-$generator = Base::create();
+use Codec\Types\ScaleInstance;
 
-$encode = $generator->U8();
-echo $encode->encode(100);
+$codec = new ScaleInstance(Base::create());
+echo $codec->createTypeByTypeString("U8")->encode(100);
 
 ```
 

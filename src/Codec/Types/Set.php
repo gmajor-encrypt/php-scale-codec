@@ -6,13 +6,6 @@ use Codec\Types\ScaleInstance;
 
 class Set extends ScaleInstance
 {
-    /**
-     * Enum $value list
-     *
-     * @var array
-     */
-    protected $valueList;
-
     function decode ()
     {
         $setIndex = $this->process("U8");

@@ -18,7 +18,7 @@ class U16 extends Uint
         if ($value >= 0 && $value <= 2 ** 16 - 1) {
             return Utils::LittleIntToBytes($value, 2);
         }
-        return new \InvalidArgumentException(sprintf('%s range out U16', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out U16', $value));
     }
 }
 

@@ -17,26 +17,17 @@ final class TypeTest extends TestCase
         $this->assertEquals([0], $scaleBytes->data);
     }
 
-    public function testUint ()
-    {
-        $codec = new ScaleInstance(Base::create());
-
-        $this->assertEquals(100, $codec->process("U8", new ScaleBytes("64")));
-        $this->assertEquals("64", $codec->createTypeByTypeString("U8")->encode(100));
-
-        $this->assertEquals(3, $codec->process("U16", new ScaleBytes("0300")));
-        $this->assertEquals("0300", $codec->createTypeByTypeString("U16")->encode(3));
-
-        $this->assertEquals(100, $codec->process("U32", new ScaleBytes("64000000")));
-        $this->assertEquals("64000000", $codec->createTypeByTypeString("U32")->encode(100));
-    }
-
-
     public function testAddressDecode ()
     {
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals("1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318",
             $codec->process("Address", new ScaleBytes("ff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318")));
+        $this->assertEquals("ff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318",
+            $codec->createTypeByTypeString("Address")->encode("1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318"));
+
+        $this->expectExceptionMessage("Address not support AccountIndex or param not AccountId");
+        $codec->createTypeByTypeString("Address")->encode("fa93");
+
     }
 
 

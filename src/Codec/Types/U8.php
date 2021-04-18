@@ -19,7 +19,7 @@ class U8 extends Uint
         if ($value >= 0 && $value <= 2 ** 8 - 1) {
             return Utils::LittleIntToBytes($value, 1);
         }
-        return new \InvalidArgumentException(sprintf('%s range out u8', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out u8', $value));
     }
 }
 

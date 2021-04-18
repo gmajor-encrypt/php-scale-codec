@@ -18,7 +18,7 @@ class U64 extends Uint
         if ($value >= 0 && $value <= 2 ** 64 - 1) {
             return Utils::LittleIntToBytes($value, 8);
         }
-        return new \InvalidArgumentException(sprintf('%s range out U64', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out U64', $value));
     }
 }
 

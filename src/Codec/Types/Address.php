@@ -34,9 +34,9 @@ class Address extends ScaleInstance
     {
         $value = Utils::trimHex($param);
         if (strlen($value) == 64) {
-            return "0xff" . $value;
+            return "ff" . $value;
         } else {
-            return new \InvalidArgumentException(sprintf('Address not support AccountIndex or param not AccountId'));
+            throw new \InvalidArgumentException(sprintf('Address not support AccountIndex or param not AccountId'));
         }
     }
 }

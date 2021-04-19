@@ -42,7 +42,7 @@ class Compact extends ScaleInstance
     {
         $compactBytes = $this->nextBytes(1);
         if (count($compactBytes) == 0) {
-            return new \OutOfRangeException(sprintf('OutOfRangeException Compact'));
+            throw new \OutOfRangeException('OutOfRangeException Compact');
         }
         $mod = $compactBytes[0] % 4;
 
@@ -82,7 +82,7 @@ class Compact extends ScaleInstance
      */
     public function encode($param)
     {
-        $value = intval($param);
+        $value = $param;
         if ($value < 2**6) {
             return Utils::LittleIntToBytes($value<<2, 1);
         } elseif ($value < 2**14) {
@@ -94,11 +94,9 @@ class Compact extends ScaleInstance
                 if( 2 ** (8 * ($i - 1)) <= $value && $value< 2 ** (8 * $i)){
                     return Utils::LittleIntToBytes(($i-4)<<2 | 3, 1) . Utils::LittleIntToBytes($value, $i);
                 }
-
             }
-
         }else{
-            return new \OutOfRangeException(sprintf('Compact encode'));
+            throw new \OutOfRangeException('Compact encode out of range');
         }
     }
 

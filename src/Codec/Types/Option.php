@@ -12,7 +12,7 @@ class Option extends ScaleInstance
         $optionData = $this->nextBytes(1);
         if (!empty($this->subType) && Utils::bytesToHex($optionData) != '00') {
             if ($this->subType == "bool") {
-                return Utils::bytesToHex($optionData) == '01' ? true : false;
+                return Utils::bytesToHex($optionData) == '01';
             }
             return $this->process($this->subType, $this->data);
         }

@@ -26,7 +26,7 @@ class I32 extends TInt
             $buffer = new Buffer($i32->write($value));
             return Utils::trimHex($buffer->getHex());
         }
-        return new \InvalidArgumentException(sprintf('%s range out i32', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out i32', $value));
     }
 
 }

@@ -26,7 +26,7 @@ class I16 extends TInt
             $buffer = new Buffer($i16->write($value));
             return Utils::trimHex($buffer->getHex());
         }
-        return new \InvalidArgumentException(sprintf('%s range out i16', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out i16', $value));
     }
 
 }

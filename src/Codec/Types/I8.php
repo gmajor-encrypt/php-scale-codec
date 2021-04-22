@@ -26,7 +26,7 @@ class I8 extends TInt
             $buffer = new Buffer($i8->write($value));
             return Utils::trimHex($buffer->getHex());
         }
-        return new \InvalidArgumentException(sprintf('%s range out i8', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out i8', $value));
     }
 
 }

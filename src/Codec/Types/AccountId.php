@@ -18,7 +18,6 @@ class AccountId extends ScaleInstance
 
     function encode ($param)
     {
-        $value = Utils::trimHex($param);
-        return $value;
+        return Utils::trimHex($param);
     }
 }

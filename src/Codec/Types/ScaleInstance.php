@@ -53,6 +53,19 @@ class ScaleInstance implements CodecInterface
     public $valueList;
 
     /**
+     * @var int
+     * Set struct BitLength
+     */
+    public $BitLength;
+
+
+    /**
+     * @var int
+     * Fixed int FixedLength
+     */
+    public $FixedLength;
+
+    /**
      * ScaleDecoder constructor.
      *
      * @param Generator $generator

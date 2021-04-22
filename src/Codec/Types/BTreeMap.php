@@ -12,12 +12,12 @@ class BTreeMap extends ScaleInstance
         $VecLength = $this->process("Compact<u32>", $this->data);
         $value = [];
         for ($i = 0; $i < $VecLength; $i++) {
-            $subType = explode($this->subType, ",");
+            $subType = explode(",", $this->subType);
             if (count($subType) != 2) {
-                return new \InvalidArgumentException(sprintf('%v sub_type invalid', $this->typeString));
+                throw new \InvalidArgumentException(sprintf('%s sub_type invalid', $this->typeString));
             }
             $key = $this->process($subType[0]);
-            array_push($value, [$key => $this->process($subType[1])]);
+            $value[$key] = $this->process($subType[1]);
         }
         return $value;
     }
@@ -25,7 +25,7 @@ class BTreeMap extends ScaleInstance
     function encode ($param)
     {
         if (!is_array($param)) {
-            return new \InvalidArgumentException(sprintf('%v not array', $param));
+            return new \InvalidArgumentException(sprintf('%s not array', $param));
         }
 
         $instant = $this->createTypeByTypeString("Compact");
@@ -33,13 +33,13 @@ class BTreeMap extends ScaleInstance
         $subData = "";
 
         foreach ($param as $index => $item) {
-            $subType = explode($this->subType, ",");
+            $subType = explode(",", $this->subType);
             if (count($subType) != 2) {
-                return new \InvalidArgumentException(sprintf('%v sub_type invalid', $this->typeString));
+                throw new \InvalidArgumentException(sprintf('%s sub_type invalid', $this->typeString));
             }
             // key
             $subKeyInstant = $this->createTypeByTypeString($subType[0]);
-            $subData = $subData . $subKeyInstant->encode($item);
+            $subData = $subData . $subKeyInstant->encode($index);
 
             // value
             $subValueInstant = $this->createTypeByTypeString($subType[1]);

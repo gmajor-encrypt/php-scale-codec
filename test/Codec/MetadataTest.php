@@ -17,7 +17,8 @@ final class MetadataTest extends TestCase
 
     public function testMetadataDecoder ()
     {
-//        $generator = Base::create();
+        $generator = Base::create();
+        $this->assertEquals(1, 1);
 //        $scaleBytes = new ScaleBytes($this->metadataStaticV12);
 //        $codec = $generator->Metadata($scaleBytes);
 //        $codec->decode();

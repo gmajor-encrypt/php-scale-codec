@@ -7,26 +7,25 @@ use Codec\Utils;
 
 class VecU8Fixed extends ScaleInstance
 {
-    /**
-     * @var $FixedLength
-     */
-    protected $FixedLength;
 
     function decode ()
     {
-        return sprintf('%s', Utils::bytesToHex($this->nextBytes($this->FixedLength)));
+        return $this->nextBytes($this->FixedLength);
     }
 
 
     /**
-     * @param $param
+     * @param array $param
      * @return mixed|string|null
      */
     function encode ($param)
     {
-        $value = Utils::trimHex($param);
-        if (strlen($value) != ($this->FixedLength) * 2) {
-            return new \InvalidArgumentException(sprintf('%v not fixed width %v', $value, $this->FixedLength));
+        $value = "";
+        if (!is_array($param)) {
+            throw new \InvalidArgumentException(sprintf('param not array'));
+        }
+        foreach ($param as $index => $item) {
+            $value .= $this->createTypeByTypeString(sprintf("U8"))->encode($item);
         }
         return $value;
     }

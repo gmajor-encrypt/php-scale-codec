@@ -19,14 +19,14 @@ class I64 extends TInt
 
     function encode ($param)
     {
-        $value = intval($param);
+        $value = strval($param);
 
-        if ($value >= -(2 ** 63) && $value <= 2 ** 63 - 1) {
+        if (gmp_cmp($value, "-9223372036854775808") == 1 && gmp_cmp($value, "9223372036854775808") == -1) {
             $i64 = new Int64(ByteOrder::LE);
             $buffer = new Buffer($i64->write($value));
             return Utils::trimHex($buffer->getHex());
         }
-        return new \InvalidArgumentException(sprintf('%s range out i64', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out i64', $value));
     }
 
 }

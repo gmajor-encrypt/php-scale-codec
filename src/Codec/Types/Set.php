@@ -8,12 +8,12 @@ class Set extends ScaleInstance
 {
     function decode ()
     {
-        $setIndex = $this->process("U8");
+        $setIndex = $this->process("U{$this->BitLength}");
         $value = array();
         if ($setIndex > 0) {
             foreach ($this->valueList as $index => $item) {
-                if ($setIndex & $item > 0) {
-                    array_push($value, $index);
+                if (($setIndex & intval(2 ** $index)) > 0) {
+                    array_push($value, $item);
                 }
             }
         }
@@ -24,15 +24,14 @@ class Set extends ScaleInstance
     function encode ($param)
     {
         $value = 0;
-        if (!is_array($value)) {
-            return new \InvalidArgumentException(sprintf('%v not array', $param));
+        if (!is_array($param)) {
+            throw new \InvalidArgumentException(sprintf('param not array'));
         }
         foreach ($this->valueList as $index => $item) {
-            if (in_array($index, $value)) {
-                $value += $item;
+            if (in_array($item, $param)) {
+                $value += 2 ** $index;
             }
         }
-        $subInstant = $this->createTypeByTypeString("U8");
-        return $subInstant->encode($value);
+        return $this->createTypeByTypeString(sprintf("U{$this->BitLength}"))->encode($value);
     }
 }

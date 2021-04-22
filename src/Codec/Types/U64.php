@@ -2,23 +2,28 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
+use BitWasp\Buffertools\Buffer;
+use BitWasp\Buffertools\ByteOrder;
+use BitWasp\Buffertools\Parser;
+use BitWasp\Buffertools\Types\Uint64;
 use Codec\Utils;
 
 class U64 extends Uint
 {
     function decode ()
     {
-        return Utils::bytesToLittleInt($this->nextBytes(8));
+        $u128 = new Uint64(ByteOrder::LE);
+        return $u128->read(new Parser(Utils::bytesToHex($this->nextBytes(8))));
     }
 
     function encode ($param)
     {
-        $value = intval($param);
-        if ($value >= 0 && $value <= 2 ** 64 - 1) {
-            return Utils::LittleIntToBytes($value, 8);
+        if ($param >= 0 && gmp_cmp(strval($param), "18446744073709551615") == -1) {
+            $u64 = new Uint64(ByteOrder::LE);
+            $buffer = new Buffer($u64->write($param));
+            return Utils::trimHex($buffer->getHex());
         }
-        throw new \InvalidArgumentException(sprintf('%s range out U64', $value));
+        throw new \InvalidArgumentException(sprintf('%s range out U64', $param));
     }
 }
 

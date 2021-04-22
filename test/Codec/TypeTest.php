@@ -72,17 +72,7 @@ final class TypeTest extends TestCase
         $this->assertEquals("1001000000020000000300000004000000", $codec->createTypeByTypeString("Vec<u32>")->encode([1, 2, 3, 4]));
     }
 
-    public function testU128 ()
-    {
-        $generator = Base::create();
-        $codec = new ScaleInstance($generator);
-        $value = $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
-        $this->assertEquals(739571955075788261, $value);
 
-        $codec = $codec->createTypeByTypeString("U128");
-        $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
-
-    }
 
     public function testEnum ()
     {

@@ -102,7 +102,7 @@ final class TypeTest extends TestCase
         $this->assertEquals(30000, $codec->process("I32", new ScaleBytes("30750000")));
         $this->assertEquals("30750000", $codec->createTypeByTypeString("I32")->encode(30000));
         $this->assertEquals("4611686018427388000", $codec->process("I64", new ScaleBytes("6000000000000040")));
-        $this->assertEquals("600034315f842900", $codec->createTypeByTypeString("I64")->encode("11686018427388000"));
+        $this->assertEquals("600034315f842900", $codec->createTypeByTypeString("I64")->encode(11686018427388000));
         $this->expectExceptionMessage("range out i64");
         $codec->createTypeByTypeString("I64")->encode("18446744073709551616");
     }

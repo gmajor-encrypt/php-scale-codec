@@ -94,13 +94,13 @@ class Compact extends ScaleInstance
         if (gettype($value) == "double") {
             throw new \InvalidArgumentException("value must be of type GMP|string|int, float given");
         }
-        if (gmp_cmp($value, "64") == -1) {
+        if (gmp_sub($value, "64") < 0) {
             return Utils::LittleIntToBytes($value << 2, 1);
-        } elseif (gmp_cmp($value, "16384") == -1) {
+        } elseif (gmp_sub($value, "16384") < 0) {
             return Utils::LittleIntToBytes($value << 2 | 1, 2);
-        } elseif (gmp_cmp($value, "1073741824") == -1) {
+        } elseif (gmp_sub($value, "1073741824") < 0) {
             return Utils::LittleIntToBytes($value << 2 | 2, 4);
-        } elseif (gmp_cmp($value, gmp_pow("2", 535)) == -1) {
+        } elseif (gmp_sub($value, gmp_pow("2", 535)) < 0) {
             foreach (range(4, 67) as $i) {
                 if (gmp_cmp($value, gmp_pow("2", 8 * ($i - 1))) != -1 && gmp_cmp($value, gmp_pow("2", 8 * $i)) == -1) {
                     return Utils::LittleIntToBytes(($i - 4) << 2 | 3, 1) . Utils::LittleIntToHex($value, $i);

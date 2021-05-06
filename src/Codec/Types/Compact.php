@@ -4,6 +4,7 @@ namespace Codec\Types;
 
 use Codec\ScaleBytes;
 use Codec\Utils;
+use GMP;
 
 class Compact extends ScaleInstance
 {
@@ -24,6 +25,14 @@ class Compact extends ScaleInstance
     {
         self::checkCompactBytes();
         $UIntBitLength = 8 * $this->compactLength;
+        if ($this->compactLength > 8) {
+            foreach (range(4, 67) as $i) {
+                if ($UIntBitLength >= 2 ** ($i - 1) && $UIntBitLength < 2 ** $i) {
+                    $UIntBitLength = 2 ** ($i - 1);
+                    break;
+                }
+            }
+        }
         $data = $this->process("U{$UIntBitLength}", new ScaleBytes($this->compactBytes));
         if (is_int($data) && $this->compactLength <= 4) {
             return intval($data / 4);
@@ -75,22 +84,26 @@ class Compact extends ScaleInstance
     /**
      * Compact encode
      *
-     * @param mixed $param
+     * @param GMP|string|int $param
      * @return \OutOfRangeException|string|null
+     * @throws \Exception
      */
     public function encode ($param)
     {
         $value = $param;
-        if ($value < 2 ** 6) {
+        if (gettype($value) == "double") {
+            throw new \InvalidArgumentException("value must be of type GMP|string|int, float given");
+        }
+        if (gmp_cmp($value, "64") == -1) {
             return Utils::LittleIntToBytes($value << 2, 1);
-        } elseif ($value < 2 ** 14) {
+        } elseif (gmp_cmp($value, "16384") == -1) {
             return Utils::LittleIntToBytes($value << 2 | 1, 2);
-        } elseif ($value < 2 ** 30) {
+        } elseif (gmp_cmp($value, "1073741824") == -1) {
             return Utils::LittleIntToBytes($value << 2 | 2, 4);
-        } elseif ($value < 2 ** 536) {
+        } elseif (gmp_cmp($value, gmp_pow("2", 535)) == -1) {
             foreach (range(4, 67) as $i) {
-                if (2 ** (8 * ($i - 1)) <= $value && $value < 2 ** (8 * $i)) {
-                    return Utils::LittleIntToBytes(($i - 4) << 2 | 3, 1) . Utils::LittleIntToBytes($value, $i);
+                if (gmp_cmp($value, gmp_pow("2", 8 * ($i - 1))) != -1 && gmp_cmp($value, gmp_pow("2", 8 * $i)) == -1) {
+                    return Utils::LittleIntToBytes(($i - 4) << 2 | 3, 1) . Utils::LittleIntToHex($value, $i);
                 }
             }
         } else {

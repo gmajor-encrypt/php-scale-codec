@@ -3,6 +3,9 @@
 namespace Codec;
 
 
+use GMP;
+use BitWasp\Buffertools\Buffer;
+
 class Utils
 {
 
@@ -113,8 +116,6 @@ class Utils
                 return self::bytesToHex(array($value));
             case 2:
                 return self::bytesToHex(array($value, $value >> 8));
-            case 3:
-                return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 32));
             case 4:
                 return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 24));
             case 8:
@@ -133,5 +134,57 @@ class Utils
     {
         $fillUp = $length - strlen($val);
         return str_repeat("0", $fillUp) . $val;
+    }
+
+    /**
+     * @param GMP $value
+     * @param int $length
+     * @return string
+     * @throws \Exception
+     */
+    public static function LittleIntToHex (GMP $value, int $length)
+    {
+        $buffer = new Buffer(pack(
+            "H*",
+            str_pad(
+                gmp_strval(
+                    gmp_init(
+                        self::flipBits(str_pad(
+                            gmp_strval($value, 2),
+                            $length * 8,
+                            '0',
+                            STR_PAD_LEFT
+                        )),
+                        2
+                    ),
+                    16
+                ),
+                $length * 2,
+                '0',
+                STR_PAD_LEFT
+            )
+        ));
+        return self::trimHex($buffer->getHex());
+    }
+
+    /**
+     * @param string $bitString
+     * @return string
+     * @throws \Exception
+     */
+    public static function flipBits (string $bitString): string
+    {
+        $length = strlen($bitString);
+
+        if ($length % 8 !== 0) {
+            throw new \Exception('Bit string length must be a multiple of 8');
+        }
+
+        $newString = '';
+        for ($i = $length; $i >= 0; $i -= 8) {
+            $newString .= substr($bitString, $i, 8);
+        }
+
+        return $newString;
     }
 }

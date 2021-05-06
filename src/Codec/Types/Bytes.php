@@ -13,7 +13,7 @@ class Bytes extends ScaleInstance
      */
     function decode ()
     {
-        $length = $this->process("Compact<u32>", $this->data);
+        $length = $this->process("Compact", $this->data);
         return sprintf('%s', Utils::bytesToHex($this->nextBytes($length)));
     }
 

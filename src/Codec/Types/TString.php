@@ -13,7 +13,7 @@ class TString extends ScaleInstance
      */
     function decode ()
     {
-        $value = $this->nextBytes($this->process('Compact<u32>'));
+        $value = $this->nextBytes($this->process('Compact'));
         return Utils::byteArray2String($value);
     }
 

@@ -38,7 +38,7 @@ final class TypeTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals(null, $codec->process("Option", new ScaleBytes("00")));
         $this->assertEquals("00", $codec->createTypeByTypeString("Option")->encode(null));
-        $this->assertEquals("01fc", $codec->createTypeByTypeString("option<Compact<u32>>")->encode(63));
+        $this->assertEquals("01fc", $codec->createTypeByTypeString("option<Compact>")->encode(63));
         $this->assertEquals(true, $codec->process("Option<bool>", new ScaleBytes("01")));
         $this->assertEquals(false, $codec->process("Option<bool>", new ScaleBytes("02")));
         $this->assertEquals("01", $codec->createTypeByTypeString("Option<bool>")->encode(true));
@@ -51,6 +51,8 @@ final class TypeTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals("Test", $codec->process("String", new ScaleBytes("1054657374")));
         $this->assertEquals("1054657374", $codec->createTypeByTypeString("String")->encode("Test"));
+        $this->assertEquals("101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e", $codec->createTypeByTypeString("vec<String>")->encode(["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"]));
+        $this->assertEquals(["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"], $codec->process("Vec<String>", new ScaleBytes("101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e")));
     }
 
 
@@ -83,6 +85,7 @@ final class TypeTest extends TestCase
         $this->assertEquals(49, $codec->decode());
         $this->assertEquals("02", $codec->encode(49));
 
+
         $this->assertEquals("Twox64Concat", $codec->process("StorageHasher", new ScaleBytes("05")));
         $this->assertEquals("05", $codec->createTypeByTypeString("StorageHasher")->encode("Twox64Concat"));
         $this->assertEquals("a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270",
@@ -90,6 +93,11 @@ final class TypeTest extends TestCase
         $this->assertEquals("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270",
             $codec->createTypeByTypeString("GenericMultiAddress")->encode(["Id" => "a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"]));
 
+        $codec = $codec->createTypeByTypeString("Enum");
+        $codec->typeStruct = ["int" => "u8", "bool" => "bool"];
+        $codec->init(new ScaleBytes("0x002a"));
+        $this->assertEquals(42, $codec->decode());
+        $this->assertEquals("0101", $codec->encode(["bool" => true]));
     }
 
     public function testInt ()
@@ -103,6 +111,8 @@ final class TypeTest extends TestCase
         $this->assertEquals("30750000", $codec->createTypeByTypeString("I32")->encode(30000));
         $this->assertEquals("4611686018427388000", $codec->process("I64", new ScaleBytes("6000000000000040")));
         $this->assertEquals("d9d4110000000000", $codec->createTypeByTypeString("I64")->encode(1168601));
+        $this->assertEquals("11686011241241", $codec->process("i128", new ScaleBytes("19838cdca00a00000000000000000000")));
+        $this->assertEquals("19838cdca00a00000000000000000000", $codec->createTypeByTypeString("I128")->encode("11686011241241"));
         $this->expectExceptionMessage("range out i64");
         $codec->createTypeByTypeString("I64")->encode("18446744073709551616");
     }
@@ -111,7 +121,7 @@ final class TypeTest extends TestCase
     {
         $codec = new ScaleInstance(Base::create());
         $codec = $codec->createTypeByTypeString("Struct");
-        $codec->typeStruct = ["a" => "Compact<u32>", "b" => "Compact<u32>"];
+        $codec->typeStruct = ["a" => "Compact", "b" => "Compact"];
         $codec->init(new ScaleBytes("0c00"));
         $this->assertEquals(["a" => 3, "b" => 0], $codec->decode());
 
@@ -161,6 +171,14 @@ final class TypeTest extends TestCase
         $this->assertEquals([1, 2, 3], $codec->decode());
         $codec->FixedLength = 1;
         $this->assertEquals("01020304", $codec->encode([1, 2, 3, 4]));
+    }
+
+
+    public function testTuples ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(["col1" => 1, "col2" => 400, "col3" => 800000], $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00")));
+        $this->assertEquals("01900100350c00", $codec->createTypeByTypeString("(u8, u16, u32)")->encode(["col1" => 1, "col2" => 400, "col3" => 800000]));
     }
 }
 

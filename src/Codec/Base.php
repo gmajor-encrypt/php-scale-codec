@@ -27,7 +27,7 @@ class Base
         "StorageHasher",
         "H256",
         "GenericMultiAddress",
-        "I8", "I16", "I32", "I64",
+        "I8", "I16", "I32", "I64", "I128",
         "Metadata",
         "metadataV12",
         "V12Module"

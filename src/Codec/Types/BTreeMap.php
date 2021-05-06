@@ -9,7 +9,7 @@ class BTreeMap extends ScaleInstance
 
     function decode ()
     {
-        $VecLength = $this->process("Compact<u32>", $this->data);
+        $VecLength = $this->process("Compact", $this->data);
         $value = [];
         for ($i = 0; $i < $VecLength; $i++) {
             $subType = explode(",", $this->subType);

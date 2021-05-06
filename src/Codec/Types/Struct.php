@@ -21,7 +21,7 @@ class Struct extends ScaleInstance
         $value = "";
         foreach ($this->typeStruct as $index => $dataType) {
             if (!array_key_exists($index, $param)) {
-                return new \InvalidArgumentException(sprintf('%v not in Struct', $index));
+                return new \InvalidArgumentException(sprintf('%d not in Struct', $index));
             }
             $subInstant = $this->createTypeByTypeString($dataType);
             $value = $value . $subInstant->encode($param[$index]);

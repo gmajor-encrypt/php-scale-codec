@@ -7,7 +7,6 @@ use BitWasp\Buffertools\ByteOrder;
 use BitWasp\Buffertools\Parser;
 use BitWasp\Buffertools\Types\Int64;
 use Codec\Utils;
-use mysql_xdevapi\Exception;
 
 class I64 extends TInt
 {

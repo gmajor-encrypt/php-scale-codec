@@ -92,12 +92,11 @@ class ScaleInstance implements CodecInterface
     /**
      * buildStructMapping
      */
-    protected function buildStructMapping ()
+    protected function buildTuplesMapping ()
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
-            $colKey = $key + 1;
-            $typeStruct["col$colKey"] = str_replace(';', ',', trim($element));
+            array_push($typeStruct, str_replace(';', ',', trim($element)));
         }
         $this->typeStruct = $typeStruct;
     }
@@ -151,9 +150,9 @@ class ScaleInstance implements CodecInterface
         }
 
         if ($typeString[0] == '(' && $typeString[-1] == ')') {
-            $struct = $this->generator->getRegistry('struct');
+            $struct = $this->generator->getRegistry('tuples');
             $struct->typeString = $typeString;
-            $struct->buildStructMapping();
+            $struct->buildTuplesMapping();
             return $struct;
         }
 

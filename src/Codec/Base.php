@@ -30,7 +30,8 @@ class Base
         "I8", "I16", "I32", "I64", "I128",
         "Metadata",
         "metadataV12",
-        "V12Module"
+        "V12Module",
+        "Tuples",
     );
 
     /**

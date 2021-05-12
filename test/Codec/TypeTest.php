@@ -69,8 +69,8 @@ final class TypeTest extends TestCase
         $this->assertEquals("ffff", Utils::bytesToHex($codec->process("Vec<u8>", new ScaleBytes("08ffff"))));
         $this->assertEquals("08ffff", $codec->createTypeByTypeString("Vec<u8>")->encode(Utils::hexToBytes("ffff")));
         $this->assertEquals([
-            ["col1" => 716, "col2" => 47054848, "col3" => 0],
-            ["col1" => 256, "col2" => 0, "col3" => 0]], $codec->process("Vec<(u32, u32, u16)>", new ScaleBytes("08cc0200000000ce0200000001")));
+            [716, 47054848, 0],
+            [256, 0, 0]], $codec->process("Vec<(u32, u32, u16)>", new ScaleBytes("08cc0200000000ce0200000001")));
         $this->assertEquals("1001000000020000000300000004000000", $codec->createTypeByTypeString("Vec<u32>")->encode([1, 2, 3, 4]));
     }
 
@@ -177,8 +177,8 @@ final class TypeTest extends TestCase
     public function testTuples ()
     {
         $codec = new ScaleInstance(Base::create());
-        $this->assertEquals(["col1" => 1, "col2" => 400, "col3" => 800000], $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00")));
-        $this->assertEquals("01900100350c00", $codec->createTypeByTypeString("(u8, u16, u32)")->encode(["col1" => 1, "col2" => 400, "col3" => 800000]));
+        $this->assertEquals([1, 400, 800000], $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00")));
+        $this->assertEquals("01900100350c00", $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]));
     }
 }
 

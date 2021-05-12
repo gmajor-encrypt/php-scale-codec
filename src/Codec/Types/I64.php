@@ -19,7 +19,10 @@ class I64 extends TInt
 
     function encode ($param)
     {
-        $value = strval($param);
+        $value = $param;
+        if (gettype($value) == "double") {
+            throw new \InvalidArgumentException("value must be of type GMP|string|int, float given");
+        }
         try {
             $i64 = new Int64(ByteOrder::LE);
             $buffer = new Buffer($i64->write($value));

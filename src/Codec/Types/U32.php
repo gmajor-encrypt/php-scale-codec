@@ -2,7 +2,6 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 class U32 extends Uint

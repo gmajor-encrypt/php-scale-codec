@@ -13,8 +13,8 @@ class U128 extends Uint
 
     function decode ()
     {
-        $u128 = new Uint128(ByteOrder::LE);
-        return $u128->read(new Parser(Utils::bytesToHex($this->nextBytes(16))));
+        $parser = new Parser(Utils::bytesToHex($this->nextBytes(16)));
+        return $parser->readBytes(16)->getGmp();
     }
 
     function encode ($param)

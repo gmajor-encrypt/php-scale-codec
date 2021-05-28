@@ -2,6 +2,7 @@
 
 namespace Codec\Types;
 
+use BitWasp\Buffertools\Parser;
 use Codec\ScaleBytes;
 use Codec\Utils;
 use GMP;
@@ -19,7 +20,8 @@ class Compact extends ScaleInstance
     protected $compactBytes;
 
     /**
-     * @return array|int|mixed
+     * @return GMP|integer
+     * @throws \Exception
      */
     public function decode ()
     {
@@ -31,12 +33,13 @@ class Compact extends ScaleInstance
                 break;
             }
         }
-        $data = $this->process("U{$UIntBitLength}", new ScaleBytes($this->compactBytes));
-        if (is_int($data) && $this->compactLength <= 4) {
-            return intval($data / 4);
-        } else {
-            return $data;
+        $compactBytes = new ScaleBytes($this->compactBytes);
+        if ($this->compactLength <= 4) {
+            return intval($this->process("U{$UIntBitLength}", $compactBytes) / 4);
         }
+        $parser = new Parser(Utils::bytesToHex($compactBytes->nextBytes($UIntBitLength / 8)));
+        $value = $parser->readBytes($UIntBitLength / 8)->getGmp();
+        return $value;
     }
 
 
@@ -93,11 +96,11 @@ class Compact extends ScaleInstance
             throw new \InvalidArgumentException("value must be of type GMP|string|int, float given");
         }
         if (gmp_sub($value, "64") < 0) {
-            return Utils::LittleIntToBytes($value << 2, 1);
+            return Utils::LittleIntToHex(gmp_init($value << 2), 1);
         } elseif (gmp_sub($value, "16384") < 0) {
-            return Utils::LittleIntToBytes($value << 2 | 1, 2);
+            return Utils::LittleIntToHex(gmp_init($value << 2 | 1), 2);
         } elseif (gmp_sub($value, "1073741824") < 0) {
-            return Utils::LittleIntToBytes($value << 2 | 2, 4);
+            return Utils::LittleIntToHex(gmp_init($value << 2 | 2), 4);
         } elseif (gmp_sub($value, gmp_pow("2", 535)) < 0) {
             foreach (range(4, 67) as $i) {
                 if (gmp_cmp($value, gmp_pow("2", 8 * ($i - 1))) != -1 && gmp_cmp($value, gmp_pow("2", 8 * $i)) == -1) {

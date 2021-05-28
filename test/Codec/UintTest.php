@@ -53,7 +53,7 @@ final class UintTest extends TestCase
     public function testU128 ()
     {
         $codec = new ScaleInstance(Base::create());
-        $this->assertEquals(739571955075788261, $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000")));
+        $this->assertEquals(gmp_init("739571955075788261"), $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000")));
         $codec = $codec->createTypeByTypeString("U128");
         $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
 

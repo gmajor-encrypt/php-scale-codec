@@ -44,7 +44,7 @@ $codec->process("U64", new ScaleBytes("471b47acc5a70000"));
 $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
 
 // Compact Support Compact int or other Mixed type, like Compact<Balance>
-$codec->process("Compact<u32>", new ScaleBytes("02093d00"));
+$codec->process("Compact", new ScaleBytes("02093d00"));
 
 // Address Support Address/Account Id/MultiAddress
 $codec->process("Address", new ScaleBytes("ff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318"));
@@ -73,6 +73,9 @@ $codec =$codec->createTypeByTypeString("Struct");
 $codec->typeStruct = ["a" => "Compact<u32>", "b" => "Compact<u32>"];
 $codec->init(new ScaleBytes("0c00"));
 $codec->decode();
+
+// Tuple
+$codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00"));
 ```
 
 ### Encode
@@ -98,7 +101,7 @@ $codec->createTypeByTypeString("Compact")->encode(2503000000000000000);
 $codec->createTypeByTypeString("Address")->encode("1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318");
 
 // Option
-$codec->createTypeByTypeString("option<Compact<u32>>")->encode(63);
+$codec->createTypeByTypeString("option<Compact>")->encode(63);
 
 // String
 $codec->createTypeByTypeString("String")->encode("Test");
@@ -116,10 +119,12 @@ $codec->encode(49);
 
 // Struct
 $codec =$codec->createTypeByTypeString("Struct");
-$codec->typeStruct = ["a" => "Compact<u32>", "b" => "Compact<u32>"];
+$codec->typeStruct = ["a" => "Compact", "b" => "Compact"];
 $codec->encode(["a" => 3, "b" => 0]);
-```
 
+// Tuple
+$codec = $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]);
+```
 ### Example
 
 More examples can refer to the test file https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/TypeTest.php

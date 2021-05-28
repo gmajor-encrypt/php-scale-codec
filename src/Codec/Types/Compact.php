@@ -25,12 +25,10 @@ class Compact extends ScaleInstance
     {
         self::checkCompactBytes();
         $UIntBitLength = 8 * $this->compactLength;
-        if ($this->compactLength > 8) {
-            foreach (range(4, 67) as $i) {
-                if ($UIntBitLength >= 2 ** ($i - 1) && $UIntBitLength < 2 ** $i) {
-                    $UIntBitLength = 2 ** ($i - 1);
-                    break;
-                }
+        foreach (range(4, 67) as $i) {
+            if ($UIntBitLength >= 2 ** ($i - 1) && $UIntBitLength < 2 ** $i) {
+                $UIntBitLength = 2 ** ($i - 1);
+                break;
             }
         }
         $data = $this->process("U{$UIntBitLength}", new ScaleBytes($this->compactBytes));

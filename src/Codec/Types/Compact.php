@@ -92,8 +92,13 @@ class Compact extends ScaleInstance
     public function encode ($param)
     {
         $value = $param;
-        if (gettype($value) == "double") {
-            throw new \InvalidArgumentException("value must be of type GMP|string|int, float given");
+        if (!in_array(gettype($value), ["integer", "string", "object"])) {
+            throw new \InvalidArgumentException("value must be one of type GMP|string|int");
+        }
+        if (gettype($value) == "object" && get_class($value) != "GMP") {
+            throw new \InvalidArgumentException("value must be one of type GMP|string|int");
+        } else {
+            $value = gmp_sub($value, "1073741824") < 0 ? gmp_intval($value) : $value;
         }
         if (gmp_sub($value, "64") < 0) {
             return Utils::LittleIntToHex(gmp_init($value << 2), 1);

@@ -86,7 +86,7 @@ use Codec\Base;
 use Codec\Types\ScaleInstance;
 
 $codec = new ScaleInstance(Base::create());
-// uint, encode support U8,U16,U32,U64,U128, Note that php int type support needs to be less than 9223372036854775807, 
+// uint, encode support U8, U16, U32, U64, U128, Note that php int type support needs to be less than 9223372036854775807, 
 // if it exceeds, it needs to be changed to string type
 $codec->createTypeByTypeString("U8")->encode(300);
 $codec->createTypeByTypeString("U16")->encode(5000);
@@ -95,6 +95,8 @@ $codec->createTypeByTypeString("U64")->encode(184467440737095);
 $codec->createTypeByTypeString("U128")->encode(739571955075788261);
 
 // Compact
+// Compact encode only support Int/GMP, if value is greater than 1073741823 (2**30-1), please use GMP type
+// https://www.php.net/manual/en/function.gmp-init.php
 $codec->createTypeByTypeString("Compact")->encode(2503000000000000000);
 
 // Address
@@ -107,7 +109,7 @@ $codec->createTypeByTypeString("option<Compact>")->encode(63);
 $codec->createTypeByTypeString("String")->encode("Test");
 
 // Bytes
- $codec->createTypeByTypeString("Bytes")->encode("0xffff");
+$codec->createTypeByTypeString("Bytes")->encode("0xffff");
 
 // Vec
 $codec->createTypeByTypeString("Vec<u32>")->encode([1, 2, 3, 4]);
@@ -138,8 +140,8 @@ make test
 
 ## Resources
 
-- [polkadot.js](http://polkadot.js.org/)
-- [polkascan](https://github.com/polkascan)
+- [Polkadot.js](http://polkadot.js.org/)
+- [Polkascan](https://github.com/polkascan/py-scale-codec)
 - [scale.go](https://github.com/itering/scale.go)
 - [substrate.dev](https://substrate.dev/docs/en/knowledgebase/advanced/codec)
 

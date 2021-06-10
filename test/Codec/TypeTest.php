@@ -88,7 +88,7 @@ final class TypeTest extends TestCase
 
         $this->assertEquals("Twox64Concat", $codec->process("StorageHasher", new ScaleBytes("05")));
         $this->assertEquals("05", $codec->createTypeByTypeString("StorageHasher")->encode("Twox64Concat"));
-        $this->assertEquals("a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270",
+        $this->assertEquals(["Id" => "a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"],
             $codec->process("GenericMultiAddress", new ScaleBytes("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270")));
         $this->assertEquals("00a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270",
             $codec->createTypeByTypeString("GenericMultiAddress")->encode(["Id" => "a6659e4c3f22c2aa97d54a36e31ab57a617af62bd43ec62ed570771492069270"]));
@@ -96,7 +96,7 @@ final class TypeTest extends TestCase
         $codec = $codec->createTypeByTypeString("Enum");
         $codec->typeStruct = ["int" => "u8", "bool" => "bool"];
         $codec->init(new ScaleBytes("0x002a"));
-        $this->assertEquals(42, $codec->decode());
+        $this->assertEquals(["int" => 42], $codec->decode());
         $this->assertEquals("0101", $codec->encode(["bool" => true]));
     }
 
@@ -123,7 +123,7 @@ final class TypeTest extends TestCase
         $codec = $codec->createTypeByTypeString("Struct");
         $codec->typeStruct = ["a" => "Compact", "b" => "Compact"];
         $codec->init(new ScaleBytes("0c00"));
-        $this->assertEquals(["a" => 3, "b" => 0], $codec->decode());
+        $this->assertEquals(["a" => gmp_init(3), "b" => gmp_init(0)], $codec->decode());
 
         $this->assertEquals("0c00", $codec->encode(["a" => 3, "b" => 0]));
     }

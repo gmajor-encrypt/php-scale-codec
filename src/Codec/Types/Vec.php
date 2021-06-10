@@ -24,7 +24,7 @@ class Vec extends ScaleInstance
             return new \InvalidArgumentException(sprintf('%v not array', $param));
         }
 
-        $instant = $this->createTypeByTypeString("Compact");
+        $instant = $this->createTypeByTypeString("Compact<u32>");
         $length = $instant->encode(count($param));
 
         $value = $length;

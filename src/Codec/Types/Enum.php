@@ -16,7 +16,7 @@ class Enum extends ScaleInstance
                 $index = 0;
                 foreach ($this->typeStruct as $key => $item) {
                     if ($EnumIndex == $index) {
-                        return $this->process($item);
+                        return [$key => $this->process($item)];
                     }
                     $index++;
                 }

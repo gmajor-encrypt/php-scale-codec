@@ -44,6 +44,7 @@ $codec->process("U64", new ScaleBytes("471b47acc5a70000"));
 $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"));
 
 // Compact Support Compact int or other Mixed type, like Compact<Balance>
+// Compact decode always return GMP type 
 $codec->process("Compact", new ScaleBytes("02093d00"));
 
 // Address Support Address/Account Id/MultiAddress

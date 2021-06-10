@@ -13,7 +13,7 @@ class Bytes extends ScaleInstance
      */
     function decode ()
     {
-        $length = $this->process("Compact", $this->data);
+        $length = gmp_intval($this->process("Compact", $this->data));
         return sprintf('%s', Utils::bytesToHex($this->nextBytes($length)));
     }
 

@@ -18,10 +18,10 @@ final class CompactTest extends TestCase
 
         // u8
         $this->assertEquals("fd03", $codec->createTypeByTypeString("Compact")->encode(2 ** 8 - 1));
-        $this->assertEquals(2 ** 8 - 1, $codec->process("Compact", new ScaleBytes("fd03")));
+        $this->assertEquals(gmp_sub(gmp_pow("2", 8), 1), $codec->process("Compact", new ScaleBytes("fd03")));
         // u16
         $this->assertEquals("feff0300", $codec->createTypeByTypeString("Compact")->encode(2 ** 16 - 1));
-        $this->assertEquals(2 ** 16 - 1, $codec->process("Compact", new ScaleBytes("feff0300")));
+        $this->assertEquals(gmp_sub(gmp_pow("2", 16), 1), $codec->process("Compact", new ScaleBytes("feff0300")));
         // u32
         $this->assertEquals("03ffffffff", $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 32), 1)));
         $this->assertEquals(gmp_sub(gmp_pow("2", 32), 1), $codec->process("Compact", new ScaleBytes("03ffffffff")));
@@ -35,13 +35,13 @@ final class CompactTest extends TestCase
         $this->assertEquals("73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 256), 1)));
         $this->assertEquals(gmp_sub(gmp_pow("2", 256), 1), $codec->process("Compact", new ScaleBytes("73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")));
         // u512
-        $this->assertEquals("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
-            $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 535), 1)));
-        $this->assertEquals(gmp_sub(gmp_pow("2", 535), 1), $codec->process("Compact", new ScaleBytes("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f")));
+        $this->assertEquals("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 536), 1)));
+        $this->assertEquals(gmp_sub(gmp_pow("2", 536), 1), $codec->process("Compact", new ScaleBytes("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")));
 
-        // check out of range > 2**535-1
+        // check out of range > 2**536-1
         $this->expectException(\OutOfRangeException::class);
-        $codec->createTypeByTypeString("Compact")->encode(gmp_pow("2", 535));
+        $codec->createTypeByTypeString("Compact")->encode(gmp_pow("2", 536));
     }
 
 }

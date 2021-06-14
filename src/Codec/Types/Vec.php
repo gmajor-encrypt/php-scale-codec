@@ -9,7 +9,7 @@ class Vec extends ScaleInstance
 
     public function decode(): array
     {
-        $VecLength = $this->process("Compact", $this->data);
+        $VecLength = $this->process("Compact<u32>", $this->data);
         $value = [];
         for ($i = 0; $i < $VecLength; $i++) {
             array_push($value, $this->process($this->subType));

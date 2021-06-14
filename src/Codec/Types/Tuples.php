@@ -2,12 +2,11 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
 
 class Tuples extends ScaleInstance
 {
 
-    function decode ()
+    public function decode (): array
     {
         $result = array();
         foreach ($this->typeStruct as $index => $item) {
@@ -16,7 +15,7 @@ class Tuples extends ScaleInstance
         return $result;
     }
 
-    function encode ($param)
+    public function encode ($param): string
     {
         $value = "";
         foreach ($this->typeStruct as $index => $dataType) {

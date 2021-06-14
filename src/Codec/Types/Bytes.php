@@ -2,7 +2,6 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 class Bytes extends ScaleInstance
@@ -11,7 +10,7 @@ class Bytes extends ScaleInstance
      * @return mixed|string
      * also return bytes
      */
-    function decode ()
+    public function decode(): string
     {
         $length = gmp_intval($this->process("Compact", $this->data));
         return sprintf('%s', Utils::bytesToHex($this->nextBytes($length)));
@@ -22,7 +21,7 @@ class Bytes extends ScaleInstance
      * @param $param
      * @return mixed|string|null
      */
-    function encode ($param)
+    public function encode($param): ?string
     {
         $value = Utils::trimHex($param);
         $instant = $this->createTypeByTypeString("Compact");

@@ -2,12 +2,13 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
+
+use InvalidArgumentException;
 
 class Struct extends ScaleInstance
 {
 
-    function decode ()
+    public function decode(): array
     {
         $result = array();
         foreach ($this->typeStruct as $index => $item) {
@@ -16,12 +17,12 @@ class Struct extends ScaleInstance
         return $result;
     }
 
-    function encode ($param)
+    public function encode($param)
     {
         $value = "";
         foreach ($this->typeStruct as $index => $dataType) {
             if (!array_key_exists($index, $param)) {
-                return new \InvalidArgumentException(sprintf('%d not in Struct', $index));
+                return new InvalidArgumentException(sprintf('%d not in Struct', $index));
             }
             $subInstant = $this->createTypeByTypeString($dataType);
             $value = $value . $subInstant->encode($param[$index]);

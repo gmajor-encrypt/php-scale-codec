@@ -216,7 +216,7 @@ class ScaleInstance implements CodecInterface
      */
     public function decode ()
     {
-        return null;
+        return;
         // TODO: Implement decode() method.
     }
 

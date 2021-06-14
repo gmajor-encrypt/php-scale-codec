@@ -22,7 +22,7 @@ class V12Module extends ScaleInstance
     public $index;
 
 
-    public function decode ()
+    public function decode (): array
     {
         $this->name = $this->process("String");
 

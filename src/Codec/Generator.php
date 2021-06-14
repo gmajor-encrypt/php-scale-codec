@@ -22,7 +22,7 @@ class Generator
     /**
      * @return array
      */
-    public function getScaleType ()
+    public function getScaleType (): array
     {
         return $this->scale_type;
     }

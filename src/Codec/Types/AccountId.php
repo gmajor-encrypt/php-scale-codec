@@ -3,20 +3,18 @@
 
 namespace Codec\Types;
 
-use Codec\ScaleBytes;
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 
 class AccountId extends ScaleInstance
 {
-    public function decode ()
+    public function decode(): string
     {
         return sprintf('%s', Utils::bytesToHex($this->nextBytes(32)));
     }
 
 
-    function encode ($param)
+    public function encode($param)
     {
         return Utils::trimHex($param);
     }

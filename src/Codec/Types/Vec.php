@@ -2,12 +2,12 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
+use InvalidArgumentException;
 
 class Vec extends ScaleInstance
 {
 
-    function decode ()
+    public function decode(): array
     {
         $VecLength = $this->process("Compact", $this->data);
         $value = [];
@@ -18,10 +18,10 @@ class Vec extends ScaleInstance
     }
 
 
-    function encode ($param)
+    public function encode($param)
     {
         if (!is_array($param)) {
-            return new \InvalidArgumentException(sprintf('%v not array', $param));
+            return new InvalidArgumentException(sprintf('%v not array', $param));
         }
 
         $instant = $this->createTypeByTypeString("Compact<u32>");

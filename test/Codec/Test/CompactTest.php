@@ -24,7 +24,7 @@ final class CompactTest extends TestCase
         $this->assertEquals(gmp_sub(gmp_pow("2", 16), 1), $codec->process("Compact", new ScaleBytes("feff0300")));
         // u32
         $this->assertEquals("03ffffffff", $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 32), 1)));
-        $this->assertEquals(gmp_sub(gmp_pow("2", 32), 1), $codec->process("Compact", new ScaleBytes("03ffffffff")));
+        $this->assertEquals(gmp_sub(gmp_pow("2", 32), 1), $codec->process("Compact<u32>", new ScaleBytes("03ffffffff")));
         // u64
         $this->assertEquals("13ffffffffffffffff", $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 64), 1)));
         $this->assertEquals(gmp_sub(gmp_pow("2", 64), 1), $codec->process("Compact", new ScaleBytes("13ffffffffffffffff")));

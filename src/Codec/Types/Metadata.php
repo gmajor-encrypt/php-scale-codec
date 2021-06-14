@@ -4,6 +4,7 @@ namespace Codec\Types;
 
 
 use Codec\Utils;
+use InvalidArgumentException;
 
 class Metadata extends ScaleInstance
 {
@@ -14,7 +15,7 @@ class Metadata extends ScaleInstance
         12 => "metadataV12"
     ];
 
-    function decode ()
+    public function decode()
     {
         if (Utils::byteArray2String($this->nextBytes(4)) === "meta") {
             $this->version = hexdec(Utils::bytesToHex($this->nextBytes(1)));
@@ -22,10 +23,10 @@ class Metadata extends ScaleInstance
             if (!empty($this->metadataVersion[$this->version])) {
                 $this->metadata = $this->process($this->metadataVersion[$this->version]);
             } else {
-                throw new \InvalidArgumentException(sprintf('only support metadata v12'));
+                throw new InvalidArgumentException(sprintf('only support metadata v12'));
             }
         } else {
-            throw new \InvalidArgumentException(sprintf('decode runtime metadata fail'));
+            throw new InvalidArgumentException(sprintf('decode runtime metadata fail'));
         }
     }
 }

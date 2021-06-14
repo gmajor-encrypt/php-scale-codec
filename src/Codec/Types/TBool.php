@@ -2,8 +2,6 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
-
 class TBool extends ScaleInstance
 {
 
@@ -12,7 +10,7 @@ class TBool extends ScaleInstance
      *
      * @return bool
      */
-    function decode()
+    public function decode(): bool
     {
         return $this->nextBool();
     }
@@ -21,7 +19,7 @@ class TBool extends ScaleInstance
      * @param mixed $param
      * @return string
      */
-    function encode($param)
+    public function encode($param): string
     {
         return $param == true ? "01" : "00";
     }

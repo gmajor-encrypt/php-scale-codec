@@ -11,13 +11,13 @@ use Codec\Utils;
 class I128 extends TInt
 {
 
-    function decode ()
+    public function decode()
     {
         $i64 = new Int128(ByteOrder::LE);
         return $i64->read(new Parser(Utils::bytesToHex($this->nextBytes(16))));
     }
 
-    function encode ($param)
+    public function encode($param)
     {
         $value = $param;
         try {

@@ -28,7 +28,7 @@ class Compact extends ScaleInstance
         self::checkCompactBytes();
         if (!empty($this->subType)) {
             $data = $this->process($this->subType, new ScaleBytes($this->compactBytes));
-            return (is_int($data) && $this->compactLength <= 4) ? gmp_init(intval($data / 4)) : $data;
+            return (is_int($data) && $this->compactLength <= 4) ? Utils::ConvertGMP(intval($data / 4)) : Utils::ConvertGMP($data);
         }
         $UIntBitLength = 8 * $this->compactLength;
         foreach (range(4, 67) as $i) {

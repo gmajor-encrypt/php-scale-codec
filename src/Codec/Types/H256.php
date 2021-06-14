@@ -7,15 +7,14 @@ use Codec\Utils;
 class H256 extends Bytes
 {
 
-    function decode ()
+    public function decode(): string
     {
         return sprintf('%s', Utils::bytesToHex($this->nextBytes(32)));
     }
 
-    function encode ($param)
+    public function encode($param): string
     {
-        $value = Utils::trimHex($param);
-        return $value;
+        return Utils::trimHex($param);
     }
 
 }

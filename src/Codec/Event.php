@@ -4,7 +4,7 @@ namespace Codec;
 
 use Codec\Types\ScaleInstance;
 
-class event extends ScaleInstance
+class Event extends ScaleInstance
 {
     // Todo
 }

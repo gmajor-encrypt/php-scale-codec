@@ -3,14 +3,13 @@
 
 namespace Codec\Types;
 
-use Codec\ScaleBytes;
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
+use InvalidArgumentException;
 
 
 class Address extends ScaleInstance
 {
-    public function decode ()
+    public function decode(): string
     {
         $accountLength = $this->data->nextBytes(1);
         switch (Utils::bytesToHex($accountLength)) {
@@ -30,13 +29,13 @@ class Address extends ScaleInstance
     }
 
 
-    function encode ($param)
+    public function encode($param): string
     {
         $value = Utils::trimHex($param);
         if (strlen($value) == 64) {
             return "ff" . $value;
         } else {
-            throw new \InvalidArgumentException(sprintf('Address not support AccountIndex or param not AccountId'));
+            throw new InvalidArgumentException(sprintf('Address not support AccountIndex or param not AccountId'));
         }
     }
 }

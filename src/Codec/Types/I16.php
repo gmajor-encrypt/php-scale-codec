@@ -7,17 +7,18 @@ use BitWasp\Buffertools\ByteOrder;
 use BitWasp\Buffertools\Parser;
 use BitWasp\Buffertools\Types\Int16;
 use Codec\Utils;
+use InvalidArgumentException;
 
 class I16 extends TInt
 {
 
-    function decode ()
+    public function decode()
     {
         $i16 = new Int16(ByteOrder::LE);
         return $i16->read(new Parser(Utils::bytesToHex($this->nextBytes(2))));
     }
 
-    function encode ($param)
+    public function encode($param)
     {
         $value = intval($param);
 
@@ -26,7 +27,7 @@ class I16 extends TInt
             $buffer = new Buffer($i16->write($value));
             return Utils::trimHex($buffer->getHex());
         }
-        throw new \InvalidArgumentException(sprintf('%s range out i16', $value));
+        throw new InvalidArgumentException(sprintf('%s range out i16', $value));
     }
 
 }

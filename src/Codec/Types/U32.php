@@ -3,21 +3,22 @@
 namespace Codec\Types;
 
 use Codec\Utils;
+use InvalidArgumentException;
 
 class U32 extends Uint
 {
-    function decode()
+    public function decode(): int
     {
         return Utils::bytesToLittleInt($this->nextBytes(4));
     }
 
-    function encode ($param)
+    public function encode($param)
     {
         $value = intval($param);
-        if ($value >= 0 && $value <= 2**32 - 1) {
+        if ($value >= 0 && $value <= 2 ** 32 - 1) {
             return Utils::LittleIntToBytes($value, 4);
         }
-        throw new \InvalidArgumentException(sprintf('%s range out U32', $value));
+        throw new InvalidArgumentException(sprintf('%s range out U32', $value));
     }
 }
 

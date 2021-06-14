@@ -3,9 +3,11 @@
 namespace Codec;
 
 
+use InvalidArgumentException;
+
 class Base
 {
-    const DEFAULT_NETWORK = 'default';
+    public const DEFAULT_NETWORK = 'default';
 
     protected static $defaultScaleTypes = array(
         "Compact",
@@ -41,7 +43,7 @@ class Base
      *
      * @return Generator
      */
-    public static function create ($network = "")
+    public static function create ($network = ""): Generator
     {
         $generator = new Generator();
         foreach (static::$defaultScaleTypes as $scaleType) {
@@ -57,7 +59,7 @@ class Base
      * @param string $network
      * @return string
      */
-    public static function getScaleCodecClassname ($scaleType, $network = '')
+    public static function getScaleCodecClassname (string $scaleType, $network = ''): string
     {
         if ($providerClass = self::findScaleCodecClassname($scaleType, $network)) {
             return $providerClass;
@@ -73,7 +75,7 @@ class Base
         if ($providerClass = self::findScaleCodecClassname($scaleType)) {
             return $providerClass;
         }
-        throw new \InvalidArgumentException(sprintf('Unable to find provider "%s" with network "%s"', $scaleType, $network));
+        throw new InvalidArgumentException(sprintf('Unable to find provider "%s" with network "%s"', $scaleType, $network));
     }
 
     /**
@@ -81,7 +83,7 @@ class Base
      * @param string $network
      * @return string
      */
-    protected static function findScaleCodecClassname ($scaleType, $network = '')
+    protected static function findScaleCodecClassname (string $scaleType, $network = ''): string
     {
         $providerClass = 'Codec\\' . ($network ? sprintf('Types\%s\%s', $scaleType, $network) : sprintf('Types\%s', $scaleType));
         if (class_exists($providerClass, true)) {

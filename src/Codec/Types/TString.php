@@ -2,22 +2,20 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
-use SebastianBergmann\CodeCoverage\Util;
 
 class TString extends ScaleInstance
 {
     /**
      * @return mixed|void
      */
-    function decode ()
+    public function decode()
     {
         $value = $this->nextBytes(gmp_intval($this->process('Compact')));
         return Utils::byteArray2String($value);
     }
 
-    function encode ($param)
+    public function encode($param): string
     {
         $instant = $this->createTypeByTypeString("Compact");
         $length = $instant->encode(strlen($param));

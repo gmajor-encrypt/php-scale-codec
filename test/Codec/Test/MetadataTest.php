@@ -4,8 +4,6 @@
 namespace Codec\Test;
 
 use Codec\Base;
-use Codec\ScaleBytes;
-use Codec\Test\Constant;
 
 use PHPUnit\Framework\TestCase;
 

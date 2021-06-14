@@ -5,10 +5,9 @@ namespace Codec\Types;
 
 use Codec\Generator;
 
-
 class GenericMultiAddress extends Enum
 {
-    public function __construct (Generator $generator)
+    public function __construct(Generator $generator)
     {
         parent::__construct($generator);
         $this->typeStruct = [

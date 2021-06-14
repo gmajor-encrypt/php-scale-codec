@@ -3,8 +3,11 @@
 namespace Codec;
 
 
+use Exception;
 use GMP;
 use BitWasp\Buffertools\Buffer;
+use InvalidArgumentException;
+use OutOfRangeException;
 
 class Utils
 {
@@ -13,7 +16,7 @@ class Utils
      * @param string $str
      * @return array|false
      */
-    public static function string2ByteArray ($str)
+    public static function string2ByteArray (string $str)
     {
         return unpack('C*', $str);
     }
@@ -23,7 +26,7 @@ class Utils
      * @param $bytes
      * @return string
      */
-    public static function byteArray2String ($bytes)
+    public static function byteArray2String ($bytes): string
     {
         $chars = array_map("chr", $bytes);
         return join($chars);
@@ -33,7 +36,7 @@ class Utils
      * @param array $bytes
      * @return string
      */
-    public static function bytesToHex ($bytes)
+    public static function bytesToHex (array $bytes): string
     {
         $chars = array_map("chr", $bytes);
         $bin = join($chars);
@@ -44,7 +47,7 @@ class Utils
      * @param $hex
      * @return array
      */
-    public static function hexToBytes ($hex)
+    public static function hexToBytes ($hex): array
     {
         $string = hex2bin($hex);
         $value = unpack('C*', $string);
@@ -55,7 +58,7 @@ class Utils
      * @param string $string
      * @return string
      */
-    public static function string2Hex (string $string)
+    public static function string2Hex (string $string): string
     {
         return bin2hex($string);
     }
@@ -74,7 +77,7 @@ class Utils
      * @param $hexString string
      * @return string|string[]|null
      */
-    public static function trimHex ($hexString)
+    public static function trimHex (string $hexString)
     {
         return preg_replace('/0x/', '', $hexString);
     }
@@ -88,7 +91,7 @@ class Utils
      *
      *
      */
-    public static function bytesToLittleInt (array $byteArray)
+    public static function bytesToLittleInt (array $byteArray): int
     {
         switch (count($byteArray)) {
             case 1:
@@ -121,7 +124,7 @@ class Utils
             case 8:
                 return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 24, $value >> 32, $value >> 40, $value >> 48, $value >> 56));
             default:
-                return new \OutOfRangeException(sprintf('LittleIntToBytes'));
+                return new OutOfRangeException(sprintf('LittleIntToBytes'));
         }
     }
 
@@ -130,7 +133,7 @@ class Utils
      * @param int $length
      * @return mixed
      */
-    public static function padLeft (string $val, int $length)
+    public static function padLeft (string $val, int $length): string
     {
         $fillUp = $length - strlen($val);
         return str_repeat("0", $fillUp) . $val;
@@ -140,7 +143,7 @@ class Utils
      * @param GMP $value
      * @param int $length
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function LittleIntToHex (GMP $value, int $length)
     {
@@ -170,14 +173,14 @@ class Utils
     /**
      * @param string $bitString
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function flipBits (string $bitString): string
     {
         $length = strlen($bitString);
 
         if ($length % 8 !== 0) {
-            throw new \Exception('Bit string length must be a multiple of 8');
+            throw new Exception('Bit string length must be a multiple of 8');
         }
 
         $newString = '';
@@ -186,5 +189,21 @@ class Utils
         }
 
         return $newString;
+    }
+
+    /**
+     * @param int|string|GMP $value
+     * @return GMP
+     */
+
+    public static function ConvertGMP($value):GMP
+    {
+        if (!in_array(gettype($value), ["integer", "string", "object"])) {
+            throw new InvalidArgumentException("value must be one of type GMP|string|int");
+        }
+        if (gettype($value) == "object" && get_class($value) != "GMP") {
+            throw new InvalidArgumentException("value must be one of type GMP|string|int");
+        }
+        return gettype($value) == "object"? $value: gmp_init($value);
     }
 }

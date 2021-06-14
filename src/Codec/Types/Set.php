@@ -2,11 +2,11 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
+use InvalidArgumentException;
 
 class Set extends ScaleInstance
 {
-    function decode ()
+    public function decode(): array
     {
         $setIndex = $this->process("U{$this->BitLength}");
         $value = array();
@@ -21,11 +21,11 @@ class Set extends ScaleInstance
 
     }
 
-    function encode ($param)
+    public function encode($param)
     {
         $value = 0;
         if (!is_array($param)) {
-            throw new \InvalidArgumentException(sprintf('param not array'));
+            throw new InvalidArgumentException(sprintf('param not array'));
         }
         foreach ($this->valueList as $index => $item) {
             if (in_array($item, $param)) {

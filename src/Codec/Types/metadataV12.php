@@ -11,7 +11,7 @@ class metadataV12 extends ScaleInstance
     // Todo
     // metadataV12
 
-    function decode ()
+    public function decode()
     {
         $result = [
             "metadata_version" => 12,

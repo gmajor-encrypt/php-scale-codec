@@ -2,6 +2,8 @@
 
 namespace Codec;
 
+use InvalidArgumentException;
+
 class ScaleBytes
 {
     /**
@@ -10,7 +12,7 @@ class ScaleBytes
     public $data;
 
     /**
-     * @var integer $offset
+     * @var int $offset
      */
     public $offset;
 
@@ -25,13 +27,13 @@ class ScaleBytes
             $hexData = Utils::trimHex($hexData);
             $data = ctype_xdigit($hexData);
             if ($data === false) {
-                throw new \InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
+                throw new InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
             }
             $this->data = Utils::hexToBytes($hexData);
         } elseif (is_array($hexData)) {
             $this->data = $hexData;
         } else {
-            throw new \InvalidArgumentException(sprintf('"%s" not support for ScaleBytes', gettype($hexData)));
+            throw new InvalidArgumentException(sprintf('"%s" not support for ScaleBytes', gettype($hexData)));
         }
     }
 
@@ -39,7 +41,7 @@ class ScaleBytes
      * @param $length
      * @return array
      */
-    public function nextBytes ($length)
+    public function nextBytes ($length): array
     {
         $data = array_slice($this->data, $this->offset, $length);
         $this->offset = $this->offset + $length;
@@ -59,7 +61,7 @@ class ScaleBytes
      *
      * @return int
      */
-    protected function remainBytesLength ()
+    protected function remainBytesLength (): int
     {
         return count($this->data) - $this->offset;
     }

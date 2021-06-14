@@ -63,10 +63,15 @@ $codec->process("Bytes", new ScaleBytes("08ffff"));
 $codec->process("Vec<(u32, u32, u16)>", new ScaleBytes("08cc0200000000ce0200000001"));
 $codec->process("Vec<u8>", new ScaleBytes("08ffff"));
 
-// Enum
+// Enum with value list
 $codec =$codec->createTypeByTypeString("Enum");
 $codec->valueList = [0, 1, 49, 50];
 $codec->init(new ScaleBytes("02"));
+$codec->decode();
+
+// Enum with struct 
+$codec->typeStruct = ["int" => "u8", "bool" => "bool"];
+$codec->init(new ScaleBytes("0x002a"));
 $codec->decode();
 
 // Struct
@@ -115,10 +120,14 @@ $codec->createTypeByTypeString("Bytes")->encode("0xffff");
 // Vec
 $codec->createTypeByTypeString("Vec<u32>")->encode([1, 2, 3, 4]);
 
-// Enum
+// Enum with value list
 $codec =$codec->createTypeByTypeString("Enum");
 $codec->valueList = [0, 1, 49, 50];
 $codec->encode(49);
+
+// Enum with struct 
+$codec->typeStruct = ["int" => "u8", "bool" => "bool"];
+$codec->encode(["bool" => true]);
 
 // Struct
 $codec =$codec->createTypeByTypeString("Struct");

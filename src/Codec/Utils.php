@@ -196,7 +196,7 @@ class Utils
      * @return GMP
      */
 
-    public static function ConvertGMP($value):GMP
+    public static function ConvertGMP ($value): GMP
     {
         if (!in_array(gettype($value), ["integer", "string", "object"])) {
             throw new InvalidArgumentException("value must be one of type GMP|string|int");
@@ -204,6 +204,28 @@ class Utils
         if (gettype($value) == "object" && get_class($value) != "GMP") {
             throw new InvalidArgumentException("value must be one of type GMP|string|int");
         }
-        return gettype($value) == "object"? $value: gmp_init($value);
+        return gettype($value) == "object" ? $value : gmp_init($value);
+    }
+
+    /**
+     * getDirContents
+     *
+     *
+     * @param string $dir
+     * @param array $results
+     * @return array
+     */
+    public static function getDirContents (string $dir, &$results = array())
+    {
+        $files = scandir($dir);
+        foreach ($files as $key => $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                $results[] = $path;
+            } else if ($value != "." && $value != "..") {
+                self::getDirContents($path, $results);
+            }
+        }
+        return $results;
     }
 }

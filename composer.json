@@ -11,7 +11,8 @@
   "require": {
     "php": ">=7.3",
     "bitwasp/buffertools": "dev-master",
-    "ext-gmp": "*"
+    "ext-gmp": "*",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7 || ^9.3.0",

@@ -29,7 +29,8 @@ class Base
         "StorageHasher",
         "Metadata",
         "metadataV12",
-        "V12Module"
+        "V12Module",
+        "FixedArray"
     );
 
     /**
@@ -116,7 +117,7 @@ class Base
         });
         foreach ($moduleFiles as $index => $file) {
             $content = json_decode(file_get_contents("src/Codec/interfaces/balances/definitions.json"), true);
-
+            self::regCustom($generator, $content);
         }
     }
 
@@ -170,25 +171,54 @@ class Base
                                 $generator->addScaleType($key, $instant);
                                 break;
                             case "BTreeMap":
-                                $instant = $generator->getRegistry("BTreeMap");
+                                $instant = $generator->getRegistry("bTreeMap");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
                         }
+                        continue;
                     }
 
-                    // Tuple todo
-                    // Fixed array todo
+                    // Tuple
+                    if ($value[0] == '(' && $value[-1] == ')') {
+                        $struct = $generator->getRegistry('tuples');
+                        $struct->typeString = $value;
+                        $struct->buildTuplesMapping();
+                        $generator->addScaleType($key, $instant);
+                        continue;
+                    }
+
+                    // Fixed array
+                    if ($value[0] == '[' && $value[-1] == ']') {
+                        $slice = explode(";", substr($value, 1, strlen($value) - 2));
+                        if (count($slice) == 2) {
+                            $struct = $generator->getRegistry('FixedArray');
+                            $struct->subType = trim($slice[0]);
+                            $struct->FixedLength = intval($slice[1]);
+                            $generator->addScaleType($key, $instant);
+                            continue;
+                        }
+                    }
                 }
             } elseif (gettype($value) == "array") { // todo
-                if (array_key_exists("_enum", $customJson)) {
-
+                if (array_key_exists("_enum", $value)) {
+                    $instant = $generator->getRegistry("enum");
+                    Utils::is_assoc($value["_enum"]) ? $instant->typeStruct = $value["_enum"] : $instant->valueList = $value["_enum"];
+                    $generator->addScaleType($key, $instant);
                 }
-                if (array_key_exists("_set", $customJson)) {
-
+                if (array_key_exists("_set", $value)) {
+                    $instant = $generator->getRegistry("set");
+                    array_key_exists("_bitLength", $value) ? $instant->BitLength = intval($value["_bitLength"]) : $instant->BitLength = 16;
+                    unset($value["_bitLength"]);
+                    $instant->valueList = $value["_set"];
+                    $generator->addScaleType($key, $instant);
                 }
+                // struct
+                $instant = $generator->getRegistry("struct");
+                $instant->typeStruct = $value;
+                $generator->addScaleType($key, $instant);
+                continue;
             }
-//              $generator->addScaleType($key,);
         }
     }
 

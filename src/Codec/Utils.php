@@ -228,4 +228,15 @@ class Utils
         }
         return $results;
     }
+
+    /**
+     * check array is assoc or not
+     *
+     * @param array $var
+     * @return bool
+     */
+    public static function is_assoc (array $var): bool
+    {
+        return is_array($var) && array_diff_key($var, array_keys(array_keys($var)));
+    }
 }

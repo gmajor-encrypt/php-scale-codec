@@ -5,16 +5,12 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
-class metadataV12 extends ScaleInstance
+class metadataV12 extends Metadata
 {
 
-    // Todo
-    // metadataV12
-
-    public function decode()
+    public function decode (): array
     {
         $result = [
-            "metadata_version" => 12,
             "metadata" => null,
             "call_index" => null,
             "event_index" => null,
@@ -35,7 +31,7 @@ class metadataV12 extends ScaleInstance
         }
 
         $result["metadata"] = $modules;
-        $extrinsic = $this->process("ExtrinsicMetadata");
-        $result["extrinsic"] = $extrinsic;
+        $result["extrinsic"] = $this->process("ExtrinsicMetadata");
+        return $result;
     }
 }

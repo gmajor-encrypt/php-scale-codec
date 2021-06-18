@@ -190,7 +190,7 @@ class ScaleInstance implements CodecInterface
     {
         $data = $this->nextBytes(1);
         if (!in_array($data[0], [0, 1])) {
-            throw new \UnexpectedValueException(sprintf('InValid value  "%s" type bool', $data));
+            throw new \UnexpectedValueException(sprintf('InValid value "%s" type bool', $data[0]));
         }
         return $data[0] === 1;
     }

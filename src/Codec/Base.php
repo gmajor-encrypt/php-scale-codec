@@ -27,9 +27,9 @@ class Base
         "U8", "U16", "U32", "U64", "U128",
         "Int", "I8", "I16", "I32", "I64", "I128",
         "StorageHasher",
-        "Metadata",
-        "metadataV12",
-        "V12Module",
+        "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
+        "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
+        "MetadataModuleError",
         "FixedArray"
     );
 
@@ -116,7 +116,7 @@ class Base
             return $slice[count($slice) - 1] == "json";
         });
         foreach ($moduleFiles as $index => $file) {
-            $content = json_decode(file_get_contents("src/Codec/interfaces/balances/definitions.json"), true);
+            $content = json_decode(file_get_contents($file), true);
             self::regCustom($generator, $content);
         }
     }
@@ -200,11 +200,12 @@ class Base
                         }
                     }
                 }
-            } elseif (gettype($value) == "array") { // todo
+            } elseif (gettype($value) == "array") {
                 if (array_key_exists("_enum", $value)) {
                     $instant = $generator->getRegistry("enum");
                     Utils::is_assoc($value["_enum"]) ? $instant->typeStruct = $value["_enum"] : $instant->valueList = $value["_enum"];
                     $generator->addScaleType($key, $instant);
+                    continue;
                 }
                 if (array_key_exists("_set", $value)) {
                     $instant = $generator->getRegistry("set");
@@ -212,6 +213,7 @@ class Base
                     unset($value["_bitLength"]);
                     $instant->valueList = $value["_set"];
                     $generator->addScaleType($key, $instant);
+                    continue;
                 }
                 // struct
                 $instant = $generator->getRegistry("struct");

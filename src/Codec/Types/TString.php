@@ -9,13 +9,13 @@ class TString extends ScaleInstance
     /**
      * @return mixed|void
      */
-    public function decode()
+    public function decode ()
     {
-        $value = $this->nextBytes(gmp_intval($this->process('Compact')));
+        $value = $this->nextBytes(gmp_intval($this->process('Compact<u32>')));
         return Utils::byteArray2String($value);
     }
 
-    public function encode($param): string
+    public function encode ($param): string
     {
         $instant = $this->createTypeByTypeString("Compact");
         $length = $instant->encode(strlen($param));

@@ -61,7 +61,7 @@ class ScaleBytes
      *
      * @return int
      */
-    protected function remainBytesLength (): int
+    public function remainBytesLength (): int
     {
         return count($this->data) - $this->offset;
     }

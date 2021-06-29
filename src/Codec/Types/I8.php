@@ -8,7 +8,7 @@ use BitWasp\Buffertools\Parser;
 use BitWasp\Buffertools\Types\Int8;
 use Codec\Utils;
 
-class I8 extends TInt
+class  I8 extends TInt
 {
 
     public function decode()

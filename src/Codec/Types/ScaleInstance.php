@@ -172,6 +172,14 @@ class ScaleInstance implements CodecInterface
     }
 
     /**
+     * @return int
+     */
+    protected function remainBytesLength (): int
+    {
+        return $this->data->remainBytesLength();
+    }
+
+    /**
      * nextU8
      *
      * @return int

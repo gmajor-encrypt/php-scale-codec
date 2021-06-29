@@ -29,7 +29,7 @@ class Base
         "StorageHasher",
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
-        "MetadataModuleError",
+        "MetadataModuleError", "EraExtrinsic",
         "FixedArray"
     );
 
@@ -156,22 +156,22 @@ class Base
                     if (count($match) > 2) {
                         switch (strtolower($match[1])) {
                             case "vec":
-                                $instant = $generator->getRegistry("vec");
+                                $instant = clone $generator->getRegistry("vec");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
                             case "option":
-                                $instant = $generator->getRegistry("option");
+                                $instant = clone $generator->getRegistry("option");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
                             case "compact":
-                                $instant = $generator->getRegistry("compact");
+                                $instant = clone $generator->getRegistry("compact");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
                             case "BTreeMap":
-                                $instant = $generator->getRegistry("bTreeMap");
+                                $instant = clone $generator->getRegistry("bTreeMap");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
@@ -181,7 +181,7 @@ class Base
 
                     // Tuple
                     if ($value[0] == '(' && $value[-1] == ')') {
-                        $struct = $generator->getRegistry('tuples');
+                        $struct = clone $generator->getRegistry('tuples');
                         $struct->typeString = $value;
                         $struct->buildTuplesMapping();
                         $generator->addScaleType($key, $instant);
@@ -192,7 +192,7 @@ class Base
                     if ($value[0] == '[' && $value[-1] == ']') {
                         $slice = explode(";", substr($value, 1, strlen($value) - 2));
                         if (count($slice) == 2) {
-                            $struct = $generator->getRegistry('FixedArray');
+                            $struct = clone $generator->getRegistry('FixedArray');
                             $struct->subType = trim($slice[0]);
                             $struct->FixedLength = intval($slice[1]);
                             $generator->addScaleType($key, $instant);
@@ -202,13 +202,13 @@ class Base
                 }
             } elseif (gettype($value) == "array") {
                 if (array_key_exists("_enum", $value)) {
-                    $instant = $generator->getRegistry("enum");
+                    $instant = clone $generator->getRegistry("enum");
                     Utils::is_assoc($value["_enum"]) ? $instant->typeStruct = $value["_enum"] : $instant->valueList = $value["_enum"];
                     $generator->addScaleType($key, $instant);
                     continue;
                 }
                 if (array_key_exists("_set", $value)) {
-                    $instant = $generator->getRegistry("set");
+                    $instant = clone $generator->getRegistry("set");
                     array_key_exists("_bitLength", $value) ? $instant->BitLength = intval($value["_bitLength"]) : $instant->BitLength = 16;
                     unset($value["_bitLength"]);
                     $instant->valueList = $value["_set"];
@@ -216,7 +216,7 @@ class Base
                     continue;
                 }
                 // struct
-                $instant = $generator->getRegistry("struct");
+                $instant = clone $generator->getRegistry("struct");
                 $instant->typeStruct = $value;
                 $generator->addScaleType($key, $instant);
                 continue;

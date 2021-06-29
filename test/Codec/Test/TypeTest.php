@@ -180,6 +180,12 @@ final class TypeTest extends TestCase
         $this->assertEquals([1, 400, 800000], $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00")));
         $this->assertEquals("01900100350c00", $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]));
     }
+
+    public function testEraExtrinsic ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(["period" => 64, "phase" => 29], $codec->process("EraExtrinsic", new ScaleBytes("d501")));
+    }
 }
 
 

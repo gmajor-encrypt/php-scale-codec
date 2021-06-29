@@ -44,6 +44,12 @@ final class ScaleBytesTest extends TestCase
     {
         $this->assertEquals(Utils::padLeft("e52d2254c67c43", 64), "00000000000000000000000000000000000000000000000000e52d2254c67c43");
     }
+
+    public function testBlake2b ()
+    {
+        $this->assertEquals("23b9bcedca506e32edae5afeda21087f25999546474a4b8298411925150ddeb8",
+            sodium_bin2hex(sodium_crypto_generichash(Utils::hex2String("9904042d00000000ef"))));
+    }
 }
 
 

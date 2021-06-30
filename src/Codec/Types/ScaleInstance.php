@@ -26,7 +26,7 @@ class ScaleInstance implements CodecInterface
     /**
      * @var string $subType
      */
-    protected $subType;
+    public $subType;
 
     /**
      * @var mixed $value
@@ -86,7 +86,9 @@ class ScaleInstance implements CodecInterface
         if (!empty($subType)) {
             $this->subType = $subType;
         }
-        $this->metadata = $metadata;
+        if (!is_null($metadata)) {
+            $this->metadata = $metadata;
+        }
     }
 
     /**
@@ -104,17 +106,20 @@ class ScaleInstance implements CodecInterface
     /**
      * @param string $typeString
      * @param ScaleBytes|null $codecData |null
-     * @param array $option
+     * @param array $metadata
      * @return mixed
      */
-    public function process (string $typeString, ScaleBytes $codecData = null, array $option = [])
+    public function process (string $typeString, ScaleBytes $codecData = null, array $metadata = null)
     {
         $codecInstant = self::createTypeByTypeString($typeString);
         $codecInstant->typeString = $typeString;
         if ($codecData == null) {
             $codecData = $this->data;
         }
-        $codecInstant->init($codecData);
+        if (!empty($this->metadata) && empty($metadata)) {
+            $metadata = $this->metadata;
+        }
+        $codecInstant->init($codecData, "", $metadata);
         return $codecInstant->decode();
     }
 

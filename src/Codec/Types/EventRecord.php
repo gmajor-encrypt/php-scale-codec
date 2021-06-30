@@ -9,7 +9,7 @@ class EventRecord extends ScaleInstance
 {
     public function decode (): array
     {
-        if (empty($this->metadata)) {
+        if (is_null($this->metadata)) {
             throw new \InvalidArgumentException("Empty metadata, please fill metadata first");
         }
 
@@ -32,7 +32,7 @@ class EventRecord extends ScaleInstance
             array_push($value["params"], ["type" => $argType, "value" => $this->process($argType)]);
         }
 
-        $event["topic"] = $this->process("Vec<String>");
+        $value["topic"] = $this->process("Vec<String>");
 
         return $value;
     }

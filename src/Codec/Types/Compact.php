@@ -5,7 +5,9 @@ namespace Codec\Types;
 use BitWasp\Buffertools\Parser;
 use Codec\ScaleBytes;
 use Codec\Utils;
+use Exception;
 use GMP;
+use OutOfRangeException;
 
 class Compact extends ScaleInstance
 {
@@ -21,7 +23,7 @@ class Compact extends ScaleInstance
 
     /**
      * @return GMP|integer
-     * @throws \Exception
+     * @throws Exception
      */
     public function decode ()
     {
@@ -54,7 +56,7 @@ class Compact extends ScaleInstance
     {
         $compactBytes = $this->nextBytes(1);
         if (count($compactBytes) == 0) {
-            throw new \OutOfRangeException('OutOfRangeException Compact');
+            throw new OutOfRangeException('OutOfRangeException Compact');
         }
         $mod = $compactBytes[0] % 4;
 
@@ -90,8 +92,8 @@ class Compact extends ScaleInstance
      * Compact encode
      *
      * @param GMP|string|int $param
-     * @return \OutOfRangeException|string|null
-     * @throws \Exception
+     * @return OutOfRangeException|string|null
+     * @throws Exception
      *
      * https://substrate.dev/docs/en/knowledgebase/advanced/codec#compactgeneral-integers
      */
@@ -119,7 +121,7 @@ class Compact extends ScaleInstance
                 }
             }
         } else {
-            throw new \OutOfRangeException('Compact encode out of range');
+            throw new OutOfRangeException('Compact encode out of range');
         }
     }
 

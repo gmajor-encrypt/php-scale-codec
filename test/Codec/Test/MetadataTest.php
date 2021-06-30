@@ -8,7 +8,7 @@ use Codec\ScaleBytes;
 use Codec\Types\ScaleInstance;
 use PHPUnit\Framework\TestCase;
 
-require "const.php";
+require_once "const.php";
 
 final class MetadataTest extends TestCase
 {

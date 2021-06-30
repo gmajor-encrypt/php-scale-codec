@@ -27,5 +27,6 @@
       "Sr25519": "Sr25519Signature",
       "Ecdsa": "EcdsaSignature"
     }
-  }
+  },
+  "Weight": "u32"
 }

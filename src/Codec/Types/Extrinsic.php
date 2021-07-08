@@ -15,7 +15,8 @@ class Extrinsic extends ScaleInstance
 
         $value = [];
 
-        $value["extrinsic_length"] = $this->process("Compact<u32>");
+        $value["extrinsic_length"] = gmp_intval($this->process("Compact<u32>"));
+
         if ($value["extrinsic_length"] != $this->remainBytesLength()) {
             $value["extrinsic_length"] = 0;
             $this->data->offset = 0;
@@ -59,10 +60,11 @@ class Extrinsic extends ScaleInstance
 
         $value["params"] = [];
         foreach ($call["call"]["args"] as $index => $arg) {
+            $r = $this->process($arg["type"]);
             array_push($value["params"], [
                 "name" => $arg["name"],
-                "type" => $arg["name"]["type"],
-                "value" => $this->process($arg["name"]["type"]),
+                "type" => $arg["type"],
+                "value" => $r,
             ]);
         }
 

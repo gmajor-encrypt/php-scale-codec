@@ -220,6 +220,11 @@ class ScaleInstance implements CodecInterface
         if ($typeString == '()') {
             return "Null";
         }
+        $typeString = str_replace("T::", "", $typeString);
+        $typeString = str_replace("VecDeque<", "Vec<", $typeString);
+        $typeString = str_replace("<T>", "", $typeString);
+        $typeString = str_replace("<T, I>", "", $typeString);
+        $typeString = str_replace("&'static[u8]", "Bytes", $typeString);
         return $typeString;
     }
 

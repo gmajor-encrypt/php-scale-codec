@@ -28,8 +28,9 @@ class Compact extends ScaleInstance
     public function decode ()
     {
         self::checkCompactBytes();
+        $compactBytes = new ScaleBytes($this->compactBytes);
         if (!empty($this->subType)) {
-            $data = $this->process($this->subType, new ScaleBytes($this->compactBytes));
+            $data = Utils::bytesToLittleInt($compactBytes->nextBytes(8));
             return (is_int($data) && $this->compactLength <= 4) ? Utils::ConvertGMP(intval($data / 4)) : Utils::ConvertGMP($data);
         }
         $UIntBitLength = 8 * $this->compactLength;
@@ -39,7 +40,7 @@ class Compact extends ScaleInstance
                 break;
             }
         }
-        $compactBytes = new ScaleBytes($this->compactBytes);
+
         if ($this->compactLength <= 4) {
             return gmp_init(intval($this->process("U{$UIntBitLength}", $compactBytes) / 4));
         }

@@ -17,17 +17,6 @@
     "version": "u8",
     "signedExtensions": "Vec<String>"
   },
-  "ExtrinsicSignature": "MultiSignature",
-  "EcdsaSignature": "[u8; 65]",
-  "Ed25519Signature": "H512",
-  "Sr25519Signature": "H512",
-  "MultiSignature": {
-    "_enum": {
-      "Ed25519": "Ed25519Signature",
-      "Sr25519": "Sr25519Signature",
-      "Ecdsa": "EcdsaSignature"
-    }
-  },
   "Weight": "u32",
   "Moment": "Compact<u32>"
 }

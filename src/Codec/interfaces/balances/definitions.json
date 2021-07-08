@@ -47,5 +47,7 @@
       "Fee": 8,
       "Tip": 16
     }
-  }
+  },
+  "BlockHash": "Hash",
+  "PrefixedStorageKey": "StorageKey"
 }

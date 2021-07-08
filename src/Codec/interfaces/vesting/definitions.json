@@ -1,0 +1,7 @@
+{
+  "VestingInfo": {
+    "locked": "Balance",
+    "perBlock": "Balance",
+    "startingBlock": "BlockNumber"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "BridgedBlockHash": "H256",
+  "BridgedBlockNumber": "BlockNumber",
+  "BridgedHeader": "Header",
+  "InitializationData": {
+    "header": "Header",
+    "authorityList": "AuthorityList",
+    "setId": "SetId",
+    "isHalted": "bool"
+  }
+}

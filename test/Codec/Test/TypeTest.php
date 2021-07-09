@@ -187,6 +187,17 @@ final class TypeTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals(["period" => 64, "phase" => 29], $codec->process("EraExtrinsic", new ScaleBytes("d501")));
     }
+
+    public function testResults ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(["Ok" => 42], $codec->process("Results<u8, bool>", new ScaleBytes("0x002a")));
+        $this->assertEquals(["Err" => false], $codec->process("Results<u8, bool>", new ScaleBytes("0x0100")));
+        $this->assertEquals("0100", $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err1" => false]);
+    }
 }
 
 

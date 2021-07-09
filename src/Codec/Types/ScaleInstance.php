@@ -26,7 +26,7 @@ class ScaleInstance implements CodecInterface
     /**
      * @var string $subType
      */
-    protected $subType;
+    public $subType;
 
     /**
      * @var mixed $value
@@ -86,13 +86,15 @@ class ScaleInstance implements CodecInterface
         if (!empty($subType)) {
             $this->subType = $subType;
         }
-        $this->metadata = $metadata;
+        if (!is_null($metadata)) {
+            $this->metadata = $metadata;
+        }
     }
 
     /**
      * buildStructMapping
      */
-    protected function buildTuplesMapping ()
+    public function buildTuplesMapping ()
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
@@ -104,17 +106,20 @@ class ScaleInstance implements CodecInterface
     /**
      * @param string $typeString
      * @param ScaleBytes|null $codecData |null
-     * @param array $option
+     * @param array $metadata
      * @return mixed
      */
-    public function process (string $typeString, ScaleBytes $codecData = null, array $option = [])
+    public function process (string $typeString, ScaleBytes $codecData = null, array $metadata = null)
     {
         $codecInstant = self::createTypeByTypeString($typeString);
         $codecInstant->typeString = $typeString;
         if ($codecData == null) {
             $codecData = $this->data;
         }
-        $codecInstant->init($codecData);
+        if (!empty($this->metadata) && empty($metadata)) {
+            $metadata = $this->metadata;
+        }
+        $codecInstant->init($codecData, "", $metadata);
         return $codecInstant->decode();
     }
 
@@ -172,6 +177,14 @@ class ScaleInstance implements CodecInterface
     }
 
     /**
+     * @return int
+     */
+    protected function remainBytesLength (): int
+    {
+        return $this->data->remainBytesLength();
+    }
+
+    /**
      * nextU8
      *
      * @return int
@@ -190,7 +203,7 @@ class ScaleInstance implements CodecInterface
     {
         $data = $this->nextBytes(1);
         if (!in_array($data[0], [0, 1])) {
-            throw new \UnexpectedValueException(sprintf('InValid value  "%s" type bool', $data));
+            throw new \UnexpectedValueException(sprintf('InValid value "%s" type bool', $data[0]));
         }
         return $data[0] === 1;
     }
@@ -206,6 +219,15 @@ class ScaleInstance implements CodecInterface
     {
         if ($typeString == '()') {
             return "Null";
+        }
+        $typeString = str_replace("T::", "", $typeString);
+        $typeString = str_replace("VecDeque<", "Vec<", $typeString);
+        $typeString = str_replace("<T>", "", $typeString);
+        $typeString = str_replace("<T, I>", "", $typeString);
+        $typeString = str_replace("&'static[u8]", "Bytes", $typeString);
+        switch ($typeString) {
+            case "<Lookup as StaticLookup>::Source":
+                return "Address";
         }
         return $typeString;
     }

@@ -45,7 +45,7 @@ class ScaleBytes
     {
         $data = array_slice($this->data, $this->offset, $length);
         $this->offset = $this->offset + $length;
-        return $data;
+        return array_pad($data, $length, 0);
     }
 
     /**
@@ -61,7 +61,7 @@ class ScaleBytes
      *
      * @return int
      */
-    protected function remainBytesLength (): int
+    public function remainBytesLength (): int
     {
         return count($this->data) - $this->offset;
     }

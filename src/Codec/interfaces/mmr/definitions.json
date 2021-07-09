@@ -1,0 +1,7 @@
+{
+  "MmrLeafProof": {
+    "blockHash": "BlockHash",
+    "leaf": "Bytes",
+    "proof": "Bytes"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "CreatedBlock": {
+    "hash": "BlockHash",
+    "aux": "ImportedAux"
+  },
+  "ImportedAux": {
+    "headerOnly": "bool",
+    "clearJustificationRequests": "bool",
+    "needsJustification": "bool",
+    "badJustification": "bool",
+    "needsFinalityProof": "bool",
+    "isNewBest": "bool"
+  }
+}

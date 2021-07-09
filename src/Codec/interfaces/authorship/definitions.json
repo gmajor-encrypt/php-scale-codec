@@ -1,0 +1,8 @@
+{
+  "UncleEntryItem": {
+    "_enum": {
+      "InclusionHeight": "BlockNumber",
+      "Uncle": "(Hash, Option<AccountId>)"
+    }
+  }
+}

@@ -26,7 +26,7 @@ class V12Module extends ScaleInstance
     {
         $this->name = $this->process("String");
 
-        $storage = $this->process("Option<Vec<ModuleStorage>>");
+        $storage = $this->process("Option<ModuleStorage>");
         if (!empty($storage)) {
             $this->storage = $storage["items"];
             $this->prefix = $storage["prefix"];
@@ -42,7 +42,7 @@ class V12Module extends ScaleInstance
             $this->events = $events;
         }
 
-        $constants = $this->process("Vec<ModuleConstants>");
+        $constants = $this->process("Vec<MetadataModuleConstants>");
         if (!empty($constants)) {
             $this->constants = $constants;
         }

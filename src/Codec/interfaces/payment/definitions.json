@@ -1,0 +1,15 @@
+{
+  "FeeDetails": {
+    "inclusionFee": "Option<InclusionFee>"
+  },
+  "InclusionFee": {
+    "baseFee": "Balance",
+    "lenFee": "Balance",
+    "adjustedWeightFee": "Balance"
+  },
+  "RuntimeDispatchInfo": {
+    "weight": "Weight",
+    "class": "DispatchClass",
+    "partialFee": "Balance"
+  }
+}

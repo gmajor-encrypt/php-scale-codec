@@ -168,9 +168,10 @@ final class TypeTest extends TestCase
         $codec = $codec->createTypeByTypeString("VecU8Fixed");
         $codec->FixedLength = 3;
         $codec->init(new ScaleBytes("0x010203"));
-        $this->assertEquals([1, 2, 3], $codec->decode());
+        $this->assertEquals("010203", $codec->decode());
         $codec->FixedLength = 1;
         $this->assertEquals("01020304", $codec->encode([1, 2, 3, 4]));
+        $this->assertEquals("010203", $codec->encode("010203"));
     }
 
 
@@ -179,6 +180,23 @@ final class TypeTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals([1, 400, 800000], $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00")));
         $this->assertEquals("01900100350c00", $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]));
+    }
+
+    public function testEraExtrinsic ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(["period" => 64, "phase" => 29], $codec->process("EraExtrinsic", new ScaleBytes("d501")));
+    }
+
+    public function testResults ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(["Ok" => 42], $codec->process("Results<u8, bool>", new ScaleBytes("0x002a")));
+        $this->assertEquals(["Err" => false], $codec->process("Results<u8, bool>", new ScaleBytes("0x0100")));
+        $this->assertEquals("0100", $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err1" => false]);
     }
 }
 

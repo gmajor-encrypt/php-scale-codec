@@ -6,7 +6,7 @@ use Codec\Utils;
 
 class EraExtrinsic extends ScaleInstance
 {
-    function decode ()
+    function decode (): array
     {
         $optionData = $this->nextBytes(1);
         if ($optionData == "00") {

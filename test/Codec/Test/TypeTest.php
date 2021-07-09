@@ -168,9 +168,10 @@ final class TypeTest extends TestCase
         $codec = $codec->createTypeByTypeString("VecU8Fixed");
         $codec->FixedLength = 3;
         $codec->init(new ScaleBytes("0x010203"));
-        $this->assertEquals([1, 2, 3], $codec->decode());
+        $this->assertEquals("010203", $codec->decode());
         $codec->FixedLength = 1;
         $this->assertEquals("01020304", $codec->encode([1, 2, 3, 4]));
+        $this->assertEquals("010203", $codec->encode("010203"));
     }
 
 

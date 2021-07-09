@@ -94,7 +94,7 @@ class ScaleInstance implements CodecInterface
     /**
      * buildStructMapping
      */
-    protected function buildTuplesMapping ()
+    public function buildTuplesMapping ()
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
@@ -225,6 +225,10 @@ class ScaleInstance implements CodecInterface
         $typeString = str_replace("<T>", "", $typeString);
         $typeString = str_replace("<T, I>", "", $typeString);
         $typeString = str_replace("&'static[u8]", "Bytes", $typeString);
+        switch ($typeString) {
+            case "<Lookup as StaticLookup>::Source":
+                return "Address";
+        }
         return $typeString;
     }
 

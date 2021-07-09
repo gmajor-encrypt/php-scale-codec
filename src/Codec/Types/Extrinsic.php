@@ -30,20 +30,21 @@ class Extrinsic extends ScaleInstance
                 $value["account_id"] = $this->process("address");
                 $value["signature"] = $this->process("ExtrinsicSignature");
                 $value["era"] = $this->process("EraExtrinsic");
-                $value["nonce"] = $this->process("Compact<U64>");
+                $value["nonce"] = gmp_strval($this->process("Compact<U64>"));
 
                 if (in_array("ChargeTransactionPayment", $this->metadata["extrinsic"]["signedExtensions"])) {
-                    $value["tip"] = $this->process("Compact<Balance>");
+                    $value["tip"] = gmp_strval($this->process("Compact<Balance>"));
                 }
-                $value["extrinsic_hash"] = function () use ($value): string {
-                    if ($value["extrinsic_length"] == 0) {
+                $extrinsicHash = function () use ($value): string {
+                    if ($value["extrinsic_length"] > 0) {
                         $extrinsicData = Utils::bytesToHex($this->data->data);
                     } else {
                         $instant = $this->createTypeByTypeString("Compact<u32>");
-                        $extrinsicData = $instant->encode(count($this->data->data));
+                        $extrinsicData = $instant->encode(count($this->data->data)) . Utils::bytesToHex($this->data->data);
                     }
-                    return sodium_bin2hex(sodium_crypto_generichash(Utils::hex2String($extrinsicData)));
+                    return sprintf("0x%s", sodium_bin2hex(sodium_crypto_generichash(Utils::hex2String($extrinsicData))));
                 };
+                $value["extrinsic_hash"] = $extrinsicHash();
             }
             $value["look_up"] = Utils::bytesToHex($this->nextBytes(2));
 

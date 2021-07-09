@@ -25,7 +25,7 @@ class Compact extends ScaleInstance
      * @return GMP|integer
      * @throws Exception
      */
-    public function decode ()
+    public function decode (): GMP
     {
         self::checkCompactBytes();
         $compactBytes = new ScaleBytes($this->compactBytes);

@@ -30,7 +30,7 @@ class Base
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
         "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic",
-        "FixedArray"
+        "FixedArray", "Null"
     );
 
     /**
@@ -98,7 +98,7 @@ class Base
      */
     private static function convertPhpType ($scaleType)
     {
-        if (in_array($scaleType, ["Bool", "String", "Int"])) {
+        if (in_array($scaleType, ["Bool", "String", "Int", "Null"])) {
             return sprintf("T%s", $scaleType);
         }
         return $scaleType;
@@ -115,10 +115,12 @@ class Base
             $slice = explode(".", $var);
             return $slice[count($slice) - 1] == "json";
         });
+        $moduleTypes = [];
         foreach ($moduleFiles as $index => $file) {
             $content = json_decode(file_get_contents($file), true);
-            self::regCustom($generator, $content);
+            $moduleTypes = array_merge($moduleTypes, $content);
         }
+        self::regCustom($generator, $moduleTypes);
     }
 
     /**
@@ -127,7 +129,7 @@ class Base
      * @param Generator $generator
      * @param array $customJson
      */
-    private static function regCustom (Generator $generator, array $customJson)
+    public static function regCustom (Generator $generator, array $customJson)
     {
         foreach ($customJson as $key => $value) {
             if (gettype($value) == "string") {
@@ -137,18 +139,33 @@ class Base
                     continue;
                 }
                 // iteration
-                if (array_key_exists($value, $customJson)) {
-                    $explained = $customJson[$value];
-                    if (gettype($explained) == "string") {
-                        $instant = $generator->getRegistry($explained);
-                        if (!is_null($instant)) {
-                            $generator->addScaleType($key, $instant);
-                            continue;
+                $iterationSolve = false;
+                while (true) {
+                    if (array_key_exists($value, $customJson)) {
+                        $value = $customJson[$value];
+                        if (gettype($value) == "string") {
+                            $instant = $generator->getRegistry($value);
+                            if (!is_null($instant)) {
+                                $generator->addScaleType($key, $instant);
+                                $iterationSolve = true;
+                                break;
+                            } else {
+                                $iterationSolve = false;
+                                continue;
+                            }
                         }
+                        self::regCustom($generator, [$key => $value]);
+                        $iterationSolve = true;
+                        break;
                     } else {
-                        self::regCustom($generator, [$key => $explained]);
+                        $iterationSolve = false;
+                        break;
                     }
                 }
+                if ($iterationSolve) {
+                    continue;
+                }
+
                 // Complex type
                 if ($value[-1] == '>') {
                     $match = array();
@@ -178,26 +195,26 @@ class Base
                         }
                         continue;
                     }
+                }
 
-                    // Tuple
-                    if ($value[0] == '(' && $value[-1] == ')') {
-                        $struct = clone $generator->getRegistry('tuples');
-                        $struct->typeString = $value;
-                        $struct->buildTuplesMapping();
+                // Tuple
+                if ($value[0] == '(' && $value[-1] == ')') {
+                    $instant = clone $generator->getRegistry('tuples');
+                    $instant->typeString = $value;
+                    $instant->buildTuplesMapping();
+                    $generator->addScaleType($key, $instant);
+                    continue;
+                }
+                // Fixed array
+                if ($value[0] == '[' && $value[-1] == ']') {
+                    $slice = explode(";", substr($value, 1, strlen($value) - 2));
+                    if (count($slice) == 2) {
+                        $subType = trim($slice[0]);
+                        $instant = $subType == "u8" ? clone $generator->getRegistry('VecU8Fixed') : clone $generator->getRegistry('FixedArray');
+                        $instant->subType = trim($slice[0]);
+                        $instant->FixedLength = intval($slice[1]);
                         $generator->addScaleType($key, $instant);
                         continue;
-                    }
-
-                    // Fixed array
-                    if ($value[0] == '[' && $value[-1] == ']') {
-                        $slice = explode(";", substr($value, 1, strlen($value) - 2));
-                        if (count($slice) == 2) {
-                            $struct = clone $generator->getRegistry('FixedArray');
-                            $struct->subType = trim($slice[0]);
-                            $struct->FixedLength = intval($slice[1]);
-                            $generator->addScaleType($key, $instant);
-                            continue;
-                        }
                     }
                 }
             } elseif (gettype($value) == "array") {

@@ -236,7 +236,6 @@ class Base
                 $instant = clone $generator->getRegistry("struct");
                 $instant->typeStruct = $value;
                 $generator->addScaleType($key, $instant);
-                continue;
             }
         }
     }

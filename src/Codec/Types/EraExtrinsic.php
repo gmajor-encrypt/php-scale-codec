@@ -19,12 +19,4 @@ class EraExtrinsic extends ScaleInstance
         $phase = ($encoded >> 4) * max($period >> 12, 1);
         return ["period" => $period, "phase" => $phase];
     }
-
-    function encode ($param)
-    {
-        if (empty($param) || $param == "00") {
-            // todo
-        }
-        return "00";
-    }
 }

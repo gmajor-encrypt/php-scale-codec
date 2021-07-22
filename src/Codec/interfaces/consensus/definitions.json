@@ -1,0 +1,4 @@
+{
+  "AuthorityId": "AccountId",
+  "RawVRFOutput": "[u8; 32]"
+}

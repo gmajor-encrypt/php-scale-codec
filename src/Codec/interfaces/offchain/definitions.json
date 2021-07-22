@@ -1,0 +1,6 @@
+{
+  "_enum": {
+    "PERSISTENT": 1,
+    "LOCAL": 2
+  }
+}

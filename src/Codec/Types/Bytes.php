@@ -10,9 +10,9 @@ class Bytes extends ScaleInstance
      * @return mixed|string
      * also return bytes
      */
-    public function decode(): string
+    public function decode (): string
     {
-        $length = gmp_intval($this->process("Compact", $this->data));
+        $length = gmp_intval($this->process("Compact<u32>", $this->data));
         return sprintf('%s', Utils::bytesToHex($this->nextBytes($length)));
     }
 
@@ -21,7 +21,7 @@ class Bytes extends ScaleInstance
      * @param $param
      * @return mixed|string|null
      */
-    public function encode($param): ?string
+    public function encode ($param): ?string
     {
         $value = Utils::trimHex($param);
         $instant = $this->createTypeByTypeString("Compact");

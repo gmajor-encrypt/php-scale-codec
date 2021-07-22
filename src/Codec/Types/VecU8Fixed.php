@@ -2,14 +2,15 @@
 
 namespace Codec\Types;
 
+use Codec\Utils;
 use InvalidArgumentException;
 
 class VecU8Fixed extends ScaleInstance
 {
 
-    function decode (): array
+    function decode (): string
     {
-        return $this->nextBytes($this->FixedLength);
+        return Utils::bytesToHex($this->nextBytes($this->FixedLength));
     }
 
 
@@ -17,9 +18,12 @@ class VecU8Fixed extends ScaleInstance
      * @param array $param
      * @return mixed|string|null
      */
-    function encode ($param):string
+    function encode ($param): string
     {
         $value = "";
+        if (is_string($param) && ctype_xdigit($param)) {
+            $param = Utils::hexToBytes($param);
+        }
         if (!is_array($param)) {
             throw new InvalidArgumentException(sprintf('param not array'));
         }

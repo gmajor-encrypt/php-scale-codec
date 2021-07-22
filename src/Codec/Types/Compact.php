@@ -5,7 +5,9 @@ namespace Codec\Types;
 use BitWasp\Buffertools\Parser;
 use Codec\ScaleBytes;
 use Codec\Utils;
+use Exception;
 use GMP;
+use OutOfRangeException;
 
 class Compact extends ScaleInstance
 {
@@ -21,13 +23,14 @@ class Compact extends ScaleInstance
 
     /**
      * @return GMP|integer
-     * @throws \Exception
+     * @throws Exception
      */
-    public function decode ()
+    public function decode (): GMP
     {
         self::checkCompactBytes();
+        $compactBytes = new ScaleBytes($this->compactBytes);
         if (!empty($this->subType)) {
-            $data = $this->process($this->subType, new ScaleBytes($this->compactBytes));
+            $data = Utils::bytesToLittleInt($compactBytes->nextBytes(8));
             return (is_int($data) && $this->compactLength <= 4) ? Utils::ConvertGMP(intval($data / 4)) : Utils::ConvertGMP($data);
         }
         $UIntBitLength = 8 * $this->compactLength;
@@ -37,7 +40,7 @@ class Compact extends ScaleInstance
                 break;
             }
         }
-        $compactBytes = new ScaleBytes($this->compactBytes);
+
         if ($this->compactLength <= 4) {
             return gmp_init(intval($this->process("U{$UIntBitLength}", $compactBytes) / 4));
         }
@@ -54,7 +57,7 @@ class Compact extends ScaleInstance
     {
         $compactBytes = $this->nextBytes(1);
         if (count($compactBytes) == 0) {
-            throw new \OutOfRangeException('OutOfRangeException Compact');
+            throw new OutOfRangeException('OutOfRangeException Compact');
         }
         $mod = $compactBytes[0] % 4;
 
@@ -90,8 +93,8 @@ class Compact extends ScaleInstance
      * Compact encode
      *
      * @param GMP|string|int $param
-     * @return \OutOfRangeException|string|null
-     * @throws \Exception
+     * @return OutOfRangeException|string|null
+     * @throws Exception
      *
      * https://substrate.dev/docs/en/knowledgebase/advanced/codec#compactgeneral-integers
      */
@@ -119,7 +122,7 @@ class Compact extends ScaleInstance
                 }
             }
         } else {
-            throw new \OutOfRangeException('Compact encode out of range');
+            throw new OutOfRangeException('Compact encode out of range');
         }
     }
 

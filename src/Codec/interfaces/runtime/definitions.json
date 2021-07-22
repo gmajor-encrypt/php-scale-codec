@@ -1,0 +1,157 @@
+{
+  "AccountId": "GenericAccountId",
+  "AccountIdOf": "AccountId",
+  "AccountIndex": "GenericAccountIndex",
+  "AssetId": "u32",
+  "Balance": "UInt<128, Balance>",
+  "BalanceOf": "Balance",
+  "BlockNumber": "u32",
+  "Call": "GenericCall",
+  "CallHash": "Hash",
+  "CallHashOf": "CallHash",
+  "ChangesTrieConfiguration": {
+    "digestInterval": "u32",
+    "digestLevels": "u32"
+  },
+  "ChangesTrieSignal": {
+    "_enum": {
+      "NewConfiguration": "Option<ChangesTrieConfiguration>"
+    }
+  },
+  "ConsensusEngineId": "GenericConsensusEngineId",
+  "CodecHash": "Hash",
+  "Digest": {
+    "logs": "Vec<DigestItem>"
+  },
+  "DigestItem": {
+    "_enum": {
+      "Other": "Bytes",
+      "AuthoritiesChange": "Vec<AuthorityId>",
+      "ChangesTrieRoot": "Hash",
+      "SealV0": "SealV0",
+      "Consensus": "Consensus",
+      "Seal": "Seal",
+      "PreRuntime": "PreRuntime",
+      "ChangesTrieSignal": "ChangesTrieSignal"
+    }
+  },
+  "ExtrinsicsWeight": {
+    "normal": "Weight",
+    "operational": "Weight"
+  },
+  "H32": "[u8; 4]",
+  "H64": "[u8; 8]",
+  "H128": "[u8; 16]",
+  "H160": "[u8; 20]",
+  "H512": "[u8; 64]",
+  "H1024": "[u8; 128]",
+  "H2048": "[u8; 256]",
+  "Hash": "H256",
+  "Header": {
+    "parentHash": "Hash",
+    "number": "Compact<BlockNumber>",
+    "stateRoot": "Hash",
+    "extrinsicsRoot": "Hash",
+    "digest": "Digest"
+  },
+  "HeaderPartial": {
+    "parentHash": "Hash",
+    "number": "BlockNumber"
+  },
+  "IndicesLookupSource": "GenericLookupSource",
+  "Index": "u32",
+  "Justification": "(ConsensusEngineId, EncodedJustification)",
+  "EncodedJustification": "Bytes",
+  "Justifications": "Vec<Justification>",
+  "KeyValue": "(StorageKey, StorageData)",
+  "KeyTypeId": "u32",
+  "LockIdentifier": "[u8; 8]",
+  "LookupSource": "MultiAddress",
+  "LookupTarget": "AccountId",
+  "ModuleId": "LockIdentifier",
+  "MultiAddress": "GenericMultiAddress",
+  "MultiSigner": {
+    "_enum": {
+      "Ed25519": "[u8; 32]",
+      "Sr25519": "[u8; 32]",
+      "Ecdsa": "[u8; 33]"
+    }
+  },
+  "Moment": "UInt<64, Moment>",
+  "OpaqueCall": "Bytes",
+  "Origin": "DoNotConstruct<Origin>",
+  "OriginCaller": {
+    "_enum": {
+      "System": "SystemOrigin"
+    }
+  },
+  "PalletId": "LockIdentifier",
+  "PalletsOrigin": "OriginCaller",
+  "PalletVersion": {
+    "major": "u16",
+    "minor": "u8",
+    "patch": "u8"
+  },
+  "Pays": {
+    "_enum": [
+      "Yes",
+      "No"
+    ]
+  },
+  "Phantom": "Null",
+  "PhantomData": "Null",
+  "Releases": {
+    "_enum": [
+      "V1",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6",
+      "V7",
+      "V8",
+      "V9",
+      "V10"
+    ]
+  },
+  "RuntimeDbWeight": {
+    "read": "Weight",
+    "write": "Weight"
+  },
+  "SignedBlock": "SignedBlockWithJustifications",
+  "SignedBlockWithJustification": {
+    "block": "Block",
+    "justification": "Option<EncodedJustification>"
+  },
+  "SignedBlockWithJustifications": {
+    "block": "Block",
+    "justifications": "Option<Justifications>"
+  },
+  "Slot": "u64",
+  "StorageData": "Bytes",
+  "StorageProof": {
+    "trieNodes": "Vec<Bytes>"
+  },
+  "TransactionPriority": "u64",
+  "TransactionInfo": {
+    "_alias": {
+      "dataSize": "size"
+    },
+    "chunkRoot": "H256",
+    "contentHash": "H256",
+    "dataSize": "u32",
+    "blockChunks": "u32"
+  },
+  "TransactionStorageProof": {
+    "chunk": "Vec<u8>",
+    "proof": "Vec<Vec<u8>>"
+  },
+  "ValidatorId": "AccountId",
+  "ValidatorIdOf": "ValidatorId",
+  "Weight": "u64",
+  "WeightMultiplier": "Fixed64",
+  "PreRuntime": "(ConsensusEngineId, Bytes)",
+  "SealV0": "(u64, Signature)",
+  "Seal": "(ConsensusEngineId, Bytes)",
+  "Consensus": "(ConsensusEngineId, Bytes)"
+}

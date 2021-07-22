@@ -82,6 +82,10 @@ $codec->decode();
 
 // Tuple
 $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00"));
+
+// Results
+$codec->process("Results<u8, bool>", new ScaleBytes("0x002a"));
+$codec->process("Results<u8, bool>", new ScaleBytes("0x0100"));
 ```
 
 ### Encode
@@ -130,13 +134,86 @@ $codec->typeStruct = ["int" => "u8", "bool" => "bool"];
 $codec->encode(["bool" => true]);
 
 // Struct
-$codec =$codec->createTypeByTypeString("Struct");
+$codec = $codec->createTypeByTypeString("Struct");
 $codec->typeStruct = ["a" => "Compact", "b" => "Compact"];
 $codec->encode(["a" => 3, "b" => 0]);
 
 // Tuple
-$codec = $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]);
+$codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]);
+
+// Results
+$codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]);
+
 ```
+
+### Custom types
+
+All substrate Pallet types will be registered by default, refer to https://github.com/polkadot-js/api/tree/master/packages/types/src/interfaces, 
+because the substrate itself is updated frequently, so https://github.com/gmajor-encrypt/php-scale-codec/tree/m2/src/Codec/interfaces 
+will also be updated frequently here.
+
+There are more than 50 polkadot-related applications so far, 
+here are some custom types that need to be registered, here are some examples for reference
+
+```php
+<?php
+
+use Codec\Base;
+
+$generator = Base::create();
+Base::regCustom($generator,[
+    // direct
+    "a"=> "balance",
+    // struct      
+    "b"=> ["b1"=>"u8","b2"=>"vec<u32>"],
+    // enum
+    "c"=> ["_enum"=>["c1","c2","c3"]],
+    // tuple
+    "d"=> "(u32, bool)",
+    // fixed
+    "e"=> "[u32; 5]",
+    // set
+    "f"=> ["_set"=>["_bitLength"=>64,"f1"=>1,"f2"=>2,"f3"=>4,"f4"=>8]]
+]);
+assert(is_null($generator->getRegistry("a")),false);
+assert(is_null($generator->getRegistry("b")),false);
+assert(is_null($generator->getRegistry("c")),false);
+assert(is_null($generator->getRegistry("d")),false);
+assert(is_null($generator->getRegistry("e")),false);
+assert(is_null($generator->getRegistry("f")),false);
+?>
+```
+
+### Extrinsic
+
+```php
+<?php
+use Codec\Base;
+use Codec\ScaleBytes;
+use Codec\Types\ScaleInstance;
+
+$metadataV13 = "..."; // from json rpc state_getMetadata
+$codec = new ScaleInstance(Base::create());
+$metadataInstant = $codec->process("metadata", new ScaleBytes($metadataV13));
+$decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes("0x280403000b819fc2837a01"), $metadataInstant);
+?>
+```
+
+### Event
+
+```php
+<?php
+use Codec\Base;
+use Codec\ScaleBytes;
+use Codec\Types\ScaleInstance;
+
+$metadataV13 = "..."; // from json rpc state_getMetadata
+$codec = new ScaleInstance(Base::create());
+$metadataInstant = $codec->process("metadata", new ScaleBytes($metadataV13));
+$decodeExtrinsic = $codec->process("Vec<EventRecord>", new ScaleBytes("0x080000000000000050e90b0b000000000200000001000000000080b2e60e00000000020000"), $metadataInstant);
+?>
+```
+
 ### Example
 
 More examples can refer to the test file https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/TypeTest.php

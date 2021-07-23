@@ -175,12 +175,12 @@ Base::regCustom($generator,[
     // set
     "f"=> ["_set"=>["_bitLength"=>64,"f1"=>1,"f2"=>2,"f3"=>4,"f4"=>8]]
 ]);
-assert(is_null($generator->getRegistry("a")),false);
-assert(is_null($generator->getRegistry("b")),false);
-assert(is_null($generator->getRegistry("c")),false);
-assert(is_null($generator->getRegistry("d")),false);
-assert(is_null($generator->getRegistry("e")),false);
-assert(is_null($generator->getRegistry("f")),false);
+assert(!is_null($generator->getRegistry("a")));
+assert(!is_null($generator->getRegistry("b")));
+assert(!is_null($generator->getRegistry("c")));
+assert(!is_null($generator->getRegistry("d")));
+assert(!is_null($generator->getRegistry("e")));
+assert(!is_null($generator->getRegistry("f")));
 ?>
 ```
 

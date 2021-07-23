@@ -3,7 +3,7 @@
   "AccountIdOf": "AccountId",
   "AccountIndex": "GenericAccountIndex",
   "AssetId": "u32",
-  "Balance": "UInt<128, Balance>",
+  "Balance": "U128",
   "BalanceOf": "Balance",
   "BlockNumber": "u32",
   "Call": "GenericCall",
@@ -77,7 +77,7 @@
       "Ecdsa": "[u8; 33]"
     }
   },
-  "Moment": "UInt<64, Moment>",
+  "Moment": "uint64",
   "OpaqueCall": "Bytes",
   "Origin": "DoNotConstruct<Origin>",
   "OriginCaller": {

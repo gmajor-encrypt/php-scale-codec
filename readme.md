@@ -83,9 +83,9 @@ $codec->decode();
 // Tuple
 $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00"));
 
-// Results
-$codec->process("Results<u8, bool>", new ScaleBytes("0x002a"));
-$codec->process("Results<u8, bool>", new ScaleBytes("0x0100"));
+// Result
+$codec->process("Result", new ScaleBytes("0x002a"));
+$codec->process("Result", new ScaleBytes("0x0100"));
 ```
 
 ### Encode
@@ -141,7 +141,7 @@ $codec->encode(["a" => 3, "b" => 0]);
 // Tuple
 $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]);
 
-// Results
+// Result
 $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]);
 
 ```

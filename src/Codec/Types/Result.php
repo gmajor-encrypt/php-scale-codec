@@ -5,7 +5,7 @@ namespace Codec\Types;
 use Codec\Utils;
 use InvalidArgumentException;
 
-class Results extends ScaleInstance
+class Result extends ScaleInstance
 {
     function decode ()
     {

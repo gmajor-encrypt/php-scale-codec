@@ -191,12 +191,12 @@ final class TypeTest extends TestCase
     public function testResults ()
     {
         $codec = new ScaleInstance(Base::create());
-        $this->assertEquals(["Ok" => 42], $codec->process("Results<u8, bool>", new ScaleBytes("0x002a")));
-        $this->assertEquals(["Err" => false], $codec->process("Results<u8, bool>", new ScaleBytes("0x0100")));
-        $this->assertEquals("0100", $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]));
+        $this->assertEquals(["Ok" => 42], $codec->process("Result<u8, bool>", new ScaleBytes("0x002a")));
+        $this->assertEquals(["Err" => false], $codec->process("Result<u8, bool>", new ScaleBytes("0x0100")));
+        $this->assertEquals("0100", $codec->createTypeByTypeString("Result<u8, bool>")->encode(["Err" => false]));
 
         $this->expectException(\InvalidArgumentException::class);
-        $codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err1" => false]);
+        $codec->createTypeByTypeString("Result<u8, bool>")->encode(["Err1" => false]);
     }
 }
 

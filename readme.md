@@ -142,7 +142,7 @@ $codec->encode(["a" => 3, "b" => 0]);
 $codec->createTypeByTypeString("(u8, u16, u32)")->encode([1, 400, 800000]);
 
 // Result
-$codec->createTypeByTypeString("Results<u8, bool>")->encode(["Err" => false]);
+$codec->createTypeByTypeString("Result<u8, bool>")->encode(["Err" => false]);
 
 ```
 

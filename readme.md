@@ -84,8 +84,8 @@ $codec->decode();
 $codec->process("(u8, u16, u32)", new ScaleBytes("01900100350c00"));
 
 // Result
-$codec->process("Result", new ScaleBytes("0x002a"));
-$codec->process("Result", new ScaleBytes("0x0100"));
+$codec->process("Result<u8, bool>", new ScaleBytes("0x002a"));
+$codec->process("Result<u8, bool>", new ScaleBytes("0x0100"));
 ```
 
 ### Encode
@@ -154,6 +154,8 @@ will also be updated frequently here.
 
 There are more than 50 polkadot-related applications so far, 
 here are some custom types that need to be registered, here are some examples for reference
+
+About custom type of [documentation](/custom_type.md) can be found here
 
 ```php
 <?php

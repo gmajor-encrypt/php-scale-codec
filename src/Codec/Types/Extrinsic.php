@@ -4,6 +4,8 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
+// https://substrate.dev/docs/en/knowledgebase/learn-substrate/extrinsics
+// Extrinsic decode has signed or Unsigned Transactions
 class Extrinsic extends ScaleInstance
 {
     public function decode (): array
@@ -25,7 +27,9 @@ class Extrinsic extends ScaleInstance
         $value["version"] = Utils::bytesToHex($this->nextBytes(1));
         $hasTransaction = hexdec($value["version"]) >= 80;
 
+        // Extrinsic v4
         if (in_array($value["version"], ["04", "84"])) {
+            // signed Transactions
             if ($hasTransaction) {
                 $value["account_id"] = $this->process("address");
                 $value["signature"] = $this->process("ExtrinsicSignature");

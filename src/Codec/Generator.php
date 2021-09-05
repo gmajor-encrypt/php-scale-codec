@@ -11,6 +11,8 @@ class Generator
     protected $registers = array();
 
     /**
+     * add Scale type to scale_type Registry
+     *
      * @param string $scaleType
      * @param $provider
      */
@@ -20,6 +22,8 @@ class Generator
     }
 
     /**
+     * get all scaleType Registry
+     *
      * @return array
      */
     public function getScaleType (): array
@@ -28,6 +32,9 @@ class Generator
     }
 
     /**
+     * get one scaleType from Registry
+     * return null if not found
+     *
      * @param string $type
      * @return mixed
      */

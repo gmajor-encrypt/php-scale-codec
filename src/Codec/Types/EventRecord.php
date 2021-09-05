@@ -5,6 +5,7 @@ namespace Codec\Types;
 use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
+// https://substrate.dev/docs/en/knowledgebase/runtime/events
 class EventRecord extends ScaleInstance
 {
     public function decode (): array

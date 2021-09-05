@@ -9,6 +9,9 @@ class Base
 {
     public const DEFAULT_NETWORK = 'default';
 
+
+    // default registered types
+    // include basic types and EventRecord, MetadataV12, MetadataV13, Extrinsic
     protected static $defaultScaleTypes = array(
         "Compact",
         "Option",
@@ -34,7 +37,7 @@ class Base
     );
 
     /**
-     * Create a new generator
+     * Create a new scale generator
      *
      * @param string $network
      *
@@ -43,6 +46,7 @@ class Base
     public static function create ($network = ""): Generator
     {
         $generator = new Generator();
+        //  register default types
         foreach (static::$defaultScaleTypes as $scaleType) {
             $providerClassName = self::getScaleCodecClassname($scaleType, $network);
             $generator->addScaleType($scaleType, new $providerClassName($generator));
@@ -53,6 +57,8 @@ class Base
     }
 
     /**
+     * get scale codec Classname
+     *
      * @param string $scaleType
      * @param string $network
      * @return string
@@ -67,16 +73,20 @@ class Base
         if ($providerClass = self::findScaleCodecClassname($scaleType, static::DEFAULT_NETWORK)) {
             return $providerClass;
         }
-
+        // convert class name, avoid php keyword conflict
         $scaleType = self::convertPhpType($scaleType);
         // fallback to no locale
         if ($providerClass = self::findScaleCodecClassname($scaleType)) {
             return $providerClass;
         }
+        // throw error
         throw new InvalidArgumentException(sprintf('Unable to find provider "%s" with network "%s"', $scaleType, $network));
     }
 
     /**
+     * find scale codec Classname
+     * default from src/Codec/Types dir
+     *
      * @param string $scaleType
      * @param string $network
      * @return string
@@ -92,6 +102,8 @@ class Base
 
     /**
      * convertPhpType
+     * convert scale type name avoid php keyword conflict
+     * so bool, string, int, null rename to Tbool, Tstring, Tint, Tnull
      *
      * @param $scaleType
      * @return mixed
@@ -106,25 +118,32 @@ class Base
 
     /**
      * findInterfaces
+     * find pallets custom types from file, default dir src/Codec/interfaces/
+     *
      *
      * @param Generator $generator
      */
     private static function findInterfaces (Generator $generator)
     {
+        // find all json file from dir
         $moduleFiles = array_filter(Utils::getDirContents("src/Codec/interfaces/"), function ($var) {
             $slice = explode(".", $var);
             return $slice[count($slice) - 1] == "json";
         });
         $moduleTypes = [];
-        foreach ($moduleFiles as $index => $file) {
+        foreach ($moduleFiles as $file) {
             $content = json_decode(file_get_contents($file), true);
+            // merge all array to one $moduleTypes array
             $moduleTypes = array_merge($moduleTypes, $content);
         }
+        // reg custom type
         self::regCustom($generator, $moduleTypes);
     }
 
     /**
      * regCustom
+     * reg all custom type from param $customJson
+     * About custom type of https://github.com/gmajor-encrypt/php-scale-codec/blob/master/custom_type.md can be found here
      *
      * @param Generator $generator
      * @param array $customJson
@@ -139,7 +158,6 @@ class Base
                     continue;
                 }
                 // iteration
-                $iterationSolve = false;
                 while (true) {
                     if (array_key_exists($value, $customJson)) {
                         $value = $customJson[$value];
@@ -150,7 +168,6 @@ class Base
                                 $iterationSolve = true;
                                 break;
                             } else {
-                                $iterationSolve = false;
                                 continue;
                             }
                         }
@@ -169,24 +186,29 @@ class Base
                 // Complex type
                 if ($value[-1] == '>') {
                     $match = array();
+                    //  find sub types
                     preg_match("/^([^<]*)<(.+)>$/", $value, $match);
                     if (count($match) > 2) {
                         switch (strtolower($match[1])) {
+                            // vec array
                             case "vec":
                                 $instant = clone $generator->getRegistry("vec");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
+                                // option
                             case "option":
                                 $instant = clone $generator->getRegistry("option");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
+                                // compact
                             case "compact":
                                 $instant = clone $generator->getRegistry("compact");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
+                                // BTreeMap
                             case "BTreeMap":
                                 $instant = clone $generator->getRegistry("bTreeMap");
                                 $instant->subType = $match[2];
@@ -218,12 +240,14 @@ class Base
                     }
                 }
             } elseif (gettype($value) == "array") {
+                // enum
                 if (array_key_exists("_enum", $value)) {
                     $instant = clone $generator->getRegistry("enum");
                     Utils::is_assoc($value["_enum"]) ? $instant->typeStruct = $value["_enum"] : $instant->valueList = $value["_enum"];
                     $generator->addScaleType($key, $instant);
                     continue;
                 }
+                // set
                 if (array_key_exists("_set", $value)) {
                     $instant = clone $generator->getRegistry("set");
                     array_key_exists("_bitLength", $value) ? $instant->BitLength = intval($value["_bitLength"]) : $instant->BitLength = 16;

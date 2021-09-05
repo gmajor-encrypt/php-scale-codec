@@ -3,6 +3,13 @@
 
 namespace Codec\Types;
 
+/**
+ * Class ModuleStorage
+ * @package Codec\Types
+ *
+ * Storage module
+ *
+ */
 
 class ModuleStorage extends ScaleInstance
 {

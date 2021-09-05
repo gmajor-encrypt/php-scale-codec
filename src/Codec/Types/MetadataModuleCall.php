@@ -2,6 +2,11 @@
 
 namespace Codec\Types;
 
+/**
+ * Class MetadataModuleCall
+ *
+ * @package Codec\Types
+ */
 class MetadataModuleCall extends ScaleInstance
 {
     public function decode (): array

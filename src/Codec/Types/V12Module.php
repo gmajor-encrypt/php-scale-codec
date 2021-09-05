@@ -2,6 +2,40 @@
 
 namespace Codec\Types;
 
+/**
+ * Class V12Module
+ * @package Codec\Types
+ *
+ * example struct
+ *  {
+*  "magicNumber": 1635018093,
+*  "metadata": {
+*    "V12": {
+*        "modules": [
+*        {
+*            // ...
+*        },
+*        {
+*            //...
+*        }
+*      ],
+*      "extrinsic": {
+*        "version": 4,
+*        "signedExtensions": [
+*            "CheckSpecVersion",
+*            "CheckTxVersion",
+*            "CheckGenesis",
+*            "CheckMortality",
+*            "CheckNonce",
+*            "CheckWeight",
+*            "ChargeTransactionPayment"
+*            ]
+*      }
+*    }
+*  }
+*}
+ *
+ */
 
 class V12Module extends ScaleInstance
 {
@@ -21,11 +55,25 @@ class V12Module extends ScaleInstance
 
     public $index;
 
-
+    /**
+     * metadata v12 decode
+     * struct include storage, calls, events, constants, errors, index
+     * {
+     *   "storage": "Option<ModuleStorage>",
+     *   "calls": "Option<Vec<MetadataModuleCall>>",
+     *   "events": "Option<Vec<MetadataModuleEvent>>",
+     *   "constants": "Vec<MetadataModuleConstants>",
+     *   "errors": "Vec<MetadataModuleError>",
+     *   "index": "u8"
+     * }
+     * @return array
+     *
+     */
     public function decode (): array
     {
         $this->name = $this->process("String");
 
+        // decode ModuleStorage
         $storage = $this->process("Option<ModuleStorage>");
         if (!empty($storage)) {
             $this->storage = $storage["items"];

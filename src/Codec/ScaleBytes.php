@@ -7,11 +7,13 @@ use InvalidArgumentException;
 class ScaleBytes
 {
     /**
+     * ScaleBytes data
      * @var array $data
      */
     public $data;
 
     /**
+     * current decode offset
      * @var int $offset
      */
     public $offset;
@@ -23,13 +25,16 @@ class ScaleBytes
      */
     public function __construct ($hexData)
     {
+        // check param is string
         if (is_string($hexData)) {
             $hexData = Utils::trimHex($hexData);
+            // check param is hex string
             $data = ctype_xdigit($hexData);
             if ($data === false) {
                 throw new InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
             }
             $this->data = Utils::hexToBytes($hexData);
+            // check param is byte array
         } elseif (is_array($hexData)) {
             $this->data = $hexData;
         } else {
@@ -38,6 +43,8 @@ class ScaleBytes
     }
 
     /**
+     *
+     * get next param length bytes
      * @param $length
      * @return array
      */
@@ -49,6 +56,7 @@ class ScaleBytes
     }
 
     /**
+     * reset offset if need
      * reset ScaleBytes
      */
     protected function reset ()
@@ -57,6 +65,7 @@ class ScaleBytes
     }
 
     /**
+     * get remain bytes length
      * remainBytesLength
      *
      * @return int

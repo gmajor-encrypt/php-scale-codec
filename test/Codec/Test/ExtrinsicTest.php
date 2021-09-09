@@ -54,4 +54,14 @@ final class ExtrinsicTest extends TestCase
         ], $decodeExtrinsic);
     }
 
+
+    public function testExtrinsicMismatchMetadata ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $metadataInstant = $codec->process("metadata", new ScaleBytes(Constant::$metadataStaticV13));
+
+        // kusama block num 9146045 https://kusama.subscan.io/extrinsic/9146045-3
+        $this->expectException(\InvalidArgumentException::class);
+        $codec->process("Extrinsic", new ScaleBytes("0xd904040b00bc8e8b009c98002408011220d5e7bd0cf571de0ea6a2f3e2a39e8fe813b831c1b4b74a24a606a823137d69831874702f6970342f37392e3133372e36352e3136312f7463702f333033333378742f6970342f3130302e3132332e3134362e36342f7463702f333033333378742f6970342f3130302e3131332e3234332e36342f7463702f333033333374702f6970342f3130302e3130392e3234372e302f7463702f33303333337c782f6970342f3130302e3131332e3230392e3132382f7463702f33303333337c782f6970342f3130302e3131352e3138392e3139322f7463702f3330333333fc3c0000da02000084030000c4bb729273025f2d5c64941f1643167726a0a212c19c20ea83f7a59d6cdba04809ab54362f4cd14838814ccff208049e591da66139999625670f9caf367e0882"), $metadataInstant);
+    }
 }

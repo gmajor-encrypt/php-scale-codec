@@ -29,6 +29,7 @@ class Extrinsic extends ScaleInstance
 
         // Extrinsic v4
         if (in_array($value["version"], ["04", "84"])) {
+
             // signed Transactions
             if ($hasTransaction) {
                 $value["account_id"] = $this->process("address");
@@ -36,9 +37,11 @@ class Extrinsic extends ScaleInstance
                 $value["era"] = $this->process("EraExtrinsic");
                 $value["nonce"] = gmp_strval($this->process("Compact<U64>"));
 
+                // check signedExtensions exist ChargeTransactionPayment
                 if (in_array("ChargeTransactionPayment", $this->metadata["extrinsic"]["signedExtensions"])) {
                     $value["tip"] = gmp_strval($this->process("Compact<Balance>"));
                 }
+                // generate extrinsic hash
                 $extrinsicHash = function () use ($value): string {
                     if ($value["extrinsic_length"] > 0) {
                         $extrinsicData = Utils::bytesToHex($this->data->data);
@@ -49,6 +52,7 @@ class Extrinsic extends ScaleInstance
                     return sprintf("0x%s", sodium_bin2hex(sodium_crypto_generichash(Utils::hex2String($extrinsicData))));
                 };
                 $value["extrinsic_hash"] = $extrinsicHash();
+
             }
             $value["look_up"] = Utils::bytesToHex($this->nextBytes(2));
 
@@ -56,20 +60,21 @@ class Extrinsic extends ScaleInstance
             throw new \InvalidArgumentException(sprintf("Extrinsic version %s is not support", $value["version"]));
         }
 
-        $call = $this->metadata["call_index"][$value["look_up"]];
-        if (is_null($call)) {
+        // check lookup
+        if (!array_key_exists($value["look_up"], $this->metadata["call_index"])) {
             throw new \InvalidArgumentException(sprintf("Not find Extrinsic Lookup %s, please check metadata info", $value["look_up"]));
         }
+
+        $call = $this->metadata["call_index"][$value["look_up"]];
         $value["module_id"] = $call["module"]["name"];
         $value["call_name"] = $call["call"]["name"];
 
         $value["params"] = [];
         foreach ($call["call"]["args"] as $index => $arg) {
-            $r = $this->process($arg["type"]);
             array_push($value["params"], [
                 "name" => $arg["name"],
                 "type" => $arg["type"],
-                "value" => $r,
+                "value" => $this->process($arg["type"]),
             ]);
         }
 

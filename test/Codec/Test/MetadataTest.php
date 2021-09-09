@@ -17,6 +17,15 @@ final class MetadataTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $r = $codec->process("metadata", new ScaleBytes(Constant::$metadataStaticV12));
         $this->assertEquals("12", $r["metadata_version"]);
+        $this->assertEquals([
+            "CheckSpecVersion",
+            "CheckTxVersion",
+            "CheckGenesis",
+            "CheckMortality",
+            "CheckNonce",
+            "CheckWeight",
+            "ChargeTransactionPayment"
+        ], $r["extrinsic"]["signedExtensions"]);
     }
 
     public function testMetadataV13Decoder ()
@@ -24,5 +33,15 @@ final class MetadataTest extends TestCase
         $codec = new ScaleInstance(Base::create());
         $r = $codec->process("metadata", new ScaleBytes(Constant::$metadataStaticV13));
         $this->assertEquals("13", $r["metadata_version"]);
+        $this->assertEquals([
+            "CheckSpecVersion",
+            "CheckTxVersion",
+            "CheckGenesis",
+            "CheckMortality",
+            "CheckNonce",
+            "CheckWeight",
+            "ChargeTransactionPayment",
+            "PrevalidateAttests"
+        ], $r["extrinsic"]["signedExtensions"]);
     }
 }

@@ -18,5 +18,6 @@
     "signedExtensions": "Vec<String>"
   },
   "Weight": "u32",
-  "Moment": "Compact<u32>"
+  "Moment": "Compact<u32>",
+  "AccountIndex": "u32"
 }

@@ -12,7 +12,7 @@ class GenericMultiAddress extends Enum
         parent::__construct($generator);
         $this->typeStruct = [
             "Id" => "AccountId",
-            "Index" => "Compact<AccountIndex>",
+            "Index" => "Compact<u32>",
             "Raw" => "Bytes",
             "Address32" => "H256",
             "Address20" => "H160",

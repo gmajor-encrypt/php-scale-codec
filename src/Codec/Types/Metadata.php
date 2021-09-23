@@ -16,12 +16,14 @@ class Metadata extends ScaleInstance
     public $metadataVersion = [
         12 => "metadataV12",
         13 => "metadataV12",
+//      14 => "metadataV14",  // todo
     ];
 
     /**
      * metadata decode
      * raw metadata can be query from substrate rpc state_getMetadata
      * https://substrate.dev/docs/en/knowledgebase/runtime/metadata#http--websocket-apis
+     *
      * @return mixed
      */
     public function decode ()

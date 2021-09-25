@@ -196,19 +196,19 @@ class Base
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
-                                // option
+                            // option
                             case "option":
                                 $instant = clone $generator->getRegistry("option");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
-                                // compact
+                            // compact
                             case "compact":
                                 $instant = clone $generator->getRegistry("compact");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;
-                                // BTreeMap
+                            // BTreeMap
                             case "BTreeMap":
                                 $instant = clone $generator->getRegistry("bTreeMap");
                                 $instant->subType = $match[2];
@@ -251,8 +251,8 @@ class Base
                 if (array_key_exists("_set", $value)) {
                     $instant = clone $generator->getRegistry("set");
                     array_key_exists("_bitLength", $value) ? $instant->BitLength = intval($value["_bitLength"]) : $instant->BitLength = 16;
-                    unset($value["_bitLength"]);
-                    $instant->valueList = $value["_set"];
+                    unset($value["_set"]["_bitLength"]);
+                    $instant->valueList = array_keys($value["_set"]);
                     $generator->addScaleType($key, $instant);
                     continue;
                 }

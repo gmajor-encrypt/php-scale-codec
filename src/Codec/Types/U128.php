@@ -24,7 +24,7 @@ class U128 extends Uint
         $value = $param;
         if ($value >= 0 && gmp_cmp(strval($param), gmp_init("ffffffffffffffffffffffffffffffff", 16)) == -1) {
             $u128 = new Uint128(ByteOrder::LE);
-            $buffer = new Buffer($u128->write($value));
+            $buffer = new Buffer($u128->write(strval($value)));
             return Utils::trimHex($buffer->getHex());
         }
         throw new InvalidArgumentException(sprintf('%s range out U128', $value));

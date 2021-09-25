@@ -5,7 +5,6 @@ namespace Codec\Test;
 
 use Codec\Base;
 use Codec\ScaleBytes;
-use Codec\Types\metadataV13;
 use Codec\Types\ScaleInstance;
 use PHPUnit\Framework\TestCase;
 
@@ -27,8 +26,9 @@ final class MetadataTest extends TestCase
             "CheckWeight",
             "ChargeTransactionPayment"
         ], $r["metadata"]["extrinsic"]["signedExtensions"]);
-        $raw = $codec->createTypeByTypeString("metadata")->encode($r);
-        $codec->process("metadata", new ScaleBytes($raw));
+        unset($r["metadata"]["call_index"], $r["metadata"]["event_index"]);
+
+        self::assertEquals($codec->createTypeByTypeString("metadata")->encode($r), Constant::$metadataStaticV12);
     }
 
     public function testMetadataV13Decoder ()
@@ -48,8 +48,7 @@ final class MetadataTest extends TestCase
         ], $r["metadata"]["extrinsic"]["signedExtensions"]);
 
         unset($r["metadata"]["call_index"], $r["metadata"]["event_index"]); // del call_index, event_index just for decode extrinsic or event
-        $raw = $codec->createTypeByTypeString("metadata")->encode($r);
-        $codec->process("metadata", new ScaleBytes($raw));
+        self::assertEquals($codec->createTypeByTypeString("metadata")->encode($r), Constant::$metadataStaticV13);
     }
 
 }

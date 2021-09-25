@@ -104,7 +104,7 @@ class MetadataModuleStorageEntry extends Struct
                     $this->createTypeByTypeString("String")->encode($hashType["double_map_type"]["key1"]) .
                     $this->createTypeByTypeString("String")->encode($hashType["double_map_type"]["key2"]) .
                     $this->createTypeByTypeString("string")->encode($hashType["double_map_type"]["value"]) .
-                    $this->createTypeByTypeString("StorageHasher")->encode($hashType["double_map_type"]["hasher"]);
+                    $this->createTypeByTypeString("StorageHasher")->encode($hashType["double_map_type"]["key2Hasher"]);
                 break;
             case "PlainType":
                 $hashFunctionValue = $this->createTypeByTypeString("String")->encode($hashType["plain_type"]);

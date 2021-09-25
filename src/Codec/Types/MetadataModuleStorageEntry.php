@@ -4,8 +4,22 @@
 namespace Codec\Types;
 
 
-class MetadataModuleStorageEntry extends ScaleInstance
+class MetadataModuleStorageEntry extends Struct
 {
+    /**
+     * MetadataModuleStorageEntry
+     * {
+     *  "name":"string",
+     *  "modifier":"StorageModify",
+     *  "type":"StorageFunctionType",
+     *  "fallback":"Bytes",
+     *  "docs":"Vec<string>",
+     * }
+     *
+     *
+     */
+
+
     public function decode (): array
     {
         $value = [];
@@ -57,5 +71,54 @@ class MetadataModuleStorageEntry extends ScaleInstance
         $value["fallback"] = $this->process("Bytes");
         $value["docs"] = $this->process("Vec<string>");
         return $value;
+    }
+
+
+    /**
+     * MetadataModuleStorageEntry encode
+     *
+     * @param $param
+     * @return \InvalidArgumentException|mixed|string|null
+     */
+
+    public function encode ($param)
+    {
+        $name = $this->createTypeByTypeString("String")->encode($param["name"]);
+        $StorageModify = $this->createTypeByTypeString("StorageModify")->encode($param["modifier"]);
+
+        $hashType = $param["type"];
+        $StorageFunctionType = $this->createTypeByTypeString("StorageFunctionType")->encode($hashType["origin"]);
+
+        //
+        $hashFunctionValue = "";
+
+        switch ($hashType["origin"]) {
+            case "MapType":
+                $hashFunctionValue = $this->createTypeByTypeString("StorageHasher")->encode($hashType["map_type"]["hasher"]) .
+                    $this->createTypeByTypeString("String")->encode($hashType["map_type"]["key"]) .
+                    $this->createTypeByTypeString("String")->encode($hashType["map_type"]["value"]) .
+                    $this->createTypeByTypeString("bool")->encode($hashType["map_type"]["isLinked"]);
+                break;
+            case "DoubleMapType":
+                $hashFunctionValue = $this->createTypeByTypeString("StorageHasher")->encode($hashType["double_map_type"]["hasher"]) .
+                    $this->createTypeByTypeString("String")->encode($hashType["double_map_type"]["key1"]) .
+                    $this->createTypeByTypeString("String")->encode($hashType["double_map_type"]["key2"]) .
+                    $this->createTypeByTypeString("string")->encode($hashType["double_map_type"]["value"]) .
+                    $this->createTypeByTypeString("StorageHasher")->encode($hashType["double_map_type"]["hasher"]);
+                break;
+            case "PlainType":
+                $hashFunctionValue = $this->createTypeByTypeString("String")->encode($hashType["plain_type"]);
+                break;
+            case "NMap":
+                $hashFunctionValue = $this->createTypeByTypeString("Vec<String>")->encode($hashType["NMapType"]["keyVec"]) .
+                    $this->createTypeByTypeString("vec<StorageHasher>")->encode($hashType["NMapType"]["hashers"]) .
+                    $this->createTypeByTypeString("String")->encode($hashType["NMapType"]["value"]);
+                break;
+        }
+
+        $fallback = $this->createTypeByTypeString("Bytes")->encode($param["fallback"]);
+        $docs = $this->createTypeByTypeString("Vec<string>")->encode($param["docs"]);
+
+        return $name . $StorageModify . $StorageFunctionType . $hashFunctionValue . $fallback . $docs;
     }
 }

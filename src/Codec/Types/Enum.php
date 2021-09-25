@@ -53,6 +53,6 @@ class Enum extends ScaleInstance
                 }
             }
         }
-        return new \InvalidArgumentException(sprintf('%v not present in value', $param));
+        return new \InvalidArgumentException(sprintf('%g not present in value', $param));
     }
 }

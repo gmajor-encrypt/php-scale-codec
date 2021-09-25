@@ -16,7 +16,7 @@ class Metadata extends ScaleInstance
 
     public $metadataVersion = [
         12 => "metadataV12",
-        13 => "metadataV12",
+        13 => "metadataV13",
 //      14 => "metadataV14",  // todo
     ];
 
@@ -60,8 +60,24 @@ class Metadata extends ScaleInstance
      *  }
      */
 
+
     public function encode ($param)
     {
+        if (!array_key_exists("magicNumber", $param) || !array_key_exists("metadata", $param) || !array_key_exists("metadata_version", $param)) {
+            throw new InvalidArgumentException("invalid metadata");
+        }
+        // magicNumber u32
+        $magicNum = $this->createTypeByTypeString("u32")->encode($param["magicNumber"]);
 
+        // Version
+        if (!array_key_exists($param["metadata_version"], $this->metadataVersion)) {
+            throw new InvalidArgumentException(sprintf('only support metadata v12,v13'));
+        }
+        $metadataVersion = $this->metadataVersion[$param["metadata_version"]];
+
+        // metadata module
+        $module = $this->createTypeByTypeString($metadataVersion)->encode($param["metadata"]);
+
+        return "0x" . $magicNum . Utils::LittleIntToBytes($param["metadata_version"], 1) . $module;
     }
 }

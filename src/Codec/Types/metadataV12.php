@@ -3,10 +3,20 @@
 namespace Codec\Types;
 
 
+use Codec\Generator;
 use Codec\Utils;
 
-class metadataV12 extends Metadata
+class metadataV12 extends Struct
 {
+
+    public function __construct (Generator $generator)
+    {
+        parent::__construct($generator);
+        $this->typeStruct = [
+            "modules" => "Vec<V12Module>",
+            "extrinsic" => "ExtrinsicMetadata"
+        ];
+    }
 
     public function decode (): array
     {
@@ -38,6 +48,6 @@ class metadataV12 extends Metadata
 
     public function encode ($param)
     {
-
+        return parent::encode($param);
     }
 }

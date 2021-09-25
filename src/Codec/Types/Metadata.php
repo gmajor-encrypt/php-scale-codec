@@ -3,6 +3,7 @@
 namespace Codec\Types;
 
 
+use Codec\ScaleBytes;
 use Codec\Utils;
 use InvalidArgumentException;
 
@@ -28,10 +29,12 @@ class Metadata extends ScaleInstance
      */
     public function decode ()
     {
-        if (Utils::byteArray2String($this->nextBytes(4)) === "meta") {
+        $magicBytes = $this->nextBytes(4);
+        if (Utils::byteArray2String($magicBytes) === "meta") {
             $this->version = hexdec(Utils::bytesToHex($this->nextBytes(1)));
             if (!empty($this->metadataVersion[$this->version])) {
-                $metadata = $this->process($this->metadataVersion[$this->version]);
+                $metadata["metadata"] = $this->process($this->metadataVersion[$this->version]);
+                $metadata["magicNumber"] = $this->process("u32", new ScaleBytes($magicBytes));
                 $metadata["metadata_version"] = $this->version;
                 return $metadata;
             } else {
@@ -40,5 +43,25 @@ class Metadata extends ScaleInstance
         } else {
             throw new InvalidArgumentException(sprintf('decode runtime metadata fail'));
         }
+    }
+
+    /**
+     * metadata encode
+     *
+     * @param $param
+     * @return mixed|void|null
+     *  {
+     *      "magicNumber": 1635018093,
+     *      "metadata":{
+     *          "modules":
+     *          "extrinsic": []
+     *      }
+     *
+     *  }
+     */
+
+    public function encode ($param)
+    {
+
     }
 }

@@ -6,6 +6,7 @@ namespace Codec\Test;
 use Codec\Base;
 use Codec\ScaleBytes;
 use Codec\Types\ScaleInstance;
+use Codec\Utils;
 use PHPUnit\Framework\TestCase;
 
 require_once "const.php";
@@ -25,7 +26,9 @@ final class MetadataTest extends TestCase
             "CheckNonce",
             "CheckWeight",
             "ChargeTransactionPayment"
-        ], $r["extrinsic"]["signedExtensions"]);
+        ], $r["metadata"]["extrinsic"]["signedExtensions"]);
+        unset($r["metadata"]["call_index"], $r["metadata"]["event_index"]); // del call_index, event_index just for decode extrinsic or event
+        $this->assertEquals($r, json_decode(file_get_contents("test/Codec/Test/v12.json"), true));
     }
 
     public function testMetadataV13Decoder ()
@@ -42,6 +45,8 @@ final class MetadataTest extends TestCase
             "CheckWeight",
             "ChargeTransactionPayment",
             "PrevalidateAttests"
-        ], $r["extrinsic"]["signedExtensions"]);
+        ], $r["metadata"]["extrinsic"]["signedExtensions"]);
+        unset($r["metadata"]["call_index"], $r["metadata"]["event_index"]); // del call_index, event_index just for decode extrinsic or event
+        $this->assertEquals($r, json_decode(file_get_contents("test/Codec/Test/v13.json"), true));
     }
 }

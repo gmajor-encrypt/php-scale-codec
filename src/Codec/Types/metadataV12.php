@@ -11,7 +11,7 @@ class metadataV12 extends Metadata
     public function decode (): array
     {
         $result = [
-            "metadata" => null,
+            "modules" => null,
             "call_index" => null,
             "event_index" => null,
             "extrinsic" => null,
@@ -30,8 +30,14 @@ class metadataV12 extends Metadata
             }
         }
 
-        $result["metadata"] = $modules;
+        $result["modules"] = $modules;
         $result["extrinsic"] = $this->process("ExtrinsicMetadata");
         return $result;
+    }
+
+
+    public function encode ($param)
+    {
+
     }
 }

@@ -199,6 +199,7 @@ $this->assertEquals($codec->process("f", new ScaleBytes($codec->createTypeByType
 ### Metadata
 
 For more information on metadata, please refer to https://substrate.dev/docs/en/knowledgebase/runtime/metadata#metadata-formats
+
 Currently, metadata decode/encode only supports v12/13, v14(https://github.com/paritytech/substrate/pull/8615) is under development
 More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/MetadataTest.php
 
@@ -222,6 +223,7 @@ print_r($metadataInstant);
 ### Extrinsic
 
 For more information on Extrinsic, please refer to https://substrate.dev/docs/en/knowledgebase/learn-substrate/extrinsics
+
 More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/ExtrinsicTest.php
 
 ```php
@@ -240,6 +242,7 @@ $decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes("0x280403000b819f
 ### Event
 
 For more information on Event, please refer to https://substrate.dev/docs/en/knowledgebase/runtime/events
+
 More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/EventTest.php
 
 

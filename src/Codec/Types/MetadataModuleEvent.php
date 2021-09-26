@@ -8,6 +8,13 @@ class MetadataModuleEvent extends Struct
 {
     /**
      * MetadataModuleEvent constructor.
+     * https://substrate.dev/docs/en/knowledgebase/runtime/metadata#events
+     * This metadata snippet is generated from this declaration in frame-system:
+     * {
+     *  "name":"string",
+     *  "args": "Vec<String>",
+     *  "docs": "Vec<string>"
+     * }
      *
      * @param Generator $generator
      */

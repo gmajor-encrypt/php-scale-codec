@@ -6,7 +6,18 @@ use Codec\Generator;
 
 /**
  * Class MetadataModuleCall
+ *  https://substrate.dev/docs/en/knowledgebase/runtime/metadata#dispatchable-calls
  *
+ *  Metadata for dispatchable calls includes information about the runtime calls and are defined by the decl_module! (FRAME v1) or #[pallet] (FRAME v2) macros
+ * Struct
+ * {
+ *   "name": "string"
+ *   "arg" : "Vec<MetadataModuleCallArgument>"
+ *   "docs" "Vec<string>"
+ * }
+ *
+ *
+
  * @package Codec\Types
  */
 class MetadataModuleCall extends Struct

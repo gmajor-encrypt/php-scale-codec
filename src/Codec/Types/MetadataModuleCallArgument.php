@@ -8,6 +8,19 @@ use Codec\Generator;
 class MetadataModuleCallArgument extends Struct
 {
 
+    /**
+     * MetadataModuleCallArgument constructor.
+     *
+     * MetadataModuleCallArgument is  MetadataModuleCall args
+     *
+     * Struct
+     * {
+     *   "name": "string",
+     *   "type": "string"
+     *
+     *
+     * @param Generator $generator
+     */
     public function __construct (Generator $generator)
     {
         parent::__construct($generator);

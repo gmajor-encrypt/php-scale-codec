@@ -8,7 +8,16 @@ class MetadataModuleError extends Struct
 {
 
     /**
-     * MetadataModuleError constructor.
+     * MetadataModuleError constructor
+     * https://substrate.dev/docs/en/knowledgebase/runtime/metadata#errors
+     * Metadata will pull all the possible runtime errors from decl_error! (FRAME v1) or #[pallet::error] (FRAME v2)
+     *
+     * Struct
+     * {
+     *  "name": "string",
+     *  "docs": "Vec<string>"
+     * }
+     *
      *
      * @param Generator $generator
      */

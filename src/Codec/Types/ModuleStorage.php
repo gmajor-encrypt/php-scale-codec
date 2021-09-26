@@ -12,6 +12,12 @@ use Codec\Generator;
  *
  * Storage module
  *
+ *  Every storage item that is defined in a pallet will have a corresponding metadata entry.
+ * Struct
+ * {
+ *   "prefix": "string"
+ *   "items" : "vec<MetadataModuleStorageEntry>"
+ * }
  */
 class ModuleStorage extends Struct
 {

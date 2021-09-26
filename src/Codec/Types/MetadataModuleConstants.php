@@ -6,6 +6,21 @@ use Codec\Generator;
 
 class MetadataModuleConstants extends Struct
 {
+    /**
+     * MetadataModuleConstants constructor.
+     *
+     * The metadata will include any module constants
+     * https://substrate.dev/docs/en/knowledgebase/runtime/metadata#constants
+     * Struct
+     * {
+     *  "name": "string",
+     *  "type": "string",
+     *  "value": "bytes",
+     *  "docs": "vec<string>"
+     * }
+     *
+     * @param Generator $generator
+     */
 
     public function __construct (Generator $generator)
     {

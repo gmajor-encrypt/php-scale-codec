@@ -7,7 +7,13 @@ namespace Codec\Types;
 class MetadataModuleStorageEntry extends Struct
 {
     /**
+     *
+     *
      * MetadataModuleStorageEntry
+     *
+     * MetadataModuleStorageEntry declares storage struct and this value hasher is
+     * there 4 Storage type MapType, DoubleMapType, PlainType, NMap
+     *
      * {
      *  "name":"string",
      *  "modifier":"StorageModify",

@@ -6,6 +6,15 @@ use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 // https://substrate.dev/docs/en/knowledgebase/runtime/events
+// https://github.com/paritytech/substrate/blob/master/frame/system/src/lib.rs#L787
+//
+// For struct EventRecord Record of an event happening.
+// "EventRecord": {
+//    "phase": "Phase",
+//    "event": "E",
+//    "topics": "Vec<T>"
+// }
+
 class EventRecord extends ScaleInstance
 {
     public function decode (): array

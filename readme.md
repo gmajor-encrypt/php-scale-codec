@@ -161,6 +161,8 @@ About custom type of [documentation](/custom_type.md) can be found here
 <?php
 
 use Codec\Base;
+use Codec\ScaleBytes;
+use Codec\Types\ScaleInstance;
 
 $generator = Base::create();
 Base::regCustom($generator,[
@@ -177,16 +179,50 @@ Base::regCustom($generator,[
     // set
     "f"=> ["_set"=>["_bitLength"=>64,"f1"=>1,"f2"=>2,"f3"=>4,"f4"=>8]]
 ]);
-assert(!is_null($generator->getRegistry("a")));
-assert(!is_null($generator->getRegistry("b")));
-assert(!is_null($generator->getRegistry("c")));
-assert(!is_null($generator->getRegistry("d")));
-assert(!is_null($generator->getRegistry("e")));
-assert(!is_null($generator->getRegistry("f")));
+$codec = new ScaleInstance($generator);
+
+// inherit
+$this->assertEquals($codec->process("a", new ScaleBytes($codec->createTypeByTypeString("a")->encode(gmp_init(739571955075788261)))), gmp_init(739571955075788261));
+// struct
+$this->assertEquals($codec->process("b", new ScaleBytes($codec->createTypeByTypeString("b")->encode(["b1" => 1, "b2" => [1, 2]]))), ["b1" => 1, "b2" => [1, 2]]);
+// enum
+$this->assertEquals($codec->process("c", new ScaleBytes($codec->createTypeByTypeString("c")->encode("c2"))), "c2");
+// tuple
+$this->assertEquals($codec->process("d", new ScaleBytes($codec->createTypeByTypeString("d")->encode([1, true]))), [1, true]);
+// fixed
+$this->assertEquals($codec->process("e", new ScaleBytes($codec->createTypeByTypeString("e")->encode([1, 2, 3, 4, 5]))), [1, 2, 3, 4, 5]);
+// set
+$this->assertEquals($codec->process("f", new ScaleBytes($codec->createTypeByTypeString("f")->encode(["f1", "f2"]))), ["f1", "f2"]);
 ?>
 ```
 
+### Metadata
+
+For more information on metadata, please refer to https://substrate.dev/docs/en/knowledgebase/runtime/metadata#metadata-formats
+Currently, metadata decode/encode only supports v12/13, v14(https://github.com/paritytech/substrate/pull/8615) is under development
+More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/MetadataTest.php
+
+```php
+<?php
+use Codec\Base;
+use Codec\ScaleBytes;
+use Codec\Types\ScaleInstance;
+
+$metadataV13 = "..."; // from json rpc state_getMetadata
+$codec = new ScaleInstance(Base::create());
+// decode
+$metadataInstant = $codec->process("metadata", new ScaleBytes($metadataV13));
+// encode
+$codec->createTypeByTypeString("metadata")->encode($metadataInstant);
+print_r($metadataInstant);
+?>
+```
+
+
 ### Extrinsic
+
+For more information on Extrinsic, please refer to https://substrate.dev/docs/en/knowledgebase/learn-substrate/extrinsics
+More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/ExtrinsicTest.php
 
 ```php
 <?php
@@ -202,6 +238,10 @@ $decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes("0x280403000b819f
 ```
 
 ### Event
+
+For more information on Event, please refer to https://substrate.dev/docs/en/knowledgebase/runtime/events
+More test you can found here https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/Test/EventTest.php
+
 
 ```php
 <?php

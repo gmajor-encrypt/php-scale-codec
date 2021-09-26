@@ -6,6 +6,22 @@ use Codec\Utils;
 
 // https://substrate.dev/docs/en/knowledgebase/learn-substrate/extrinsics
 // Extrinsic decode has signed or Unsigned Transactions
+// Unsigned
+// {
+//    "length" "Compact<u32>",
+//    "Version" "u8"
+//    "method": "Call"
+// }
+// Signed
+// {
+//    "length" "Compact<u32>",
+//    "Version" "u8" // 84, V4, signing bit set
+//    "signer":"account_id",
+//    "signature": "EcdsaSignature | Ed25519Signature | Sr25519Signature"
+//    "era" :"era",
+//    "nonce": "Compact<U64>"
+//    "method": "Call"
+// }
 class Extrinsic extends ScaleInstance
 {
     public function decode (): array

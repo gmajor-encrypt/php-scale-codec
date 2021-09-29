@@ -2,9 +2,17 @@
 
 namespace Codec\Types;
 
-use Codec\Utils;
 use InvalidArgumentException;
 
+/**
+ * Class Vec
+ *
+ * @package Codec\Types
+ *
+ * A collection of same-typed values is encoded, prefixed with a compact encoding of the number of items, followed by each item's encoding concatenated in turn
+ *
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#vectors-lists-series-sets
+ */
 class Vec extends ScaleInstance
 {
 

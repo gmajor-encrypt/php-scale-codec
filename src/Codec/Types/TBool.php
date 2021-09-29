@@ -2,6 +2,17 @@
 
 namespace Codec\Types;
 
+/**
+ * Class TBool
+ *
+ * @package Codec\Types
+ *
+ * Boolean values are encoded using the least significant bit of a single byte.
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#boolean
+ *
+ *
+ *
+ */
 class TBool extends ScaleInstance
 {
 
@@ -12,6 +23,7 @@ class TBool extends ScaleInstance
      */
     public function decode(): bool
     {
+        // check next first bytes is 0
         return $this->nextBool();
     }
 

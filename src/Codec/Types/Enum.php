@@ -5,6 +5,15 @@ namespace Codec\Types;
 use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
+/**
+ * Class Enum
+ *
+ * @package Codec\Types
+ *
+ * A fixed number of variants, each mutually exclusive and potentially implying a further value or series of values.
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#enumerations-tagged-unions
+ *
+ */
 class Enum extends ScaleInstance
 {
 

@@ -8,6 +8,10 @@ use BitWasp\Buffertools\Parser;
 use BitWasp\Buffertools\Types\Int128;
 use Codec\Utils;
 
+
+// Basic integers are encoded using a fixed-width little-endian (LE) format.
+// signed 128-bit integer
+// https://substrate.dev/docs/en/knowledgebase/advanced/codec#fixed-width-integers
 class I128 extends TInt
 {
 

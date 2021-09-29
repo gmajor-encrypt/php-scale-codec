@@ -10,6 +10,10 @@ use Codec\Utils;
 use Exception;
 use InvalidArgumentException;
 
+
+// Basic integers are encoded using a fixed-width little-endian (LE) format.
+// signed 64-bit integer
+// https://substrate.dev/docs/en/knowledgebase/advanced/codec#fixed-width-integers
 class I64 extends TInt
 {
 

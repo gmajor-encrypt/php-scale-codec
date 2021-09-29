@@ -197,6 +197,8 @@ class ScaleInstance implements CodecInterface
     /**
      * nextBool
      *
+     * check next first bytes is 0, return True when bytes is 1
+     *
      * @return bool
      */
     protected function nextBool ()

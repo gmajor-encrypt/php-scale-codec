@@ -5,6 +5,17 @@ namespace Codec\Types;
 
 use InvalidArgumentException;
 
+/**
+ * Class Struct
+ *
+ * @package Codec\Types
+ *
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#data-structures
+ * For structures, the values are named, but that is irrelevant for the encoding (names are ignored - only order matters).
+ * All containers store elements consecutively. The order of the elements is not fixed, depends on the container, and cannot be relied on at decoding.
+ * This implicitly means that decoding some byte-array into a specified structure that enforces an order and then re-encoding it could result in a different byte array than the original that was decoded.
+ *
+ */
 class Struct extends ScaleInstance
 {
 

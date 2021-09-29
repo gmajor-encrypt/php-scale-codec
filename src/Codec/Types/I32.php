@@ -9,6 +9,10 @@ use BitWasp\Buffertools\Types\Int32;
 use Codec\Utils;
 use InvalidArgumentException;
 
+
+// Basic integers are encoded using a fixed-width little-endian (LE) format.
+// signed 32-bit integer
+// https://substrate.dev/docs/en/knowledgebase/advanced/codec#fixed-width-integers
 class I32 extends TInt
 {
 

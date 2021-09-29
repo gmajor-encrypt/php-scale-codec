@@ -5,6 +5,10 @@ namespace Codec\Types;
 use Codec\Utils;
 use InvalidArgumentException;
 
+
+// Basic integers are encoded using a fixed-width little-endian (LE) format.
+// unsigned 8-bit integer
+// https://substrate.dev/docs/en/knowledgebase/advanced/codec#fixed-width-integers
 class U8 extends Uint
 {
     public function decode (): int

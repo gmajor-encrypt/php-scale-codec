@@ -4,6 +4,15 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
+/**
+ * Class TString
+ *
+ * @package Codec\Types
+ *
+ * Strings are Vectors containing a valid UTF8 sequence.
+ *
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#strings
+ */
 class TString extends ScaleInstance
 {
     /**

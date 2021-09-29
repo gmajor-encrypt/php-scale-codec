@@ -10,6 +10,10 @@ use BitWasp\Buffertools\Parser;
 use GMP;
 use InvalidArgumentException;
 
+// Basic integers are encoded using a fixed-width little-endian (LE) format.
+// unsigned 128-bit integer
+// https://substrate.dev/docs/en/knowledgebase/advanced/codec#fixed-width-integers
+
 class U128 extends Uint
 {
 

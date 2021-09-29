@@ -5,6 +5,17 @@ namespace Codec\Types;
 use Codec\Utils;
 use InvalidArgumentException;
 
+/**
+ * Class Result
+ *
+ * @package Codec\Types
+ *
+ * Results are commonly used enumerations which indicate whether certain operations were successful or unsuccessful
+ *
+ * https://substrate.dev/docs/en/knowledgebase/advanced/codec#results
+ *
+ *
+ */
 class Result extends ScaleInstance
 {
     function decode ()

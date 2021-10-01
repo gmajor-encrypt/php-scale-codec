@@ -9,10 +9,21 @@ use BitWasp\Buffertools\Buffer;
 use InvalidArgumentException;
 use OutOfRangeException;
 
+/**
+ * Utils package
+ * package of various tool functions
+ *
+ * Class Utils
+ * @package Codec
+ */
+
 class Utils
 {
 
     /**
+     *
+     * Unpack data from a binary string
+     *
      * @param string $str
      * @return array|false
      */
@@ -23,6 +34,8 @@ class Utils
 
 
     /**
+     * Bytes data to string
+     *
      * @param $bytes
      * @return string
      */
@@ -33,6 +46,8 @@ class Utils
     }
 
     /**
+     * bytes data to hex string
+     *
      * @param array $bytes
      * @return string
      */
@@ -44,6 +59,8 @@ class Utils
     }
 
     /**
+     * hex string to bytes data
+     *
      * @param $hex
      * @return array
      */
@@ -55,6 +72,8 @@ class Utils
     }
 
     /**
+     * Convert binary data into hexadecimal representation
+     *
      * @param string $string
      * @return string
      */
@@ -64,6 +83,8 @@ class Utils
     }
 
     /**
+     *  Convert hexadecimal string to its binary representation.
+     *
      * @param string $hexString
      * @return bool|string
      */
@@ -85,6 +106,7 @@ class Utils
 
     /**
      * BytesToLittleInt
+     * bytes data to little int
      *
      * @param array $byteArray
      * @return int
@@ -108,6 +130,8 @@ class Utils
     }
 
     /**
+     * little int to bytes data
+     *
      * @param int $value
      * @param int $length
      * @return string
@@ -129,6 +153,8 @@ class Utils
     }
 
     /**
+     * padding $length-len($value) to left
+     *
      * @param string $val
      * @param int $length
      * @return mixed
@@ -140,6 +166,8 @@ class Utils
     }
 
     /**
+     * Convert GMP to hex
+     *
      * @param GMP $value
      * @param int $length
      * @return string
@@ -175,7 +203,7 @@ class Utils
      * @return string
      * @throws Exception
      */
-    public static function flipBits (string $bitString): string
+    private static function flipBits (string $bitString): string
     {
         $length = strlen($bitString);
 
@@ -192,6 +220,8 @@ class Utils
     }
 
     /**
+     * convert integer/string/object(GMP) to GMP
+     *
      * @param int|string|GMP $value
      * @return GMP
      */
@@ -210,15 +240,16 @@ class Utils
     /**
      * getDirContents
      *
+     * get dir all content file
      *
      * @param string $dir
      * @param array $results
      * @return array
      */
-    public static function getDirContents (string $dir, &$results = array())
+    public static function getDirContents (string $dir, &$results = array()): array
     {
         $files = scandir($dir);
-        foreach ($files as $key => $value) {
+        foreach ($files as $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if (!is_dir($path)) {
                 $results[] = $path;

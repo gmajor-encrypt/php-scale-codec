@@ -4,6 +4,14 @@ namespace Codec\Types;
 
 use InvalidArgumentException;
 
+/**
+ * Class FixedArray
+ * @package Codec\Types
+ *
+ * FixedArray is Fixed-length array
+ * Encode/decode no need to declare length
+ *
+ */
 class FixedArray extends ScaleInstance
 {
     public $FixedLength;

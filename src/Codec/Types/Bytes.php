@@ -4,6 +4,13 @@ namespace Codec\Types;
 
 use Codec\Utils;
 
+/**
+ *
+ * Class Bytes
+ * @package Codec\Types
+ *
+ * Similar to Vec<u8>
+ */
 class Bytes extends ScaleInstance
 {
     /**

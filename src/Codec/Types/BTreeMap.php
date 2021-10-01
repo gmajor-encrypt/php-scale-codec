@@ -4,11 +4,22 @@ namespace Codec\Types;
 
 use InvalidArgumentException;
 
+/**
+ * Class BTreeMap
+ * @package Codec\Types
+ *
+ *
+ * BTreeMap is similar to an array, but its key is not fixed, so the key also needs to be parsed
+ * like BTreeMap<type1,type2> -> BTreeMap<string,u64>
+ *
+ */
+
 class BTreeMap extends ScaleInstance
 {
 
     public function decode(): array
     {
+        // length
         $VecLength = $this->process("Compact", $this->data);
         $value = [];
         for ($i = 0; $i < $VecLength; $i++) {
@@ -16,7 +27,9 @@ class BTreeMap extends ScaleInstance
             if (count($subType) != 2) {
                 throw new InvalidArgumentException(sprintf('%s sub_type invalid', $this->typeString));
             }
+            // process key
             $key = $this->process($subType[0]);
+            // process value
             $value[$key] = $this->process($subType[1]);
         }
         return $value;

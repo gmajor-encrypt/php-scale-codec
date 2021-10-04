@@ -4,6 +4,13 @@ namespace Codec\Types;
 
 use InvalidArgumentException;
 
+/**
+ *
+ * Class Set
+ * @package Codec\Types
+ *
+ *  An Set is an array of string values, represented an an encoded type by a bitwise representation of the values
+ */
 class Set extends ScaleInstance
 {
     public function decode(): array

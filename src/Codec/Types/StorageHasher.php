@@ -4,6 +4,12 @@ namespace Codec\Types;
 
 use Codec\Generator;
 
+/**
+ * Class StorageHasher
+ * @package Codec\Types
+ *
+ * StorageHasher is enum, it include Multiple hashes
+ */
 class StorageHasher extends Enum
 {
     public function __construct (Generator $generator)

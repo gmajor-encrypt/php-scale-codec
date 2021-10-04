@@ -5,6 +5,12 @@ namespace Codec\Types;
 use Codec\Utils;
 use InvalidArgumentException;
 
+/**
+ * Fixed length u8 vendor
+ *
+ * Class VecU8Fixed
+ * @package Codec\Types
+ */
 class VecU8Fixed extends ScaleInstance
 {
 

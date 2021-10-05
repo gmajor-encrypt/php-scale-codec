@@ -39,16 +39,16 @@ class Compact extends ScaleInstance
     protected $compactBytes;
 
     /**
-     * @return GMP|integer
+     * @return GMP|string
      * @throws Exception
      */
-    public function decode (): GMP
+    public function decode (): GMP|string
     {
         self::checkCompactBytes();
         $compactBytes = new ScaleBytes($this->compactBytes);
         if (!empty($this->subType)) {
             $data = Utils::bytesToLittleInt($compactBytes->nextBytes(8));
-            return (is_int($data) && $this->compactLength <= 4) ? Utils::ConvertGMP(intval($data / 4)) : Utils::ConvertGMP($data);
+            return (is_int($data) && $this->compactLength <= 4) ? gmp_strval(Utils::ConvertGMP(intval($data / 4))) : gmp_strval(Utils::ConvertGMP($data));
         }
         $UIntBitLength = 8 * $this->compactLength;
         foreach (range(4, 67) as $i) {

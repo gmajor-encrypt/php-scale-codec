@@ -1,0 +1,91 @@
+{
+  "PortableRegistry": "GenericPortableRegistry",
+  "GenericPortableRegistry": "Vec<PortableType>",
+  "PortableType": {
+    "id": "SiLookupTypeId",
+    "type": "SiType"
+  },
+  "SiTypeDefVariant": {
+    "variants": "Vec<SiVariant>"
+  },
+  "SiField": {
+    "name": "Option<String>",
+    "type": "SiLookupTypeId",
+    "typeName": "Option<String>",
+    "docs": "Vec<String>"
+  },
+  "SiTypeDefBitSequence": {
+    "bitStoreType": "SiLookupTypeId",
+    "bitOrderType": "SiLookupTypeId"
+  },
+  "SiTypeDefCompact": {
+    "type": "SiLookupTypeId"
+  },
+  "SiTypeDefArray": {
+    "len": "u32",
+    "type": "SiLookupTypeId"
+  },
+  "SiPath": "Vec<String>",
+  "SiVariant": {
+    "name": "String",
+    "fields": "Vec<SiField>",
+    "index": "u8",
+    "docs": "Vec<String>"
+  },
+  "SiType": {
+    "path": "SiPath",
+    "params": "Vec<SiTypeParameter>",
+    "def": "SiTypeDef",
+    "docs": "Vec<String>"
+  },
+  "SiTypeParameter": {
+    "name": "String",
+    "type": "Option<SiLookupTypeId>"
+  },
+  "SiTypeDefSequence": {
+    "type": "SiLookupTypeId"
+  },
+  "SiTypeDefComposite": {
+    "fields": "Vec<SiField>"
+  },
+  "SiLookupTypeId": "Compact<u32>",
+  "SiTypeDefTuple": "Vec<SiLookupTypeId>",
+  "SiTypeDef": {
+    "_enum": {
+      "Composite": "SiTypeDefComposite",
+      "Variant": "SiTypeDefVariant",
+      "Sequence": "SiTypeDefSequence",
+      "Array": "SiTypeDefArray",
+      "Tuple": "SiTypeDefTuple",
+      "Primitive": "SiTypeDefPrimitive",
+      "Compact": "SiTypeDefCompact",
+      "BitSequence": "SiTypeDefBitSequence",
+      "Range": "SiTypeDefRange",
+      "HistoricMetaCompat": "String"
+    }
+  },
+  "SiTypeDefRange": {
+    "start": "SiLookupTypeId",
+    "end": "SiLookupTypeId",
+    "inclusive": "bool"
+  },
+  "SiTypeDefPrimitive": {
+    "_enum": [
+      "Bool",
+      "Char",
+      "Str",
+      "U8",
+      "U16",
+      "U32",
+      "U64",
+      "U128",
+      "U256",
+      "I8",
+      "I16",
+      "I32",
+      "I64",
+      "I128",
+      "I256"
+    ]
+  }
+}

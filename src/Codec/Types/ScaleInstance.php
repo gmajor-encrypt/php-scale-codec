@@ -137,7 +137,7 @@ class ScaleInstance implements CodecInterface
         if ($typeString[-1] == '>') {
             $codecInstant = $this->generator->getRegistry(strtolower($typeString));
             if (!is_null($codecInstant)) {
-                return $codecInstant;
+                return clone $codecInstant;
             }
             preg_match("/^([^<]*)<(.+)>$/", $typeString, $match);
         }
@@ -145,12 +145,12 @@ class ScaleInstance implements CodecInterface
             $codecInstant = $this->generator->getRegistry(strtolower($match[1]));
             if (!is_null($codecInstant)) {
                 $codecInstant->subType = $match[2];
-                return $codecInstant;
+                return clone $codecInstant;
             }
         } else {
             $codecInstant = $this->generator->getRegistry(strtolower($typeString));
             if (!is_null($codecInstant)) {
-                return $codecInstant;
+                return clone $codecInstant;
             }
         }
 

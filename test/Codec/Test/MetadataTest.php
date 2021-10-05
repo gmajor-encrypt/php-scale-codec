@@ -51,4 +51,12 @@ final class MetadataTest extends TestCase
         self::assertEquals($codec->createTypeByTypeString("metadata")->encode($r), Constant::$metadataStaticV13);
     }
 
+    public function testMetadataV14Decoder()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $r = $codec->process("metadata", new ScaleBytes(Constant::$metadataStaticV14));
+        $this->assertEquals("14", $r["metadata_version"]);
+        echo json_encode($r,JSON_PRETTY_PRINT);
+        self::assertEquals($codec->createTypeByTypeString("metadata")->encode($r), Constant::$metadataStaticV14);
+    }
 }

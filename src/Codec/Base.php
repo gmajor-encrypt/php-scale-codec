@@ -33,7 +33,7 @@ class Base
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
         "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic",
-        "FixedArray", "Null", "Result","metadataV14"
+        "FixedArray", "Null", "Result","metadataV14","V14Module","MetadataV14ModuleStorage","MetadataV14ModuleStorageEntry"
     );
 
     /**

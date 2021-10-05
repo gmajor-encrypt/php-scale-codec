@@ -9,10 +9,10 @@
     "variants": "Vec<SiVariant>"
   },
   "SiField": {
-    "name": "Option<Text>",
+    "name": "Option<String>",
     "type": "SiLookupTypeId",
-    "typeName": "Option<Text>",
-    "docs": "Vec<Text>"
+    "typeName": "Option<String>",
+    "docs": "Vec<String>"
   },
   "SiTypeDefBitSequence": {
     "bitStoreType": "SiLookupTypeId",
@@ -25,21 +25,21 @@
     "len": "u32",
     "type": "SiLookupTypeId"
   },
-  "SiPath": "Vec<Text>",
+  "SiPath": "Vec<String>",
   "SiVariant": {
-    "name": "Text",
+    "name": "String",
     "fields": "Vec<SiField>",
     "index": "u8",
-    "docs": "Vec<Text>"
+    "docs": "Vec<String>"
   },
   "SiType": {
     "path": "SiPath",
     "params": "Vec<SiTypeParameter>",
     "def": "SiTypeDef",
-    "docs": "Vec<Text>"
+    "docs": "Vec<String>"
   },
   "SiTypeParameter": {
-    "name": "Text",
+    "name": "String",
     "type": "Option<SiLookupTypeId>"
   },
   "SiTypeDefSequence": {

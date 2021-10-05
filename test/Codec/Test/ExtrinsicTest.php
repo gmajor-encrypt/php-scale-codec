@@ -22,7 +22,7 @@ final class ExtrinsicTest extends TestCase
             'look_up' => '0300',
             'module_id' => 'Timestamp',
             'call_name' => 'set',
-            'params' => [["name" => "now", "type" => "Compact<T::Moment>", "value" => gmp_init(1625708208001)]],
+            'params' => [["name" => "now", "type" => "Compact<T::Moment>", "value" => "1625708208001"]],
         ], $decodeExtrinsic);
     }
 
@@ -50,7 +50,7 @@ final class ExtrinsicTest extends TestCase
             "extrinsic_hash" => "0x10febc2b1bfd2f7024bd99685afc810eae81fb03c300a95909bb76cee7670a63",
             'params' => [
                 ["name" => "dest", "type" => "<T::Lookup as StaticLookup>::Source", "value" => ["Id" => "07c12e8b63d2592412cbbde38e96181551234bb57ec8438c1281e212b5bed72b"]],
-                ["name" => "value", "type" => "Compact<T::Balance>", "value" => gmp_init(1995648263100)]
+                ["name" => "value", "type" => "Compact<T::Balance>", "value" => "1995648263100"]
             ],
         ], $decodeExtrinsic);
     }

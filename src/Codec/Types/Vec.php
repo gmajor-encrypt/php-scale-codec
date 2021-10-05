@@ -39,7 +39,7 @@ class Vec extends ScaleInstance
 
         $value = $length;
         $subType = $this->subType;
-        foreach ($param as $index => $item) {
+        foreach ($param as $item) {
             $subInstant = $this->createTypeByTypeString($subType);
             $value = $value . $subInstant->encode($item);
         }

@@ -9,7 +9,7 @@
     "_enum": {
       "Future": "Null",
       "Ready": "Null",
-      "Broadcast": "Vec<Text>",
+      "Broadcast": "Vec<String>",
       "InBlock": "Hash",
       "Retracted": "Hash",
       "FinalityTimeout": "Hash",

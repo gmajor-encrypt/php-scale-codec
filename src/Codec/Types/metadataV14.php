@@ -3,7 +3,6 @@
 namespace Codec\Types;
 
 use Codec\Generator;
-use Codec\Utils;
 
 /**
  * Class metadataV14
@@ -27,7 +26,7 @@ class metadataV14 extends Struct
         parent::__construct($generator);
         $this->typeStruct = [
             "lookup" => "PortableRegistry",
-            "pallets" => "Vec<PalletV14>",
+            "pallets" => "Vec<V14Module>",
             "extrinsic" => "ExtrinsicMetadataV14"
         ];
     }
@@ -36,6 +35,11 @@ class metadataV14 extends Struct
     {
         $metadataRaw = parent::decode();
         return $metadataRaw;
+    }
+
+    public function encode ($param)
+    {
+        return parent::encode($param);
     }
 }
 

@@ -13,10 +13,6 @@ use Codec\Generator;
  */
 class V14Module extends Struct
 {
-    public $name;
-
-    public $prefix;
-
     public $storage;
 
     public $calls;

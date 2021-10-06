@@ -36,14 +36,13 @@ final class CompactTest extends TestCase
             $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 536), 1)));
         $this->assertEquals(gmp_sub(gmp_pow("2", 536), 1), $codec->process("Compact", new ScaleBytes("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")));
 
-        // check out of range > 2**536-1
-        $this->expectException(\OutOfRangeException::class);
-        $codec->createTypeByTypeString("Compact")->encode(gmp_pow("2", 536));
-
         // u32
         $this->assertEquals("03ffffffff", $codec->createTypeByTypeString("Compact")->encode(gmp_sub(gmp_pow("2", 32), 1)));
         $this->assertEquals("4294967295", $codec->process("Compact<u32>", new ScaleBytes("03ffffffff")));
 
+        // check out of range > 2**536-1
+        $this->expectException(\OutOfRangeException::class);
+        $codec->createTypeByTypeString("Compact")->encode(gmp_pow("2", 536));
     }
 
 }

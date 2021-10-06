@@ -32,7 +32,7 @@ class Base
         "StorageHasher",
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
-        "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic",
+        "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic","BitVec",
         "FixedArray", "Null", "Result","metadataV14","V14Module","MetadataV14ModuleStorage","MetadataV14ModuleStorageEntry"
     );
 

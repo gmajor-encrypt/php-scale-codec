@@ -198,6 +198,13 @@ final class TypeTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $codec->createTypeByTypeString("Result<u8, bool>")->encode(["Err1" => false]);
     }
+
+    public function testBitVec(){
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals("37", $codec->process("BitVec", new ScaleBytes("0x0837")));
+        $this->assertEquals("7b", $codec->process("BitVec", new ScaleBytes("0x087b")));
+        $this->assertEquals("33", $codec->process("BitVec", new ScaleBytes("0x0c33")));
+    }
 }
 
 

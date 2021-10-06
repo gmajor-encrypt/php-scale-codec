@@ -9,7 +9,7 @@
   "license": "MIT",
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.3",
+    "php": ">=8.0",
     "bitwasp/buffertools": "dev-master",
     "ext-gmp": "*",
     "ext-json": "*",

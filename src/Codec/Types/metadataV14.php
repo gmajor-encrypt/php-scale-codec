@@ -21,6 +21,10 @@ use Codec\Utils;
 
 class metadataV14 extends Struct
 {
+    /**
+     * @var $registeredSiType array
+     */
+    protected $registeredSiType;
 
     public function __construct (Generator $generator)
     {
@@ -126,11 +130,134 @@ class metadataV14 extends Struct
 
     /**
      *
-     * todo
+     *
      * @param array $id2Portable
      */
     private function regPortableType(array $id2Portable){
+        foreach ($id2Portable as $id=>$item){
+            if(array_key_exists("Primitive",$item["type"]["def"])){
+                $this->registeredSiType[$id] = $item["type"]["def"]["Primitive"];
+            }
+        }
+        foreach ($id2Portable as $id=>$item){
+            if(!array_key_exists($id,$this->registeredSiType)){
+                $this->dealOnePortableType($id,$item,$id2Portable);
+            }
+        }
+    }
 
+    /**
+     * dealOnePortableType
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return String
+     */
+    private function dealOnePortableType(int $id, array $one,array $id2Portable) :String{
+        // Composite, struct
+        $one = $one["type"];
+        if(array_key_exists("Composite",$one["def"])){
+            if(count($one["def"]["Composite"]["fields"])==1){
+                $subType = intval($one["def"]["Composite"]["fields"][0]["type"]);
+                // check subType
+                $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? $this->registeredSiType[$subType]:
+                    $this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable);
+                return $this->registeredSiType[$id];
+            }else{
+                $tempStruct = [];
+                foreach ($one["def"]["Composite"]["fields"] as $field){
+                    $tempStruct[$field["name"]] = array_key_exists($field["type"],$this->registeredSiType) ? $this->registeredSiType[$field["type"]]:
+                        $this->dealOnePortableType($field["type"],$id2Portable[$field["type"]],$id2Portable);
+                }
+                $instant = clone $this->generator->getRegistry("struct");
+                $instant->typeStruct = $tempStruct;
+                $typeString = end($one["path"]);
+                $this->generator->addScaleType($typeString, $instant);
+                return $typeString;
+            }
+        }
+        // Array, Fixed
+        if(array_key_exists("Array",$one["def"])){
+            $subType = intval($one["def"]["Array"]["type"]);
+            $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? sprintf("[%s; %d]",$this->registeredSiType[$subType],$one["def"]["Array"]["len"]):
+                sprintf("[%s; %d]",$this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable),$one["def"]["Array"]["len"]);
+            return $this->registeredSiType[$id];
+        }
+
+        // Sequence, vendor
+        if(array_key_exists("Sequence",$one["def"])){
+            $subType = intval($one["def"]["Sequence"]["type"]);
+            $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? sprintf("Vec<%s>",$this->registeredSiType[$subType]):
+                sprintf("Vec<%s>",$this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable));
+            return $this->registeredSiType[$id];
+        }
+
+        // Tuple
+        if(array_key_exists("Tuple",$one["def"])){
+            if(count($one["def"]["Tuple"])==0){
+                $this->registeredSiType[$id] = "NULL";
+                return "NULL";
+            }
+            $tuple1 = intval($one["def"]["Tuple"][0]);
+            $tuple2 = intval($one["def"]["Tuple"][1]);
+            $tuple1Type = array_key_exists($tuple1,$this->registeredSiType) ? $this->registeredSiType[$tuple1]:
+                $this->dealOnePortableType($tuple1,$id2Portable[$tuple1],$id2Portable);
+            $tuple2Type = array_key_exists($tuple2,$this->registeredSiType) ? $this->registeredSiType[$tuple2]:
+                $this->dealOnePortableType($tuple2,$id2Portable[$tuple2],$id2Portable);
+            // combine (a,b) Tuple
+            $this->registeredSiType[$id] = sprintf("(%s,%s)",$tuple1Type,$tuple2Type);
+            return $this->registeredSiType[$id];
+        }
+        // Compact
+        if(array_key_exists("Compact",$one["def"])){
+            $subType = intval($one["def"]["Compact"]["type"]);
+            $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? sprintf("Compact<%s>",$this->registeredSiType[$subType]):
+                sprintf("Compact<%s>",$this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable));
+            return $this->registeredSiType[$id];
+        }
+        // BitSequence
+        if(array_key_exists("BitSequence",$one["def"])){
+            $this->registeredSiType[$id] = "BitVec";
+            return $this->registeredSiType[$id];
+        }
+        // Variant
+        if(array_key_exists("Variant",$one["def"])){
+            $VariantType = $one["path"][0];
+            switch ($VariantType){
+                // option
+                case "Option":
+                    $subType = intval($one["params"][0]["type"]);
+                    $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? sprintf("Option<%s>",$this->registeredSiType[$subType]):
+                        sprintf("Option<%s>",$this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable));
+                    return $this->registeredSiType[$id];
+                // Result
+                case "Result":
+                    $ResultOk = intval($one["params"][0]["type"]);
+                    $ResultErr = intval($one["params"][1]["type"]);
+                    $okType = array_key_exists($ResultOk,$this->registeredSiType) ? $this->registeredSiType[$ResultOk]:
+                        $this->dealOnePortableType($ResultOk,$id2Portable[$ResultOk],$id2Portable);
+                    $errType = array_key_exists($ResultErr,$this->registeredSiType) ? $this->registeredSiType[$ResultErr]:
+                        $this->dealOnePortableType($ResultErr,$id2Portable[$ResultErr],$id2Portable);
+                    // combine (a,b) Tuple
+                    $this->registeredSiType[$id] = sprintf("Result<%s,%s>",$okType,$errType);
+                    return $this->registeredSiType[$id];
+            }
+            // pallet Call, Event, Error, metadata deal
+            if(in_array(end($one["path"]),["Call", "Event", "Error"])){
+                return "Call";
+            }
+            if(count($one["path"])==2 && (end($one["path"])== "Instruction" || (end($one["path"])=="Call" && $one["path"][count( $one["path"])-2]=="pallet") )){
+                return "Call";
+            }
+            // Enum Todo
+            foreach ($one["def"]["Variant"]["variants"] as $variant){
+
+            }
+
+        }
+        $this->registeredSiType[$id] = "NULL";
+        return "NULL";
     }
 }
 

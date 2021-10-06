@@ -62,8 +62,7 @@ class Compact extends ScaleInstance
             return gmp_init(intval($this->process("U{$UIntBitLength}", $compactBytes) / 4));
         }
         $parser = new Parser(Utils::bytesToHex($compactBytes->nextBytes($UIntBitLength / 8)));
-        $value = $parser->readBytes($UIntBitLength / 8)->getGmp();
-        return $value;
+        return $parser->readBytes($UIntBitLength / 8)->getGmp();
     }
 
 

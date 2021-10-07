@@ -59,10 +59,10 @@ class metadataV14 extends Struct
 
                     // PlainType
                     if($item["type"]["origin"]=="PlainType"){
-                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["plain_type"] = "plain_type_id"; //todo
+                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["plain_type"] = $this->registeredSiType[$item["type"]["plain_type_id"]];
                     } elseif ($item["type"]["origin"]=="Map"){
-                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["MapType"]["keys"] = "keys_id"; //todo
-                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["MapType"]["values"] = "values_id"; //todo
+                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["MapType"]["keys"] = $this->registeredSiType[$item["type"]["MapType"]["keys_id"]];
+                        $metadataRaw["pallets"][$palletIndex]["storage"]["items"][$index]["type"]["MapType"]["values"] =$this->registeredSiType[$item["type"]["MapType"]["values_id"]];
                     }
                 }
             }
@@ -74,7 +74,7 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant){
                     $args = array();
                     foreach ($variant["fields"] as $v){
-                        array_push($args,["name"=>$v["name"],"type"=>$v["type"]]);// todo
+                        array_push($args,["name"=>$v["name"],"type"=>$this->registeredSiType[$v["type"]]]);
                     }
                     array_push($calls,["name"=>$variant["name"], "args"=>$args, "docs"=>$variant["docs"]]);
                 }
@@ -87,7 +87,7 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant){
                     $args = array();
                     foreach ($variant["fields"] as $v){
-                        array_push($args,["name"=>$v["name"],"type"=>$v["type"]]); // todo
+                        array_push($args,["name"=>$v["name"],"type"=>$this->registeredSiType[$v["type"]]]);
                     }
                     array_push($events,["name"=>$variant["name"], "args"=>$args, "docs"=>$variant["docs"]]);
                 }
@@ -96,18 +96,18 @@ class metadataV14 extends Struct
             // call lookup
             foreach ($calls as $callIndex => $call) {
                 $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($callIndex), 2);
-                $metadataRaw["pallets"][$palletIndex]["call_index"][$lookup] = ["module" => $pallet["name"], "call" => $call];
+                $metadataRaw["call_index"][$lookup] = ["module" => ["name"=>$pallet["name"]], "call" => $call];
             }
             // event lookup
             foreach ($events as $eventIndex => $event) {
                 $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($eventIndex), 2);
-                $metadataRaw["pallets"][$palletIndex]["event_index"][$lookup] = ["module" => $pallet["name"], "call" => $event];
+                $metadataRaw["event_index"][$lookup] = ["module" => ["name"=>$pallet["name"]], "call" => $event];
             }
 
 
             // constants
             foreach ($pallet["constants"] as $index =>$item) {
-                $metadataRaw["pallets"][$palletIndex]["constants"][$index]["type_string"] = $item["type"]; // todo
+                $metadataRaw["pallets"][$palletIndex]["constants"][$index]["type_string"] = $this->registeredSiType[$item["type"]];
             }
 
             // errors
@@ -174,6 +174,7 @@ class metadataV14 extends Struct
                 $instant->typeStruct = $tempStruct;
                 $typeString = end($one["path"]);
                 $this->generator->addScaleType($typeString, $instant);
+                $this->registeredSiType[$id] = $typeString;
                 return $typeString;
             }
         }
@@ -222,39 +223,70 @@ class metadataV14 extends Struct
             return $this->registeredSiType[$id];
         }
         // Variant
-        if(array_key_exists("Variant",$one["def"])){
+        if(array_key_exists("Variant",$one["def"])) {
             $VariantType = $one["path"][0];
-            switch ($VariantType){
+            switch ($VariantType) {
                 // option
                 case "Option":
                     $subType = intval($one["params"][0]["type"]);
-                    $this->registeredSiType[$id] = array_key_exists($subType,$this->registeredSiType) ? sprintf("Option<%s>",$this->registeredSiType[$subType]):
-                        sprintf("Option<%s>",$this->dealOnePortableType($subType,$id2Portable[$subType],$id2Portable));
+                    $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? sprintf("Option<%s>", $this->registeredSiType[$subType]) :
+                        sprintf("Option<%s>", $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable));
                     return $this->registeredSiType[$id];
                 // Result
                 case "Result":
                     $ResultOk = intval($one["params"][0]["type"]);
                     $ResultErr = intval($one["params"][1]["type"]);
-                    $okType = array_key_exists($ResultOk,$this->registeredSiType) ? $this->registeredSiType[$ResultOk]:
-                        $this->dealOnePortableType($ResultOk,$id2Portable[$ResultOk],$id2Portable);
-                    $errType = array_key_exists($ResultErr,$this->registeredSiType) ? $this->registeredSiType[$ResultErr]:
-                        $this->dealOnePortableType($ResultErr,$id2Portable[$ResultErr],$id2Portable);
+                    $okType = array_key_exists($ResultOk, $this->registeredSiType) ? $this->registeredSiType[$ResultOk] :
+                        $this->dealOnePortableType($ResultOk, $id2Portable[$ResultOk], $id2Portable);
+                    $errType = array_key_exists($ResultErr, $this->registeredSiType) ? $this->registeredSiType[$ResultErr] :
+                        $this->dealOnePortableType($ResultErr, $id2Portable[$ResultErr], $id2Portable);
                     // combine (a,b) Tuple
-                    $this->registeredSiType[$id] = sprintf("Result<%s,%s>",$okType,$errType);
+                    $this->registeredSiType[$id] = sprintf("Result<%s,%s>", $okType, $errType);
                     return $this->registeredSiType[$id];
             }
             // pallet Call, Event, Error, metadata deal
-            if(in_array(end($one["path"]),["Call", "Event", "Error"])){
+            if (in_array(end($one["path"]), ["Call", "Event", "Error"])) {
+                $this->registeredSiType[$id] = "Call";
                 return "Call";
             }
-            if(count($one["path"])==2 && (end($one["path"])== "Instruction" || (end($one["path"])=="Call" && $one["path"][count( $one["path"])-2]=="pallet") )){
+            if (count($one["path"]) == 2 && (end($one["path"]) == "Instruction" || (end($one["path"]) == "Call" && $one["path"][count($one["path"]) - 2] == "pallet"))) {
+                $this->registeredSiType[$id] = "Call";
                 return "Call";
             }
-            // Enum Todo
-            foreach ($one["def"]["Variant"]["variants"] as $variant){
+            // Enum
+            $enumValueList = [];
+            foreach ($one["def"]["Variant"]["variants"] as $variant) {
+                $name = $variant["name"];
+                switch (count($variant["fields"])) {
+                    case 0:
+                        $enumValueList[$name]= "NULL";
+                        break;
+                    case 1:
+                        $subType = $variant["fields"][0]["type"];
+                        $enumValueList[$name] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                            $variant["fields"][0]["typeName"];
+                        break;
 
+                    default:
+                        $structValue = [];
+                        // field count> 1, enum one element is struct
+                        foreach ($variant["fields"] as $field){
+                            $valueName = $field["name"];
+                            $subType = $field["type"];
+                            $structValue[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                                $field["typeName"];
+                        }
+                        $enumValueList[$name] = json_encode($structValue);
+                        break;
+                }
             }
 
+            $instant = clone $this->generator->getRegistry("enum");
+            $instant->typeStruct = $enumValueList;
+            $typeString = end($one["path"]);
+            $this->generator->addScaleType($typeString, $instant);
+            $this->registeredSiType[$id] = $typeString;
+            return $typeString;
         }
         $this->registeredSiType[$id] = "NULL";
         return "NULL";

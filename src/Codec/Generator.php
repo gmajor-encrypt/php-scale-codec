@@ -28,6 +28,7 @@ class Generator
      */
     public function getScaleType (): array
     {
+//        print_r($this->scale_type["AccountIndex"]);
         return $this->scale_type;
     }
 

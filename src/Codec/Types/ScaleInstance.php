@@ -161,6 +161,17 @@ class ScaleInstance implements CodecInterface
             return $struct;
         }
 
+        if ($typeString[0] == '[' && $typeString[-1] == ']') {
+            $slice = explode(";", substr($typeString, 1, strlen($typeString) - 2));
+            if (count($slice) == 2) {
+                $subType = trim($slice[0]);
+                $instant = strtolower($subType) == "u8" ? $this->generator->getRegistry('VecU8Fixed') :  $this->generator->getRegistry('FixedArray');
+                $instant->subType = trim($slice[0]);
+                $instant->FixedLength = intval($slice[1]);
+                return $instant;
+            }
+        }
+
 
         throw new \InvalidArgumentException(sprintf('Unknown codec type "%s"', $typeString));
     }

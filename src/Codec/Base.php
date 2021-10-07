@@ -232,7 +232,7 @@ class Base
                     $slice = explode(";", substr($value, 1, strlen($value) - 2));
                     if (count($slice) == 2) {
                         $subType = trim($slice[0]);
-                        $instant = $subType == "u8" ? clone $generator->getRegistry('VecU8Fixed') : clone $generator->getRegistry('FixedArray');
+                        $instant = strtolower($subType) == "u8" ? clone $generator->getRegistry('VecU8Fixed') : clone $generator->getRegistry('FixedArray');
                         $instant->subType = trim($slice[0]);
                         $instant->FixedLength = intval($slice[1]);
                         $generator->addScaleType($key, $instant);

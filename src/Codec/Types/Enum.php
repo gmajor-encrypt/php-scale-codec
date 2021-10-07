@@ -30,13 +30,12 @@ class Enum extends ScaleInstance
                     $index++;
                 }
             }
-            throw new \InvalidArgumentException(sprintf('%s range out enum', $EnumIndex));
         } else {
             if (count($this->valueList) > $EnumIndex) {
                 return $this->valueList[$EnumIndex];
             }
-            throw new \InvalidArgumentException(sprintf('%s range out enum', $EnumIndex));
         }
+        throw new \InvalidArgumentException(sprintf('%s range out enum', $EnumIndex));
     }
 
     function encode ($param)

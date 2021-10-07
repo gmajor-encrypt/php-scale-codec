@@ -48,13 +48,17 @@ class Extrinsic extends ScaleInstance
 
             // signed Transactions
             if ($hasTransaction) {
-                $value["account_id"] = $this->process("address");
+                $value["account_id"] = $this->process("MultiAddress");
                 $value["signature"] = $this->process("ExtrinsicSignature");
                 $value["era"] = $this->process("EraExtrinsic");
                 $value["nonce"] = gmp_strval($this->process("Compact<U64>"));
 
                 // check signedExtensions exist ChargeTransactionPayment
-                if (in_array("ChargeTransactionPayment", $this->metadata["extrinsic"]["signedExtensions"])) {
+                $signedExtensions = $this->metadata["extrinsic"]["signedExtensions"];
+                if(count($signedExtensions)>0 && is_array($signedExtensions[0])){
+                    $signedExtensions = array_column($signedExtensions,"identifier");
+                }
+                if (in_array("ChargeTransactionPayment",$signedExtensions )) {
                     $value["tip"] = gmp_strval($this->process("Compact<Balance>"));
                 }
                 // generate extrinsic hash

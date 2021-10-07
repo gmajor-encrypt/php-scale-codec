@@ -66,4 +66,31 @@ final class ExtrinsicTest extends TestCase
         $codec->process("Extrinsic", new ScaleBytes("0xd904040b00bc8e8b009c98002408011220d5e7bd0cf571de0ea6a2f3e2a39e8fe813b831c1b4b74a24a606a823137d69831874702f6970342f37392e3133372e36352e3136312f7463702f333033333378742f6970342f3130302e3132332e3134362e36342f7463702f333033333378742f6970342f3130302e3131332e3234332e36342f7463702f333033333374702f6970342f3130302e3130392e3234372e302f7463702f33303333337c782f6970342f3130302e3131332e3230392e3132382f7463702f33303333337c782f6970342f3130302e3131352e3138392e3139322f7463702f3330333333fc3c0000da02000084030000c4bb729273025f2d5c64941f1643167726a0a212c19c20ea83f7a59d6cdba04809ab54362f4cd14838814ccff208049e591da66139999625670f9caf367e0882"),
             $metadataInstant["metadata"]);
     }
+
+
+    public function testExtrinsicWithMetadataV14 ()
+    {
+        $generator = Base::create();
+        $codec = new ScaleInstance($generator);
+        $metadataInstant = $codec->process("metadata", new ScaleBytes(Constant::$metadataStaticV14));
+        // rococo block num 133418 https://rococo.subscan.io/extrinsic/133418-2
+        $decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes("0x450284009ed7705e3c7da027ba0583a22a3212042f7e715d3c168ba14f1424e2bc111d0001243196d4bf13f52ae5348f34d2a6aa926fbda6ec206f75669fe224f369266d16b1998d3d519eb7a6e07202b94ef196282c713970aa5a7e0f84fa97271f5f76857502ed0200040000ae8bde916d81d9525267dde07517510be474a76781daa4921bda39e5f8f8a767070010a5d4e8"),
+            $metadataInstant["metadata"]);
+        $this->assertEquals(json_decode(
+            '{"extrinsic_length":145,
+                   "version":"84",
+                   "account_id":{"Id":"9ed7705e3c7da027ba0583a22a3212042f7e715d3c168ba14f1424e2bc111d00"},
+                   "signature":{"Sr25519":"243196d4bf13f52ae5348f34d2a6aa926fbda6ec206f75669fe224f369266d16b1998d3d519eb7a6e07202b94ef196282c713970aa5a7e0f84fa97271f5f7685"},
+                   "era":{"period":64,"phase":39},
+                   "nonce":"187",
+                   "tip":"0",
+                   "extrinsic_hash":"0x0b202e15d49ec5cbe8505be3fcfd80d826781af763bf99c790ceaf794050ffa1",
+                   "look_up":"0400",
+                   "module_id":"Balances",
+                   "call_name":"transfer",
+                   "params":[{"name":"dest","type":"MultiAddress","value":{"Id":"ae8bde916d81d9525267dde07517510be474a76781daa4921bda39e5f8f8a767"}},
+                   {"name":"value","type":"Compact<U128>","value":"1000000000000"}]}',
+            true),
+            $decodeExtrinsic);
+    }
 }

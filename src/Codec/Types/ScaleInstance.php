@@ -63,7 +63,7 @@ class ScaleInstance implements CodecInterface
      * @var int
      * Fixed int FixedLength
      */
-    public $FixedLength;
+    public int $FixedLength;
 
     /**
      * ScaleDecoder constructor.
@@ -144,8 +144,9 @@ class ScaleInstance implements CodecInterface
         if (count($match) > 0) {
             $codecInstant = $this->generator->getRegistry(strtolower($match[1]));
             if (!is_null($codecInstant)) {
+                $codecInstant = clone $codecInstant;
                 $codecInstant->subType = $match[2];
-                return clone $codecInstant;
+                return $codecInstant;
             }
         } else {
             $codecInstant = $this->generator->getRegistry(strtolower($typeString));
@@ -165,8 +166,8 @@ class ScaleInstance implements CodecInterface
             $slice = explode(";", substr($typeString, 1, strlen($typeString) - 2));
             if (count($slice) == 2) {
                 $subType = trim($slice[0]);
-                $instant = strtolower($subType) == "u8" ? $this->generator->getRegistry('VecU8Fixed') :  $this->generator->getRegistry('FixedArray');
-                $instant->subType = trim($slice[0]);
+                $instant = strtolower($subType) == "u8" ? $this->generator->getRegistry('VecU8Fixed') : $this->generator->getRegistry('FixedArray');
+                $instant->subType = $subType;
                 $instant->FixedLength = intval($slice[1]);
                 return $instant;
             }

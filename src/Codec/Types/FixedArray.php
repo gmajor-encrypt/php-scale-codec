@@ -14,7 +14,10 @@ use InvalidArgumentException;
  */
 class FixedArray extends ScaleInstance
 {
-    public $FixedLength;
+    /**
+     * @var int
+     */
+    public int $FixedLength;
 
     function decode (): array
     {
@@ -34,13 +37,14 @@ class FixedArray extends ScaleInstance
     {
         $value = "";
         if (!is_array($param)) {
-            throw new InvalidArgumentException(sprintf('param not array'));
+            throw new InvalidArgumentException('param not array');
         }
         if (count($param) != $this->FixedLength) {
-            throw new InvalidArgumentException(sprintf('param not eq FixedLength'));
+            throw new InvalidArgumentException('param not eq FixedLength');
         }
-        foreach ($param as $index => $item) {
-            $value .= $this->createTypeByTypeString($this->subType)->encode($item);
+        $subType = $this->subType;
+        foreach ($param as $item) {
+            $value .= $this->createTypeByTypeString($subType)->encode($item);
         }
         return $value;
     }

@@ -42,9 +42,7 @@ class Generator
     public function getRegistry (string $type)
     {
         if (isset($this->scale_type[strtolower($type)])) {
-            $instant = $this->scale_type[strtolower($type)];
-            $instant->typeString = "";
-            return $instant;
+            return $this->scale_type[strtolower($type)];
         }
         return null;
     }

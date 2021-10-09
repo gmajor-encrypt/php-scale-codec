@@ -236,7 +236,6 @@ class Base
                         $instant->subType = trim($slice[0]);
                         $instant->FixedLength = intval($slice[1]);
                         $generator->addScaleType($key, $instant);
-                        continue;
                     }
                 }
             } elseif (gettype($value) == "array") {

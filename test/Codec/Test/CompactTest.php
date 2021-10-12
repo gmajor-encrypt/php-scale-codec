@@ -14,6 +14,7 @@ final class CompactTest extends TestCase
     {
         $codec = new ScaleInstance(Base::create());
         // gmp data
+        $this->assertEquals("0100", $codec->createTypeByTypeString("option<Compact<u32>>")->encode(0));
         $this->assertEquals("04", $codec->createTypeByTypeString("Compact")->encode(gmp_init("1")));
         // u8
         $this->assertEquals("fd03", $codec->createTypeByTypeString("Compact")->encode(2 ** 8 - 1));

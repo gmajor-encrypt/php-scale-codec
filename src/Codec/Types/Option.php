@@ -31,7 +31,7 @@ class Option extends ScaleInstance
 
     function encode ($param)
     {
-        if ((!empty($param) or is_bool($param)) and !empty($this->subType)) {
+        if ((!empty($param) or is_bool($param) or $param === 0 or $param === "0") and !empty($this->subType)) {
             if ($this->subType == "bool") {
                 return $param == true ? "01" : "02";
             }

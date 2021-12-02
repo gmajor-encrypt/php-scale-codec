@@ -14,9 +14,9 @@ use OutOfRangeException;
  * package of various tool functions
  *
  * Class Utils
+ *
  * @package Codec
  */
-
 class Utils
 {
 
@@ -27,7 +27,7 @@ class Utils
      * @param string $str
      * @return array|false
      */
-    public static function string2ByteArray (string $str)
+    public static function string2ByteArray (string $str): array|bool
     {
         return unpack('C*', $str);
     }

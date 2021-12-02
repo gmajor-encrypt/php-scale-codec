@@ -126,7 +126,7 @@ class Base
     private static function findInterfaces (Generator $generator)
     {
         // find all json file from dir
-        $moduleFiles = array_filter(Utils::getDirContents("src/Codec/interfaces/"), function ($var) {
+        $moduleFiles = array_filter(Utils::getDirContents(__DIR__ . "/interfaces/"), function ($var) {
             $slice = explode(".", $var);
             return $slice[count($slice) - 1] == "json";
         });

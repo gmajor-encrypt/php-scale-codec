@@ -13,7 +13,7 @@ class metadataV12 extends Struct
     {
         parent::__construct($generator);
         $this->typeStruct = [
-            "modules" => "Vec<V12Module>",
+            "pallets" => "Vec<V12Module>",
             "extrinsic" => "ExtrinsicMetadata"
         ];
     }
@@ -21,7 +21,7 @@ class metadataV12 extends Struct
     public function decode (): array
     {
         $result = [
-            "modules" => null,
+            "pallets" => null,
             "call_index" => null,
             "event_index" => null,
             "extrinsic" => null,
@@ -40,7 +40,7 @@ class metadataV12 extends Struct
             }
         }
 
-        $result["modules"] = $modules;
+        $result["pallets"] = $modules;
         $result["extrinsic"] = $this->process("ExtrinsicMetadata");
         return $result;
     }

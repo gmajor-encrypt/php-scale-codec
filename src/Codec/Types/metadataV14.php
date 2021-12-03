@@ -29,7 +29,7 @@ class metadataV14 extends Struct
     /**
      * @var $registeredSiType array
      */
-    protected $registeredSiType;
+    protected array $registeredSiType;
 
     public function __construct (Generator $generator)
     {
@@ -147,6 +147,11 @@ class metadataV14 extends Struct
             }
         }
         foreach ($id2Portable as $id => $item) {
+            if (count($item["type"]["path"]) > 1 && current($item["type"]["path"]) == "primitive_types") {
+                $this->registeredSiType[$id] = end($item["type"]["path"]);
+            }
+        }
+        foreach ($id2Portable as $id => $item) {
             if (!array_key_exists($id, $this->registeredSiType)) {
                 $this->dealOnePortableType($id, $item, $id2Portable);
             }
@@ -253,13 +258,20 @@ class metadataV14 extends Struct
                     return $this->registeredSiType[$id];
             }
             // pallet Call, Event, Error, metadata deal
-            if (in_array(end($one["path"]), ["Call", "Event", "Error"])) {
-                $this->registeredSiType[$id] = "Call";
-                return "Call";
-            }
-            if (count($one["path"]) == 2 && (end($one["path"]) == "Instruction" || (end($one["path"]) == "Call" && $one["path"][count($one["path"]) - 2] == "pallet"))) {
-                $this->registeredSiType[$id] = "Call";
-                return "Call";
+            if (count($one["path"]) >= 2) {
+                if (in_array(end($one["path"]), ["Call", "Event"])) {
+                    $this->registeredSiType[$id] = "Call";
+                    return "Call";
+                }
+                if (end($one["path"]) == "Call" && $one["path"][count($one["path"]) - 2] == "pallet") {
+                    $this->registeredSiType[$id] = "Call";
+                    return "Call";
+                }
+                // todo
+                if (end($one["path"]) == "Instruction") {
+                    $this->registeredSiType[$id] = "Call";
+                    return "Call";
+                }
             }
             // Enum
             $enumValueList = [];

@@ -20,7 +20,7 @@ class U128 extends Uint
     public function decode(): GMP
     {
         $parser = new Parser(Utils::bytesToHex($this->nextBytes(16)));
-        return $parser->readBytes(16)->getGmp();
+        return $parser->readBytes(16, true)->getGmp();
     }
 
     public function encode($param)

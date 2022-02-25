@@ -32,7 +32,6 @@ final class UintTest extends TestCase
     public function testU32int ()
     {
         $codec = new ScaleInstance(Base::create());
-
         $this->assertEquals(100, $codec->process("U32", new ScaleBytes("64000000")));
         $this->assertEquals("64000000", $codec->createTypeByTypeString("U32")->encode(100));
         $this->expectException(\InvalidArgumentException::class);
@@ -42,7 +41,6 @@ final class UintTest extends TestCase
     public function testU64int ()
     {
         $codec = new ScaleInstance(Base::create());
-
         $this->assertEquals(184467440737095, $codec->process("U64", new ScaleBytes("471b47acc5a70000")));
         $this->assertEquals("471b47acc5a70000", $codec->createTypeByTypeString("U64")->encode(184467440737095));
         $this->expectException(\InvalidArgumentException::class);
@@ -53,7 +51,7 @@ final class UintTest extends TestCase
     public function testU128 ()
     {
         $codec = new ScaleInstance(Base::create());
-        $this->assertEquals(gmp_init("739571955075788261"), $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000")));
+        $this->assertEquals(0, gmp_cmp(gmp_init("739571955075788261"), $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"))));
         $codec = $codec->createTypeByTypeString("U128");
         $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
 

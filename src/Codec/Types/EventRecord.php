@@ -43,8 +43,14 @@ class EventRecord extends ScaleInstance
         $value["event_id"] = $event["call"]["name"];
 
         $value["params"] = [];
+        $type = $event["call"]["args"];
+
         foreach ($event["call"]["args"] as $arg) {
-            $value["params"][] = ["type" => $argType = $arg['type'], "value" => $this->process($argType)];
+            if (is_string($arg)) {
+                $value["params"][] = ["type" => $arg, "value" => $this->process($arg)];
+            }  else {
+                $value["params"][] = ["type" => $argType = $arg['type'], "value" => $this->process($argType)];
+            }
         }
 
         // topic

@@ -65,42 +65,101 @@ final class EventTest extends TestCase
                             "value" => gmp_init('0'), // TODO: Check why it is not parsing
                         ]
                     ],
-                    "topic"=> []
+                    "topic" => []
                 ],
                 [
-                    "phase"=>0,
-                    "extrinsic_index"=>2,
-                    "look_up"=>"0502",
-                    "module_id"=>"Balances",
-                    "event_id"=>"Transfer",
-                    "params"=> [
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "0502",
+                    "module_id" => "Balances",
+                    "event_id" => "Transfer",
+                    "params" => [
                         [
-                            "type"=>"[U8; 32]",
-                            "value"=>"32d804aff686f512841f7f31b7091a31d41fcc5aa89a4eed8d2d2705b62517fe"
+                            "type" => "[U8; 32]",
+                            "value" => "32d804aff686f512841f7f31b7091a31d41fcc5aa89a4eed8d2d2705b62517fe"
                         ],
                         [
-                            "type"=>"[U8; 32]",
-                            "value"=> "3a47aaf41b881b4932c750d2c36faf138c6209f47dd53b3b4c96749d9636911f"
+                            "type" => "[U8; 32]",
+                            "value" => "3a47aaf41b881b4932c750d2c36faf138c6209f47dd53b3b4c96749d9636911f"
                         ],
                         [
-                            "type"=>"U128","value"=> gmp_init('0'), // TODO: Check why it is not parsing
-                            ]],
-                    "topic"=>[]
+                            "type" => "U128",
+                            "value" => gmp_init('0'), // TODO: Check why it is not parsing
+                        ]
+                    ],
+                    "topic" => []
                 ],
                 [
-                    "phase"=>0,"extrinsic_index"=>2,"look_up"=>"0507","module_id"=>"Balances","event_id"=>"Deposit","params"=>[["type"=>"[U8; 32]","value"=>"6d6f646c70792f74727372790000000000000000000000000000000000000000"],["type"=>"U128","value"=>gmp_init('0'), // TODO: Check why it is not parsing
-                    ]],"topic"=>[]
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "0507",
+                    "module_id" => "Balances",
+                    "event_id" => "Deposit",
+                    "params" => [
+                        [
+                            "type" => "[U8; 32]",
+                            "value" => "6d6f646c70792f74727372790000000000000000000000000000000000000000"
+                        ],
+                        [
+                            "type" => "U128",
+                            "value" => gmp_init('0'), // TODO: Check why it is not parsing
+                        ]
+                    ],
+                    "topic" => []
                 ],
                 [
-                    "phase"=>0,"extrinsic_index"=>2,"look_up"=>"1306","module_id"=>"Treasury","event_id"=>"Deposit","params"=>[["type"=>"U128","value"=>gmp_init('0'), // TODO: Check why it is not parsing
-                    ]],"topic"=>[]
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "1306",
+                    "module_id" => "Treasury",
+                    "event_id" => "Deposit",
+                    "params" => [
+                        [
+                            "type" => "U128",
+                            "value" => gmp_init('0'), // TODO: Check why it is not parsing
+                        ]
+                    ],
+                    "topic" => []
                 ],
                 [
-                    "phase"=>0,"extrinsic_index"=>2,"look_up"=>"0507","module_id"=>"Balances","event_id"=>"Deposit","params"=>[["type"=>"[U8; 32]","value"=>"7a8b406e98e5b8439e8654cb022c4d61fc458de099d54e79699b28f1fab01b5b"],["type"=>"U128","value"=>gmp_init('0'), // TODO: Check why it is not parsing
-                    ]],"topic"=>[]
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "0507",
+                    "module_id" => "Balances",
+                    "event_id" => "Deposit",
+                    "params" => [
+                        [
+                            "type" => "[U8; 32]",
+                            "value" => "7a8b406e98e5b8439e8654cb022c4d61fc458de099d54e79699b28f1fab01b5b"
+                        ],
+                        [
+                            "type" => "U128",
+                            "value" => gmp_init('0'), // TODO: Check why it is not parsing
+                        ]
+                    ],
+                    "topic" => []
                 ],
                 [
-                    "phase"=>0,"extrinsic_index"=>2,"look_up"=>"0000","module_id"=>"System","event_id"=>"ExtrinsicSuccess","params"=>[["type"=>"frame_support:weights:DispatchInfo","value"=>["weight"=>"148391000","class"=>["Normal"=>null],"pays_fee"=>["Yes"=>null]]]],"topic"=>[]
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "0000",
+                    "module_id" => "System",
+                    "event_id" => "ExtrinsicSuccess",
+                    "params" => [
+                        [
+                            "type" => "frame_support:weights:DispatchInfo",
+                            "value" => [
+                                "weight" => "148391000",
+                                "class" => [
+                                    "Normal" => null
+                                ],
+                                "pays_fee" => [
+                                    "Yes" => null
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
                 ]
             ], array_slice($decodeEvents, -6));
     }

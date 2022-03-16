@@ -17,7 +17,7 @@ use Codec\Utils;
 
 class EventRecord extends ScaleInstance
 {
-    public function decode (): array
+    public function decode(): array
     {
         if (empty($this->metadata)) {
             throw new \InvalidArgumentException("Empty metadata, please fill metadata first");
@@ -43,8 +43,8 @@ class EventRecord extends ScaleInstance
         $value["event_id"] = $event["call"]["name"];
 
         $value["params"] = [];
-        foreach ($event["call"]["args"] as $index => $argType) {
-            $value["params"][] = ["type" => $argType, "value" => $this->process($argType)];
+        foreach ($event["call"]["args"] as $arg) {
+            $value["params"][] = ["type" => $argType = $arg['type'], "value" => $this->process($argType)];
         }
 
         // topic

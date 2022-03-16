@@ -41,9 +41,7 @@ class EventRecord extends ScaleInstance
         $event = $this->metadata["event_index"][$value["look_up"]];
         $value["module_id"] = $event["module"]["name"];
         $value["event_id"] = $event["call"]["name"];
-
         $value["params"] = [];
-        $type = $event["call"]["args"];
 
         foreach ($event["call"]["args"] as $arg) {
             if (is_string($arg)) {

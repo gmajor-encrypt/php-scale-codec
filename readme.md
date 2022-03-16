@@ -261,7 +261,7 @@ $decodeExtrinsic = $codec->process("Vec<EventRecord>", new ScaleBytes("0x0800000
 
 ### Example
 
-More examples can refer to the test file https://github.com/gmajor-encrypt/php-scale-codec/blob/master/test/Codec/TypeTest.php
+More examples can refer to the test file https://github.com/gmajor-encrypt/php-scale-codec/tree/master/test/Codec/Test
 
 ## Test
 

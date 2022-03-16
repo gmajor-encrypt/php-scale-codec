@@ -12,7 +12,7 @@ class Base
 
     // default registered types
     // include basic types and EventRecord, MetadataV12, MetadataV13, Extrinsic
-    protected static $defaultScaleTypes = array(
+    protected static array $defaultScaleTypes = array(
         "Compact",
         "Option",
         "Bytes",
@@ -33,7 +33,8 @@ class Base
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
         "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic","BitVec",
-        "FixedArray", "Null", "Result","metadataV14","V14Module","MetadataV14ModuleStorage","MetadataV14ModuleStorageEntry"
+        "FixedArray", "Null", "Result","metadataV14","V14Module","MetadataV14ModuleStorage","MetadataV14ModuleStorageEntry",
+        "Call"
     );
 
     /**
@@ -43,7 +44,7 @@ class Base
      *
      * @return Generator
      */
-    public static function create ($network = ""): Generator
+    public static function create (string $network = ""): Generator
     {
         $generator = new Generator();
         //  register default types

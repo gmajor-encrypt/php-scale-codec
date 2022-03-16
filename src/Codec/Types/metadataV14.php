@@ -185,7 +185,7 @@ class metadataV14 extends Struct
                 }
                 $instant = clone $this->generator->getRegistry("struct");
                 $instant->typeStruct = $tempStruct;
-                $typeString = end($one["path"]);
+                $typeString = self::genPathName($one["path"]);
                 $this->generator->addScaleType($typeString, $instant);
                 $this->registeredSiType[$id] = $typeString;
                 return $typeString;
@@ -267,7 +267,6 @@ class metadataV14 extends Struct
                     $this->registeredSiType[$id] = "Call";
                     return "Call";
                 }
-                // todo
                 if (end($one["path"]) == "Instruction") {
                     $this->registeredSiType[$id] = "Call";
                     return "Call";
@@ -303,7 +302,7 @@ class metadataV14 extends Struct
 
             $instant = clone $this->generator->getRegistry("enum");
             $instant->typeStruct = $enumValueList;
-            $typeString = end($one["path"]);
+            $typeString = self::genPathName($one["path"]);
             $this->generator->addScaleType($typeString, $instant);
             $this->registeredSiType[$id] = $typeString;
             return $typeString;
@@ -311,6 +310,17 @@ class metadataV14 extends Struct
         $this->registeredSiType[$id] = "NULL";
         return "NULL";
     }
+
+    /**
+     * genPathName
+     * generate type name by struct
+     *
+     * @param array $path
+     * @return string
+     */
+    private function genPathName (array $path): string
+    {
+        return join(":", $path);
+    }
+
 }
-
-

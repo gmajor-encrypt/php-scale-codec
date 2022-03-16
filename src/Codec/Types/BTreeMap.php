@@ -48,7 +48,7 @@ class BTreeMap extends ScaleInstance
         foreach ($param as $index => $item) {
             $subType = explode(",", $this->subType);
             if (count($subType) != 2) {
-                throw new InvalidArgumentException(sprintf('%s sub_type invalid', $this->typeString));
+                throw new InvalidArgumentException(sprintf('%s sub_type invalid', $this->subType));
             }
             // key
             $subKeyInstant = $this->createTypeByTypeString($subType[0]);

@@ -11,52 +11,52 @@ class ScaleInstance implements CodecInterface
     /**
      * @var Generator
      */
-    protected $generator;
+    protected Generator $generator;
 
     /**
      * @var ScaleBytes $data
      */
-    protected $data;
+    protected ScaleBytes $data;
 
     /**
      * @var string $typeString
      */
-    public $typeString;
+    public string $typeString;
 
     /**
      * @var string $subType
      */
-    public $subType;
+    public string $subType;
 
     /**
      * @var mixed $value
      */
-    public $value;
+    public mixed $value;
 
     /**
      *
      * @var array $metadata
      */
-    protected $metadata;
+    protected array $metadata;
 
 
     /**
      * @var array $typeStruct
      */
-    public $typeStruct;
+    public array $typeStruct;
 
 
     /**
      * @var array $typeStruct
      * enum
      */
-    public $valueList;
+    public array $valueList;
 
     /**
      * @var int
      * Set struct BitLength
      */
-    public $BitLength;
+    public int $BitLength;
 
 
     /**
@@ -98,7 +98,7 @@ class ScaleInstance implements CodecInterface
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
-            array_push($typeStruct, str_replace(';', ',', trim($element)));
+            $typeStruct[] = str_replace(';', ',', trim($element));
         }
         $this->typeStruct = $typeStruct;
     }
@@ -184,8 +184,7 @@ class ScaleInstance implements CodecInterface
      */
     protected function nextBytes ($length): array
     {
-        $data = $this->data->nextBytes($length);
-        return $data;
+        return $this->data->nextBytes($length);
     }
 
     /**

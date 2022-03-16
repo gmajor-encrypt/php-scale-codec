@@ -9,6 +9,7 @@
     "aye": "Balance",
     "nay": "Balance"
   },
+  "GenericVote": "u8",
   "AccountVoteStandard": {
     "vote": "Vote",
     "balance": "Balance"

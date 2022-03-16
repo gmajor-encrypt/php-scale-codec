@@ -91,11 +91,11 @@ class Extrinsic extends ScaleInstance
 
         $value["params"] = [];
         foreach ($call["call"]["args"] as $arg) {
-            array_push($value["params"], [
+            $value["params"][] = [
                 "name" => $arg["name"],
                 "type" => $arg["type"],
                 "value" => $this->process($arg["type"]),
-            ]);
+            ];
         }
 
         return $value;

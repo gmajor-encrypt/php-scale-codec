@@ -123,8 +123,10 @@ final class TypeTest extends TestCase
         $codec = $codec->createTypeByTypeString("Struct");
         $codec->typeStruct = ["a" => "Compact", "b" => "Compact"];
         $codec->init(new ScaleBytes("0c00"));
-        $this->assertEquals(["a" => gmp_init(3), "b" => gmp_init(0)], $codec->decode());
 
+        $r = $codec->decode();
+        $this->assertEquals(0, gmp_cmp($r['a'], gmp_init(3)));
+        $this->assertEquals(0, gmp_cmp($r['b'], gmp_init(0)));
         $this->assertEquals("0c00", $codec->encode(["a" => 3, "b" => 0]));
     }
 

@@ -17,8 +17,8 @@ class U64 extends Uint
 {
     public function decode()
     {
-        $u128 = new Uint64(ByteOrder::LE);
-        return $u128->read(new Parser(Utils::bytesToHex($this->nextBytes(8))));
+        $u64 = new Uint64(ByteOrder::LE);
+        return $u64->read(new Parser(Utils::bytesToHex($this->nextBytes(8))));
     }
 
     public function encode($param)

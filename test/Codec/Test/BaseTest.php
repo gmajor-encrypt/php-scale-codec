@@ -32,7 +32,7 @@ final class BaseTest extends TestCase
         $codec = new ScaleInstance($generator);
 
         // inherit
-        $this->assertEquals($codec->process("a", new ScaleBytes($codec->createTypeByTypeString("a")->encode(gmp_init(739571955075788261)))), gmp_init(739571955075788261));
+        $this->assertEquals(0, gmp_cmp($codec->process("a", new ScaleBytes($codec->createTypeByTypeString("a")->encode(gmp_init(739571955075788261)))), gmp_init(739571955075788261)));
         // struct
         $this->assertEquals($codec->process("b", new ScaleBytes($codec->createTypeByTypeString("b")->encode(["b1" => 1, "b2" => [1, 2]]))), ["b1" => 1, "b2" => [1, 2]]);
         // enum

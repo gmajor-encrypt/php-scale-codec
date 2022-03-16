@@ -51,20 +51,18 @@ class Compact extends ScaleInstance
             return (is_int($data) && $this->compactLength <= 4) ? gmp_strval(Utils::ConvertGMP(intval($data / 4))) : gmp_strval(Utils::ConvertGMP($data));
         }
         $UIntBitLength = 8 * $this->compactLength;
-        foreach (range(4, 67) as $i) {
-            if ($UIntBitLength >= 2 ** ($i - 1) && $UIntBitLength < 2 ** $i) {
-                $UIntBitLength = 2 ** ($i - 1);
-                break;
-            }
-        }
-
         if ($this->compactLength <= 4) {
+            foreach (range(4, 67) as $i) {
+                if ($UIntBitLength >= 2 ** ($i - 1) && $UIntBitLength < 2 ** $i) {
+                    $UIntBitLength = 2 ** ($i - 1);
+                    break;
+                }
+            }
             return gmp_init(intval($this->process("U{$UIntBitLength}", $compactBytes) / 4));
         }
         $parser = new Parser(Utils::bytesToHex($compactBytes->nextBytes($UIntBitLength / 8)));
-        return $parser->readBytes($UIntBitLength / 8)->getGmp();
+        return $parser->readBytes($UIntBitLength / 8, true)->getGmp();
     }
-
 
     /**
      * checkCompactBytes

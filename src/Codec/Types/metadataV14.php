@@ -93,7 +93,7 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant) {
                     $args = array();
                     foreach ($variant["fields"] as $v) {
-                        array_push($args, ["name" => $v["name"], "type" => $this->registeredSiType[$v["type"]]]);
+                        array_push($args, $this->registeredSiType[$v["type"]]);
                     }
                     array_push($events, ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]]);
                 }

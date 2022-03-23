@@ -46,8 +46,139 @@ final class EventTest extends TestCase
         $decodeEvents = $codec->process("Vec<EventRecord>",
             new ScaleBytes("0x1800000000000000000000000000000002000000010000000000c04581000000000002000000020000000000000000000000000002000000030000000a08d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d7cb125f7c8de3b0000000000000000000000030000002807000301000000000000000000000000000000d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d0000030000000000c0ea210100000000000000"), $metadataInstant["metadata"]);
 
-        $this->assertEquals([], $decodeEvents);
-
+        $this->assertEquals('1', gmp_strval($decodeEvents[4]['params'][0]['value']['freeze_type']['TokenAccount'][0]));
+        $this->assertEquals(
+            [
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 0,
+                    "look_up" => "0000",
+                    "module_id" => "System",
+                    "event_id" => "ExtrinsicSuccess",
+                    "params" => [
+                        [
+                            "type" =>"frame_support:weights:DispatchInfo",
+                            "value"  => [
+                                "weight" =>"0",
+                                "class"  => [
+                                    "Mandatory" => null
+                                ],
+                                "pays_fee" => [
+                                    "Yes" => null
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
+                ],
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 1,
+                    "look_up" => "0000",
+                    "module_id" => "System",
+                    "event_id" => "ExtrinsicSuccess",
+                    "params" => [
+                        [
+                            "type" => "frame_support:weights:DispatchInfo",
+                            "value" => [
+                                "weight" => "8472000",
+                                "class" => [
+                                    "Mandatory" => null
+                                ],
+                                "pays_fee" => [
+                                    "Yes" => null
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
+                ],
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 2,
+                    "look_up" => "0000",
+                    "module_id" => "System",
+                    "event_id" => "ExtrinsicSuccess",
+                    "params" => [
+                        [
+                            "type" => "frame_support:weights:DispatchInfo",
+                            "value" => [
+                                "weight" => "0",
+                                "class" => [
+                                    "Mandatory" => null
+                                ],
+                                "pays_fee" => [
+                                    "Yes" => null
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
+                ],
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 3,
+                    "look_up" => "0a08",
+                    "module_id" => "Balances",
+                    "event_id" => "Withdraw",
+                    "params" => [
+                        [
+                            "type" => "[U8; 32]",
+                            "value" => "d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+                        ],
+                        [
+                            "type" => "U128",
+                            "value" => gmp_init(0), // This is not tested it just check if it is a gmp
+                        ]
+                    ],
+                    "topic" => []
+                ],
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 3,
+                    "look_up" => "2807",
+                    "module_id" => "MultiTokens",
+                    "event_id" => "Thawed",
+                    "params" => [
+                        ["type" => "pallet_multi_tokens:features:freeze:types:Freeze",
+                            "value" => [
+                                "collection_id" => "0",
+                                "freeze_type" => [
+                                    "TokenAccount" => [
+                                        gmp_init(0), // This is not tested it just check if it is a gmp
+                                        "d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
+                ],
+                [
+                    "phase" => 0,
+                    "extrinsic_index" => 3,
+                    "look_up" => "0000",
+                    "module_id" => "System",
+                    "event_id" => "ExtrinsicSuccess",
+                    "params" => [
+                        [
+                            "type" => "frame_support:weights:DispatchInfo",
+                            "value" => [
+                                "weight" => "19000000",
+                                "class" => [
+                                    "Normal" => null
+                                ],
+                                "pays_fee" => [
+                                    "Yes" => null
+                                ]
+                            ]
+                        ]
+                    ],
+                    "topic" => []
+                ]
+            ],
+            $decodeEvents
+        );
 
     }
 

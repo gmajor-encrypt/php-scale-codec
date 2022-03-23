@@ -98,7 +98,7 @@ class ScaleInstance implements CodecInterface
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
-            $typeStruct[] = str_replace(';', ',', trim($element));
+            $typeStruct[] = trim($element);
         }
         $this->typeStruct = $typeStruct;
     }
@@ -156,15 +156,20 @@ class ScaleInstance implements CodecInterface
         }
 
         if ($typeString[0] == '(' && $typeString[-1] == ')') {
+            echo "\nTuple TypeString: " . $typeString;
             $struct = $this->generator->getRegistry('tuples');
             $struct->typeString = $typeString;
+            echo "\nStruct Type:" . json_encode($struct);
             $struct->buildTuplesMapping();
+            echo "\nTupple mapping:" . json_encode($struct);
             return $struct;
         }
 
         if ($typeString[0] == '[' && $typeString[-1] == ']') {
             $slice = explode(";", substr($typeString, 1, strlen($typeString) - 2));
+            echo "\nTypeString: " . $typeString;
             if (count($slice) == 2) {
+                echo "\nSlice: " . json_encode($slice);
                 $subType = trim($slice[0]);
                 $instant = strtolower($subType) == "u8" ? $this->generator->getRegistry('VecU8Fixed') : $this->generator->getRegistry('FixedArray');
                 $instant->subType = $subType;

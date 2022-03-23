@@ -287,15 +287,30 @@ class metadataV14 extends Struct
                         break;
 
                     default:
-                        $structValue = [];
                         // field count> 1, enum one element is struct
+                        // If there is no name the fields are a tuple
+                        if ($variant["fields"][0]["name"] === null) {
+                            $typeMapping = "";
+                            foreach ($variant["fields"] as $field) {
+                                $subType = $field["type"];
+
+                                $typeMapping !== "" && $typeMapping .= ", ";
+                                $typeMapping .= array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                                    $field["typeName"];
+                            }
+                            $enumValueList[$name] = sprintf("(%s)", $typeMapping);
+                            break;
+                        }
+
+                        $typeMapping = [];
                         foreach ($variant["fields"] as $field) {
                             $valueName = $field["name"];
                             $subType = $field["type"];
-                            $structValue[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                                $field["typeName"];
+
+                            $typeMapping[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                                    $field["typeName"];
                         }
-                        $enumValueList[$name] = json_encode($structValue);
+                        $enumValueList[$name] = json_encode($typeMapping);
                         break;
                 }
             }

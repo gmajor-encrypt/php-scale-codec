@@ -44,7 +44,10 @@ class EventRecord extends ScaleInstance
         $value["params"] = [];
 
         foreach ($event["call"]["args"] as $argType) {
-            $value["params"][] = ["type" => $argType, "value" => $this->process($argType)];
+            $value["params"][] = [
+                "type" => $argType,
+                "value" => $this->process($argType),
+            ];
         }
 
         // topic

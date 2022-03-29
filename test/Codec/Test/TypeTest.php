@@ -43,6 +43,7 @@ final class TypeTest extends TestCase
         $this->assertEquals(false, $codec->process("Option<bool>", new ScaleBytes("02")));
         $this->assertEquals("01", $codec->createTypeByTypeString("Option<bool>")->encode(true));
         $this->assertEquals("02", $codec->createTypeByTypeString("Option<bool>")->encode(false));
+        $this->assertEquals("0101000000000000000000000000000000", $codec->createTypeByTypeString("Option<u128>")->encode(gmp_init(1)));
     }
 
 

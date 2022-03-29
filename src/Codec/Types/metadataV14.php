@@ -93,7 +93,7 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant) {
                     $args = array();
                     foreach ($variant["fields"] as $v) {
-                        array_push($args, ["name" => $v["name"], "type" => $this->registeredSiType[$v["type"]]]);
+                        array_push($args, $this->registeredSiType[$v["type"]]);
                     }
                     array_push($events, ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]]);
                 }
@@ -287,15 +287,30 @@ class metadataV14 extends Struct
                         break;
 
                     default:
-                        $structValue = [];
                         // field count> 1, enum one element is struct
+                        // If there is no name the fields are a tuple
+                        if ($variant["fields"][0]["name"] === null) {
+                            $typeMapping = "";
+                            foreach ($variant["fields"] as $field) {
+                                $subType = $field["type"];
+
+                                $typeMapping !== "" && $typeMapping .= ", ";
+                                $typeMapping .= array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                                    $field["typeName"];
+                            }
+                            $enumValueList[$name] = sprintf("(%s)", $typeMapping);
+                            break;
+                        }
+
+                        $typeMapping = [];
                         foreach ($variant["fields"] as $field) {
                             $valueName = $field["name"];
                             $subType = $field["type"];
-                            $structValue[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                                $field["typeName"];
+
+                            $typeMapping[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+                                    $field["typeName"];
                         }
-                        $enumValueList[$name] = json_encode($structValue);
+                        $enumValueList[$name] = json_encode($typeMapping);
                         break;
                 }
             }

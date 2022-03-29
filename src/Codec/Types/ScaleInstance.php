@@ -98,7 +98,7 @@ class ScaleInstance implements CodecInterface
     {
         $typeStruct = [];
         foreach (explode(",", substr($this->typeString, 1, strlen($this->typeString) - 2)) as $key => $element) {
-            $typeStruct[] = str_replace(';', ',', trim($element));
+            $typeStruct[] = trim($element);
         }
         $this->typeStruct = $typeStruct;
     }

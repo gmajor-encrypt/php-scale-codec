@@ -6,9 +6,9 @@ namespace Codec;
 class Generator
 {
 
-    protected $scale_type = array();
+    protected array $scale_type = array();
 
-    protected $registers = array();
+    protected array $registers = array();
 
     /**
      * add Scale type to scale_type Registry
@@ -22,24 +22,13 @@ class Generator
     }
 
     /**
-     * get all scaleType Registry
-     *
-     * @return array
-     */
-    public function getScaleType (): array
-    {
-//        print_r($this->scale_type["AccountIndex"]);
-        return $this->scale_type;
-    }
-
-    /**
      * get one scaleType from Registry
      * return null if not found
      *
      * @param string $type
      * @return mixed
      */
-    public function getRegistry (string $type)
+    public function getRegistry (string $type): mixed
     {
         if (isset($this->scale_type[strtolower($type)])) {
             return $this->scale_type[strtolower($type)];

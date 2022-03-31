@@ -18,7 +18,7 @@ class Tuples extends ScaleInstance
     {
         $result = array();
         foreach ($this->typeStruct as $index => $item) {
-            array_push($result, $this->process($item));
+            $result[] = $this->process($item);
         }
         return $result;
     }

@@ -2,6 +2,7 @@
 
 namespace Codec\Types;
 
+use Codec\Base;
 use Codec\Generator;
 use Codec\Utils;
 
@@ -80,9 +81,9 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant) {
                     $args = array();
                     foreach ($variant["fields"] as $v) {
-                        array_push($args, ["name" => $v["name"], "type" => $this->registeredSiType[$v["type"]]]);
+                        $args[] = ["name" => $v["name"], "type" => $this->registeredSiType[$v["type"]]];
                     }
-                    array_push($calls, ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]]);
+                    $calls[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]];
                 }
             }
 
@@ -93,9 +94,9 @@ class metadataV14 extends Struct
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant) {
                     $args = array();
                     foreach ($variant["fields"] as $v) {
-                        array_push($args, $this->registeredSiType[$v["type"]]);
+                        $args[] = $this->registeredSiType[$v["type"]];
                     }
-                    array_push($events, ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]]);
+                    $events[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]];
                 }
             }
 
@@ -121,7 +122,7 @@ class metadataV14 extends Struct
             if (!empty($pallet["errors"])) {
                 $variants = $id2Portable[$pallet["errors"]["type"]];
                 foreach ($variants["type"]["def"]["Variant"]["variants"] as $variant) {
-                    array_push($errors, ["name" => $variant["name"], "docs" => $variant["docs"]]);
+                    $errors[] = ["name" => $variant["name"], "docs" => $variant["docs"]];
                 }
             }
             $metadataRaw["pallets"]["$palletIndex"]["errors_value"] = $errors;
@@ -129,7 +130,11 @@ class metadataV14 extends Struct
         return $metadataRaw;
     }
 
-    public function encode ($param)
+    /**
+     * @param $param
+     * @return \InvalidArgumentException|string
+     */
+    public function encode ($param): \InvalidArgumentException|string
     {
         return parent::encode($param);
     }
@@ -151,6 +156,13 @@ class metadataV14 extends Struct
                 $this->registeredSiType[$id] = end($item["type"]["path"]);
             }
         }
+
+        foreach ($id2Portable as $id => $item) {
+            if (count($item["type"]["path"]) > 1 && current($item["type"]["path"]) == "sp_core") {
+                $this->dealOnePortableType($id, $item, $id2Portable);
+            }
+        }
+
         foreach ($id2Portable as $id => $item) {
             if (!array_key_exists($id, $this->registeredSiType)) {
                 $this->dealOnePortableType($id, $item, $id2Portable);
@@ -168,67 +180,31 @@ class metadataV14 extends Struct
      */
     private function dealOnePortableType (int $id, array $one, array $id2Portable): string
     {
+
+
         // Composite, struct
         $one = $one["type"];
         if (array_key_exists("Composite", $one["def"])) {
-            if (count($one["def"]["Composite"]["fields"]) == 1) {
-                $subType = intval($one["def"]["Composite"]["fields"][0]["type"]);
-                // check subType
-                $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                    $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable);
-                return $this->registeredSiType[$id];
-            } else {
-                $tempStruct = [];
-                foreach ($one["def"]["Composite"]["fields"] as $field) {
-                    $tempStruct[$field["name"]] = array_key_exists($field["type"], $this->registeredSiType) ? $this->registeredSiType[$field["type"]] :
-                        $this->dealOnePortableType($field["type"], $id2Portable[$field["type"]], $id2Portable);
-                }
-                $instant = clone $this->generator->getRegistry("struct");
-                $instant->typeStruct = $tempStruct;
-                $typeString = self::genPathName($one["path"]);
-                $this->generator->addScaleType($typeString, $instant);
-                $this->registeredSiType[$id] = $typeString;
-                return $typeString;
-            }
+            return self::expandComposite($id, $one, $id2Portable);
         }
         // Array, Fixed
         if (array_key_exists("Array", $one["def"])) {
-            $subType = intval($one["def"]["Array"]["type"]);
-            $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? sprintf("[%s; %d]", $this->registeredSiType[$subType], $one["def"]["Array"]["len"]) :
-                sprintf("[%s; %d]", $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable), $one["def"]["Array"]["len"]);
-            return $this->registeredSiType[$id];
+            return self::expandArray($id, $one, $id2Portable);
         }
 
         // Sequence, vendor
         if (array_key_exists("Sequence", $one["def"])) {
-            $subType = intval($one["def"]["Sequence"]["type"]);
-            $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? sprintf("Vec<%s>", $this->registeredSiType[$subType]) :
-                sprintf("Vec<%s>", $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable));
-            return $this->registeredSiType[$id];
+            return self::expandSequence($id, $one, $id2Portable);
         }
 
         // Tuple
         if (array_key_exists("Tuple", $one["def"])) {
-            if (count($one["def"]["Tuple"]) == 0) {
-                $this->registeredSiType[$id] = "NULL";
-                return "NULL";
-            }
-            $tuple1 = intval($one["def"]["Tuple"][0]);
-            $tuple2 = intval($one["def"]["Tuple"][1]);
-            $tuple1Type = array_key_exists($tuple1, $this->registeredSiType) ? $this->registeredSiType[$tuple1] :
-                $this->dealOnePortableType($tuple1, $id2Portable[$tuple1], $id2Portable);
-            $tuple2Type = array_key_exists($tuple2, $this->registeredSiType) ? $this->registeredSiType[$tuple2] :
-                $this->dealOnePortableType($tuple2, $id2Portable[$tuple2], $id2Portable);
-            // combine (a,b) Tuple
-            $this->registeredSiType[$id] = sprintf("(%s,%s)", $tuple1Type, $tuple2Type);
-            return $this->registeredSiType[$id];
+            return self::expandTuple($id, $one, $id2Portable);
         }
+
         // Compact
         if (array_key_exists("Compact", $one["def"])) {
-            $subType = intval($one["def"]["Compact"]["type"]);
-            $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? sprintf("Compact<%s>", $this->registeredSiType[$subType]) :
-                sprintf("Compact<%s>", $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable));
-            return $this->registeredSiType[$id];
+            return self::expandCompact($id, $one, $id2Portable);
         }
         // BitSequence
         if (array_key_exists("BitSequence", $one["def"])) {
@@ -241,21 +217,10 @@ class metadataV14 extends Struct
             switch ($VariantType) {
                 // option
                 case "Option":
-                    $subType = intval($one["params"][0]["type"]);
-                    $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? sprintf("Option<%s>", $this->registeredSiType[$subType]) :
-                        sprintf("Option<%s>", $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable));
-                    return $this->registeredSiType[$id];
+                    return self::expandOption($id, $one, $id2Portable);
                 // Result
                 case "Result":
-                    $ResultOk = intval($one["params"][0]["type"]);
-                    $ResultErr = intval($one["params"][1]["type"]);
-                    $okType = array_key_exists($ResultOk, $this->registeredSiType) ? $this->registeredSiType[$ResultOk] :
-                        $this->dealOnePortableType($ResultOk, $id2Portable[$ResultOk], $id2Portable);
-                    $errType = array_key_exists($ResultErr, $this->registeredSiType) ? $this->registeredSiType[$ResultErr] :
-                        $this->dealOnePortableType($ResultErr, $id2Portable[$ResultErr], $id2Portable);
-                    // combine (a,b) Tuple
-                    $this->registeredSiType[$id] = sprintf("Result<%s,%s>", $okType, $errType);
-                    return $this->registeredSiType[$id];
+                    return self::expandResult($id, $one, $id2Portable);
             }
             // pallet Call, Event, Error, metadata deal
             if (count($one["path"]) >= 2) {
@@ -267,60 +232,13 @@ class metadataV14 extends Struct
                     $this->registeredSiType[$id] = "Call";
                     return "Call";
                 }
-                if (end($one["path"]) == "Instruction") {
+                if (end($one["path"]) == "Instruction") { // todo xcm
                     $this->registeredSiType[$id] = "Call";
                     return "Call";
                 }
             }
             // Enum
-            $enumValueList = [];
-            foreach ($one["def"]["Variant"]["variants"] as $variant) {
-                $name = $variant["name"];
-                switch (count($variant["fields"])) {
-                    case 0:
-                        $enumValueList[$name] = "NULL";
-                        break;
-                    case 1:
-                        $subType = $variant["fields"][0]["type"];
-                        $enumValueList[$name] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                            $variant["fields"][0]["typeName"];
-                        break;
-
-                    default:
-                        // field count> 1, enum one element is struct
-                        // If there is no name the fields are a tuple
-                        if ($variant["fields"][0]["name"] === null) {
-                            $typeMapping = "";
-                            foreach ($variant["fields"] as $field) {
-                                $subType = $field["type"];
-
-                                $typeMapping !== "" && $typeMapping .= ", ";
-                                $typeMapping .= array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                                    $field["typeName"];
-                            }
-                            $enumValueList[$name] = sprintf("(%s)", $typeMapping);
-                            break;
-                        }
-
-                        $typeMapping = [];
-                        foreach ($variant["fields"] as $field) {
-                            $valueName = $field["name"];
-                            $subType = $field["type"];
-
-                            $typeMapping[$valueName] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
-                                    $field["typeName"];
-                        }
-                        $enumValueList[$name] = json_encode($typeMapping);
-                        break;
-                }
-            }
-
-            $instant = clone $this->generator->getRegistry("enum");
-            $instant->typeStruct = $enumValueList;
-            $typeString = self::genPathName($one["path"]);
-            $this->generator->addScaleType($typeString, $instant);
-            $this->registeredSiType[$id] = $typeString;
-            return $typeString;
+            return self::expandEnum($id, $one, $id2Portable);
         }
         $this->registeredSiType[$id] = "NULL";
         return "NULL";
@@ -338,4 +256,239 @@ class metadataV14 extends Struct
         return join(":", $path);
     }
 
+    /**
+     * expandComposite
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandComposite (int $id, array $one, array $id2Portable): string
+    {
+        $typeString = self::genPathName($one["path"]);
+
+        if (count($one["def"]["Composite"]["fields"]) == 0) {
+            $this->registeredSiType[$id] = "NULL";
+            return "NULL";
+        }
+
+        if (count($one["def"]["Composite"]["fields"]) == 1) {
+            $siType = intval($one["def"]["Composite"]["fields"][0]["type"]);
+            // check subType
+            $subType = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
+                $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable);
+            Base::regCustom($this->generator, [$typeString => $subType]);
+        } else {
+            $tempStruct = [];
+            foreach ($one["def"]["Composite"]["fields"] as $field) {
+                $tempStruct[$field["name"]] = array_key_exists($field["type"], $this->registeredSiType) ? $this->registeredSiType[$field["type"]] :
+                    $this->dealOnePortableType($field["type"], $id2Portable[$field["type"]], $id2Portable);
+            }
+            $instant = clone $this->generator->getRegistry("struct");
+            $instant->typeStruct = $tempStruct;
+            $this->generator->addScaleType($typeString, $instant);
+        }
+        $this->registeredSiType[$id] = $typeString;
+        return $typeString;
+    }
+
+
+    /**
+     * expandArray
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandArray (int $id, array $one, array $id2Portable): string
+    {
+        $siType = intval($one["def"]["Array"]["type"]);
+
+        $this->registeredSiType[$id] = sprintf("[%s; %d]",
+            array_key_exists($siType, $this->registeredSiType) ?
+                $this->registeredSiType[$siType] : $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable),
+            $one["def"]["Array"]["len"]);
+
+        return $this->registeredSiType[$id];
+    }
+
+    /**
+     * expandSequence
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandSequence (int $id, array $one, array $id2Portable): string
+    {
+        $siType = intval($one["def"]["Sequence"]["type"]);
+
+        $this->registeredSiType[$id] = array_key_exists($siType, $this->registeredSiType) ?
+            sprintf("Vec<%s>", $this->registeredSiType[$siType]) :
+            sprintf("Vec<%s>", $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable));
+        return $this->registeredSiType[$id];
+    }
+
+
+    /**
+     * expandTuple
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandTuple (int $id, array $one, array $id2Portable): string
+    {
+        if (count($one["def"]["Tuple"]) == 0) {
+            $this->registeredSiType[$id] = "NULL";
+            return "NULL";
+        }
+        $tuple1 = intval($one["def"]["Tuple"][0]);
+        $tuple2 = intval($one["def"]["Tuple"][1]);
+        $tuple1Type = array_key_exists($tuple1, $this->registeredSiType) ? $this->registeredSiType[$tuple1] :
+            $this->dealOnePortableType($tuple1, $id2Portable[$tuple1], $id2Portable);
+        $tuple2Type = array_key_exists($tuple2, $this->registeredSiType) ? $this->registeredSiType[$tuple2] :
+            $this->dealOnePortableType($tuple2, $id2Portable[$tuple2], $id2Portable);
+        // combine (a,b) Tuple
+        $this->registeredSiType[$id] = sprintf("(%s,%s)", $tuple1Type, $tuple2Type);
+        return $this->registeredSiType[$id];
+    }
+
+    /**
+     * expandCompact
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandCompact (int $id, array $one, array $id2Portable): string
+    {
+        $siType = intval($one["def"]["Compact"]["type"]);
+        $this->registeredSiType[$id] = array_key_exists($siType, $this->registeredSiType) ?
+            sprintf("Compact<%s>", $this->registeredSiType[$siType]) :
+            sprintf("Compact<%s>", $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable));
+        return $this->registeredSiType[$id];
+    }
+
+    /**
+     * expandOption
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandOption (int $id, array $one, array $id2Portable): string
+    {
+        $siType = intval($one["params"][0]["type"]);
+        $this->registeredSiType[$id] = array_key_exists($siType, $this->registeredSiType) ?
+            sprintf("Option<%s>", $this->registeredSiType[$siType]) :
+            sprintf("Option<%s>", $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable));
+        return $this->registeredSiType[$id];
+    }
+
+    /**
+     * expandResult
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandResult (int $id, array $one, array $id2Portable): string
+    {
+        $ResultOk = intval($one["params"][0]["type"]);
+        $ResultErr = intval($one["params"][1]["type"]);
+        $okType = array_key_exists($ResultOk, $this->registeredSiType) ?
+            $this->registeredSiType[$ResultOk] :
+            $this->dealOnePortableType($ResultOk, $id2Portable[$ResultOk], $id2Portable);
+        $errType = array_key_exists($ResultErr, $this->registeredSiType) ?
+            $this->registeredSiType[$ResultErr] :
+            $this->dealOnePortableType($ResultErr, $id2Portable[$ResultErr], $id2Portable);
+        // combine (a,b) Tuple
+        $this->registeredSiType[$id] = sprintf("Result<%s,%s>", $okType, $errType);
+        return $this->registeredSiType[$id];
+    }
+
+    /**
+     * expandEnum
+     *
+     * @param int $id
+     * @param array $one
+     * @param array $id2Portable
+     * @return string
+     */
+    private function expandEnum (int $id, array $one, array $id2Portable): string
+    {
+        $enumValueList = [];
+        // sort by enum index
+        $variants = $one["def"]["Variant"]["variants"];
+        usort($variants, function ($pre, $next) {
+            return ($pre["index"] < $next["index"]) ? -1 : 1;
+        });
+
+        foreach ($variants as $index => $variant) {
+            $name = $variant["name"];
+            $enumIndex = $variant["index"];
+
+            // fill empty element
+            $interval = $enumIndex;
+            if ($index > 0) {
+                $interval = $enumIndex - $variants[$index - 1]["index"] - 1;
+            }
+            while ($interval > 0) {
+                $enumValueList[sprintf("empty%d", $interval)] = "NULL";
+                $interval--;
+            }
+
+            switch (count($variant["fields"])) {
+                case 0:
+                    $enumValueList[$name] = "NULL";
+                    break;
+                case 1:
+                    $siType = $variant["fields"][0]["type"];
+                    $enumValueList[$name] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
+                        self::genPathName($id2Portable[$siType]["type"]["path"]);
+                    break;
+
+                default:
+                    // field count> 1, enum one element is struct
+                    // If there is no name the fields are a tuple
+                    if ($variant["fields"][0]["name"] === null) {
+                        $typeMapping = "";
+                        foreach ($variant["fields"] as $field) {
+                            $siType = $field["type"];
+
+                            $typeMapping !== "" && $typeMapping .= ", ";
+                            $typeMapping .= array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
+                                self::genPathName($id2Portable[$siType]["type"]["path"]);
+                        }
+                        $enumValueList[$name] = sprintf("(%s)", $typeMapping);
+                        break;
+                    }
+
+                    $typeMapping = [];
+                    foreach ($variant["fields"] as $field) {
+                        $valueName = $field["name"];
+                        $siType = $field["type"];
+                        $typeMapping[$valueName] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] : self::genPathName($id2Portable[$siType]["type"]["path"]);
+                    }
+                    $enumValueList[$name] = json_encode($typeMapping);
+                    break;
+            }
+        }
+
+
+        $instant = clone $this->generator->getRegistry("enum");
+        $instant->typeStruct = $enumValueList;
+        $typeString = self::genPathName($one["path"]);
+        $this->generator->addScaleType($typeString, $instant);
+        $this->registeredSiType[$id] = $typeString;
+        return $typeString;
+    }
 }

@@ -25,6 +25,7 @@ class Enum extends ScaleInstance
                 $index = 0;
                 foreach ($this->typeStruct as $key => $item) {
                     if ($EnumIndex == $index) {
+                        // struct element
                         if ($item[0] == "{" && $item[strlen($item) - 1] == "}") {
                             $structValue = array();
                             foreach (json_decode($item, true) as $k => $v) {

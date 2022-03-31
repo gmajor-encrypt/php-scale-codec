@@ -4,7 +4,6 @@ namespace Codec;
 
 
 use InvalidArgumentException;
-
 class Base
 {
     public const DEFAULT_NETWORK = 'default';
@@ -64,7 +63,7 @@ class Base
      * @param string $network
      * @return string
      */
-    public static function getScaleCodecClassname (string $scaleType, $network = ''): string
+    public static function getScaleCodecClassname (string $scaleType, string $network = ''): string
     {
         if ($providerClass = self::findScaleCodecClassname($scaleType, $network)) {
             return $providerClass;
@@ -92,7 +91,7 @@ class Base
      * @param string $network
      * @return string
      */
-    protected static function findScaleCodecClassname (string $scaleType, $network = ''): string
+    protected static function findScaleCodecClassname (string $scaleType, string $network = ''): string
     {
         $providerClass = 'Codec\\' . ($network ? sprintf('Types\%s\%s', $scaleType, $network) : sprintf('Types\%s', $scaleType));
         if (class_exists($providerClass, true)) {
@@ -109,7 +108,7 @@ class Base
      * @param $scaleType
      * @return mixed
      */
-    private static function convertPhpType ($scaleType)
+    private static function convertPhpType ($scaleType): mixed
     {
         if (in_array($scaleType, ["Bool", "String", "Int", "Null"])) {
             return sprintf("T%s", $scaleType);

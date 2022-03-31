@@ -123,6 +123,9 @@ class Compact extends ScaleInstance
         } else {
             $value = gmp_sub($value, "1073741824") < 0 ? gmp_intval($value) : $value;
         }
+        if (is_string($value)) {
+            $value = gmp_init($value);
+        }
         if (gmp_sub($value, "64") < 0) { //2**6-1
             return Utils::LittleIntToHex(gmp_init($value << 2), 1);
         } elseif (gmp_sub($value, "16384") < 0) { //2**14-1

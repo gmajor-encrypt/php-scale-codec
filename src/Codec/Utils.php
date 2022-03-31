@@ -148,7 +148,7 @@ class Utils
             case 8:
                 return self::bytesToHex(array($value, $value >> 8, $value >> 16, $value >> 24, $value >> 32, $value >> 40, $value >> 48, $value >> 56));
             default:
-                return new OutOfRangeException(sprintf('LittleIntToBytes'));
+                return new OutOfRangeException('LittleIntToBytes');
         }
     }
 
@@ -246,7 +246,7 @@ class Utils
      * @param array $results
      * @return array
      */
-    public static function getDirContents (string $dir, &$results = array()): array
+    public static function getDirContents (string $dir, array &$results = array()): array
     {
         $files = scandir($dir);
         foreach ($files as $value) {

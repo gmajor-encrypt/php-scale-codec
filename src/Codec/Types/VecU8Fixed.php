@@ -31,7 +31,7 @@ class VecU8Fixed extends ScaleInstance
             $param = Utils::hexToBytes($param);
         }
         if (!is_array($param)) {
-            throw new InvalidArgumentException(sprintf('param not array'));
+            throw new InvalidArgumentException('param not array');
         }
         foreach ($param as $index => $item) {
             $value .= $this->createTypeByTypeString(sprintf("U8"))->encode($item);

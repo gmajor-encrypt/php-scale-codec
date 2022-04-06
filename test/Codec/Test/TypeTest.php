@@ -189,6 +189,7 @@ final class TypeTest extends TestCase
     {
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals(["period" => 64, "phase" => 29], $codec->process("EraExtrinsic", new ScaleBytes("d501")));
+        $this->assertEquals("d501", $codec->createTypeByTypeString("EraExtrinsic")->encode(["period" => 64, "phase" => 29]));
     }
 
     public function testResult ()
@@ -202,7 +203,8 @@ final class TypeTest extends TestCase
         $codec->createTypeByTypeString("Result<u8, bool>")->encode(["Err1" => false]);
     }
 
-    public function testBitVec(){
+    public function testBitVec ()
+    {
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals("37", $codec->process("BitVec", new ScaleBytes("0x0837")));
         $this->assertEquals("7b", $codec->process("BitVec", new ScaleBytes("0x087b")));

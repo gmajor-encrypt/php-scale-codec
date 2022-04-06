@@ -2,6 +2,7 @@
 
 namespace Codec\Types;
 
+use Codec\Generator;
 use Codec\Utils;
 
 // https://substrate.dev/docs/en/knowledgebase/learn-substrate/extrinsics
@@ -24,6 +25,23 @@ use Codec\Utils;
 // }
 class Extrinsic extends ScaleInstance
 {
+
+    public function __construct (Generator $generator)
+    {
+        parent::__construct($generator);
+        $this->typeStruct = [
+            "extrinsic_length" => "Compact<u32>",
+            "version" => "u8",
+            "account_id" => "MultiAddress",
+            "signature" => "ExtrinsicSignature",
+            "era" => "EraExtrinsic",
+            "nonce" => "Compact<U64>",
+            "tip" => "Compact<Balance>",
+            "look_up" => "[u8;2]",
+            "call" => "Call"
+        ];
+    }
+
     public function decode (): array
     {
 
@@ -55,10 +73,10 @@ class Extrinsic extends ScaleInstance
 
                 // check signedExtensions exist ChargeTransactionPayment
                 $signedExtensions = $this->metadata["extrinsic"]["signedExtensions"];
-                if(count($signedExtensions)>0 && is_array($signedExtensions[0])){
-                    $signedExtensions = array_column($signedExtensions,"identifier");
+                if (count($signedExtensions) > 0 && is_array($signedExtensions[0])) {
+                    $signedExtensions = array_column($signedExtensions, "identifier");
                 }
-                if (in_array("ChargeTransactionPayment",$signedExtensions )) {
+                if (in_array("ChargeTransactionPayment", $signedExtensions)) {
                     $value["tip"] = gmp_strval($this->process("Compact<Balance>"));
                 }
                 // generate extrinsic hash
@@ -98,6 +116,46 @@ class Extrinsic extends ScaleInstance
             ];
         }
 
+        return $value;
+    }
+
+    /**
+     * Extrinsic encode
+     *
+     *
+     * @param $param
+     * @return string
+     */
+    function encode ($param): string
+    {
+        // check is signed or unsigned Extrinsic
+        foreach (["extrinsic_length", "version", "look_up", "params"] as $v) {
+            if (!array_key_exists($v, $param)) {
+                throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param));
+            }
+        }
+        $value = $this->createTypeByTypeString("Compact<u32>")->encode($param["extrinsic_length"]);
+        // version
+        $value = $value . $param["version"];
+        if (array_key_exists("signature", $param)) {
+            foreach (["account_id", "era", "nonce"] as $v) {
+                if (!array_key_exists($v, $param)) {
+                    throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $v));
+                }
+            }
+            $value = $value . $this->createTypeByTypeString("MultiAddress")->encode($param["account_id"]);
+            $value = $value . $this->createTypeByTypeString("ExtrinsicSignature")->encode($param["signature"]);
+            $value = $value . $this->createTypeByTypeString("EraExtrinsic")->encode($param["era"]);
+            $value = $value . $this->createTypeByTypeString("Compact<U64>")->encode($param["nonce"]);
+            if (array_key_exists("tip", $param)) {
+                $value = $value . $this->createTypeByTypeString("Compact<Balance>")->encode($param["tip"]);
+            }
+            // encode sign extrinsic
+        }
+        $value = $value . $param["look_up"];
+        foreach ($param["params"] as $arg) {
+            $value = $value . $this->createTypeByTypeString($arg["type"])->encode($arg["value"]);
+        }
         return $value;
     }
 

@@ -279,6 +279,16 @@ class metadataV14 extends Struct
             $subType = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
                 $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable);
             Base::regCustom($this->generator, [$typeString => $subType]);
+
+            // TODO:
+            // The issue seems to be here, if we revert this part to what was in a previous commit like so, it works:
+//            $subType = intval($one["def"]["Composite"]["fields"][0]["type"]);
+//            // check subType
+//            $this->registeredSiType[$id] = array_key_exists($subType, $this->registeredSiType) ? $this->registeredSiType[$subType] :
+//                $this->dealOnePortableType($subType, $id2Portable[$subType], $id2Portable);
+//            return $this->registeredSiType[$id];
+
+
         } else {
             $tempStruct = [];
             foreach ($one["def"]["Composite"]["fields"] as $field) {

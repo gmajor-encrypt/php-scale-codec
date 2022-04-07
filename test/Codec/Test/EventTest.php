@@ -38,6 +38,19 @@ final class EventTest extends TestCase
         ], $decodeEvent[1]);
     }
 
+    public function testRuntimeSubtypeMetadataV14Decoder ()
+    {
+        $codec = new ScaleInstance(Base::create());
+
+        $metadataInstant = $codec->process("metadata", new ScaleBytes(Constant::$efinityMetadata));
+        $decodeEvent = $codec->process("Vec<EventRecord>",
+            new ScaleBytes("0x1c0000000000000000000000000000000200000001000000000070e86f000000000002000000020000000000000000000000000002000000030000000a08d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d272984f348a9360000000000000000000000030000000a04d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d000065db9998b1160100000000000000000003000000280a010000000000000000000000000000000101000000000000000000000000000000106e616d6528546f6b656e205465737400000300000000000051250200000000000000"), $metadataInstant["metadata"]);
+
+        $this->assertEquals([
+            
+        ], $decodeEvent);
+    }
+
     public function testV14InfiniteLoopMetadataEvent ()
     {
         $codec = new ScaleInstance(Base::create());

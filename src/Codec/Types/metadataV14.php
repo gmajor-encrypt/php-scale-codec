@@ -300,7 +300,7 @@ class metadataV14 extends Struct
             $typeString = self::genPathName($one["path"], $id);
             $this->registeredTypeNames[] = $typeString;
             Base::regCustom($this->generator, [$typeString => $subType]);
-            $this->registeredSiType[$id] = $subType;
+            $this->registeredSiType[$id] = $typeString;
             return $subType;
         }
         $tempStruct = [];

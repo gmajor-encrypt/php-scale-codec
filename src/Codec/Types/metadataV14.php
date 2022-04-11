@@ -32,9 +32,23 @@ class metadataV14 extends Struct
      */
     protected array $registeredSiType;
 
+    /**
+     * has registered type name
+     *
+     * @var array
+     */
+    protected array $registeredTypeNames;
+
+
+    /**
+     * metadataV14 construct function
+     *
+     * @param Generator $generator
+     */
     public function __construct (Generator $generator)
     {
         parent::__construct($generator);
+        $this->registeredTypeNames = [];
         $this->typeStruct = [
             "lookup" => "PortableRegistry",
             "pallets" => "Vec<V14Module>",
@@ -164,9 +178,7 @@ class metadataV14 extends Struct
         }
 
         foreach ($id2Portable as $id => $item) {
-            if (!array_key_exists($id, $this->registeredSiType)) {
-                $this->dealOnePortableType($id, $item, $id2Portable);
-            }
+            $this->dealOnePortableType($id, $item, $id2Portable);
         }
     }
 
@@ -181,6 +193,9 @@ class metadataV14 extends Struct
     private function dealOnePortableType (int $id, array $one, array $id2Portable): string
     {
 
+        if (array_key_exists($id, $this->registeredSiType)) {
+            return $this->registeredSiType[$id];
+        }
 
         // Composite, struct
         $one = $one["type"];
@@ -249,11 +264,16 @@ class metadataV14 extends Struct
      * generate type name by struct
      *
      * @param array $path
+     * @param int $siTypeId
      * @return string
      */
-    private function genPathName (array $path): string
+    private function genPathName (array $path, int $siTypeId): string
     {
-        return join(":", $path);
+        $genName = join(":", $path);
+        if (in_array($genName, $this->registeredTypeNames)) {
+            $genName = $genName . "@" . $siTypeId;
+        }
+        return $genName;
     }
 
     /**
@@ -266,7 +286,6 @@ class metadataV14 extends Struct
      */
     private function expandComposite (int $id, array $one, array $id2Portable): string
     {
-        $typeString = self::genPathName($one["path"]);
 
         if (count($one["def"]["Composite"]["fields"]) == 0) {
             $this->registeredSiType[$id] = "NULL";
@@ -278,17 +297,22 @@ class metadataV14 extends Struct
             // check subType
             $subType = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
                 $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable);
+            $typeString = self::genPathName($one["path"], $id);
+            $this->registeredTypeNames[] = $typeString;
             Base::regCustom($this->generator, [$typeString => $subType]);
-        } else {
-            $tempStruct = [];
-            foreach ($one["def"]["Composite"]["fields"] as $field) {
-                $tempStruct[$field["name"]] = array_key_exists($field["type"], $this->registeredSiType) ? $this->registeredSiType[$field["type"]] :
-                    $this->dealOnePortableType($field["type"], $id2Portable[$field["type"]], $id2Portable);
-            }
-            $instant = clone $this->generator->getRegistry("struct");
-            $instant->typeStruct = $tempStruct;
-            $this->generator->addScaleType($typeString, $instant);
+            $this->registeredSiType[$id] = $subType;
+            return $subType;
         }
+        $tempStruct = [];
+        foreach ($one["def"]["Composite"]["fields"] as $field) {
+            $tempStruct[$field["name"]] = array_key_exists($field["type"], $this->registeredSiType) ? $this->registeredSiType[$field["type"]] :
+                $this->dealOnePortableType($field["type"], $id2Portable[$field["type"]], $id2Portable);
+        }
+        $instant = clone $this->generator->getRegistry("struct");
+        $instant->typeStruct = $tempStruct;
+        $typeString = self::genPathName($one["path"], $id);
+        $this->registeredTypeNames[] = $typeString;
+        $this->generator->addScaleType($typeString, $instant);
         $this->registeredSiType[$id] = $typeString;
         return $typeString;
     }
@@ -453,7 +477,7 @@ class metadataV14 extends Struct
                 case 1:
                     $siType = $variant["fields"][0]["type"];
                     $enumValueList[$name] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
-                        self::genPathName($id2Portable[$siType]["type"]["path"]);
+                        self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
                     break;
 
                 default:
@@ -466,7 +490,7 @@ class metadataV14 extends Struct
 
                             $typeMapping !== "" && $typeMapping .= ", ";
                             $typeMapping .= array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
-                                self::genPathName($id2Portable[$siType]["type"]["path"]);
+                                self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
                         }
                         $enumValueList[$name] = sprintf("(%s)", $typeMapping);
                         break;
@@ -476,7 +500,7 @@ class metadataV14 extends Struct
                     foreach ($variant["fields"] as $field) {
                         $valueName = $field["name"];
                         $siType = $field["type"];
-                        $typeMapping[$valueName] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] : self::genPathName($id2Portable[$siType]["type"]["path"]);
+                        $typeMapping[$valueName] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] : self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
                     }
                     $enumValueList[$name] = json_encode($typeMapping);
                     break;
@@ -486,7 +510,8 @@ class metadataV14 extends Struct
 
         $instant = clone $this->generator->getRegistry("enum");
         $instant->typeStruct = $enumValueList;
-        $typeString = self::genPathName($one["path"]);
+        $typeString = self::genPathName($one["path"], $id);
+        $this->registeredTypeNames[] = $typeString;
         $this->generator->addScaleType($typeString, $instant);
         $this->registeredSiType[$id] = $typeString;
         return $typeString;

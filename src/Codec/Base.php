@@ -173,11 +173,10 @@ class Base
                         }
                         self::regCustom($generator, [$key => $value]);
                         $iterationSolve = true;
-                        break;
                     } else {
                         $iterationSolve = false;
-                        break;
                     }
+                    break;
                 }
                 if ($iterationSolve) {
                     continue;

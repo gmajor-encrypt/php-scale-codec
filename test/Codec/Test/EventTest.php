@@ -123,7 +123,7 @@ final class EventTest extends TestCase
                     "event_id" => "Withdraw",
                     "params" => [
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d"
                         ],
                         [
@@ -218,7 +218,7 @@ final class EventTest extends TestCase
                     "event_id" => "Withdraw",
                     "params" => [
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "32d804aff686f512841f7f31b7091a31d41fcc5aa89a4eed8d2d2705b62517fe",
                         ],
                         [
@@ -236,11 +236,11 @@ final class EventTest extends TestCase
                     "event_id" => "Transfer",
                     "params" => [
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "32d804aff686f512841f7f31b7091a31d41fcc5aa89a4eed8d2d2705b62517fe"
                         ],
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "3a47aaf41b881b4932c750d2c36faf138c6209f47dd53b3b4c96749d9636911f"
                         ],
                         [
@@ -258,7 +258,7 @@ final class EventTest extends TestCase
                     "event_id" => "Deposit",
                     "params" => [
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "6d6f646c70792f74727372790000000000000000000000000000000000000000"
                         ],
                         [
@@ -290,7 +290,7 @@ final class EventTest extends TestCase
                     "event_id" => "Deposit",
                     "params" => [
                         [
-                            "type" => "sp_core:crypto:AccountId32",
+                            "type" => "[U8; 32]",
                             "value" => "7a8b406e98e5b8439e8654cb022c4d61fc458de099d54e79699b28f1fab01b5b"
                         ],
                         [

@@ -51,7 +51,7 @@ class Enum extends ScaleInstance
     {
         if (!empty($this->typeStruct)) {
             if (!is_array($param)) {
-                return new \InvalidArgumentException(sprintf('%v not array', $param));
+                return new \InvalidArgumentException(sprintf('%s not array', $param));
             }
             foreach ($param as $enumKey => $enumValue) {
                 $index = 0;

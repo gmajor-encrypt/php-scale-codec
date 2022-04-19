@@ -98,6 +98,12 @@ final class ExtrinsicTest extends TestCase
             $decodeExtrinsic);
         // encode
         $this->assertEquals($raw, "0x" . $codec->createTypeByTypeString("Extrinsic")->encode($decodeExtrinsic));
+
+        $raw = $codec->createTypeByTypeString("Call")->setMetadata($metadataInstant["metadata"])->encode(["module_id" => "Balances", "call_name" => "transfer", "params" => [
+            ["Id" => "ae8bde916d81d9525267dde07517510be474a76781daa4921bda39e5f8f8a767"], "1000000000000"
+        ]]);
+        $this->assertEquals("040000ae8bde916d81d9525267dde07517510be474a76781daa4921bda39e5f8f8a767070010a5d4e8",$raw);
+        $this->assertEquals("transfer", $codec->process("Call", new ScaleBytes($raw), $metadataInstant["metadata"])["call_name"]);
     }
 
 

@@ -46,9 +46,23 @@ class Call extends ScaleInstance
         return $value;
     }
 
-    // Call encode todo
+    // call data encode
     public function encode ($param)
     {
-
+        foreach (["module_id", "call_name", "params"] as $v) {
+            if (!array_key_exists($v, $param)) {
+                throw new \InvalidArgumentException(sprintf('call data %s not exist', $v));
+            }
+        }
+        foreach ($this->metadata["call_index"] as $call_index => $call) {
+            if ($call["module"]["name"] == $param["module_id"] and $call["call"]["name"] == $param["call_name"]) {
+                $value = $call_index;
+                foreach ($call["call"]["args"] as $index => $arg) {
+                    $value = $value . $this->createTypeByTypeString($arg["type"])->encode($param["params"][$index]);
+                }
+                return $value;
+            }
+        }
+        throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param["call_name"]));
     }
 }

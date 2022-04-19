@@ -92,6 +92,17 @@ class ScaleInstance implements CodecInterface
     }
 
     /**
+     *
+     * @param array $metadata
+     * @return ScaleInstance
+     */
+    public function setMetadata (array $metadata)
+    {
+        $this->metadata = $metadata;
+        return $this;
+    }
+
+    /**
      * buildStructMapping
      */
     public function buildTuplesMapping ()
@@ -106,7 +117,7 @@ class ScaleInstance implements CodecInterface
     /**
      * @param string $typeString
      * @param ScaleBytes|null $codecData |null
-     * @param array $metadata
+     * @param array|null $metadata
      * @return mixed
      */
     public function process (string $typeString, ScaleBytes $codecData = null, array $metadata = null)
@@ -129,7 +140,7 @@ class ScaleInstance implements CodecInterface
      * @param string $typeString
      * @return ScaleInstance
      */
-    public function createTypeByTypeString (string $typeString)
+    public function createTypeByTypeString (string $typeString): ScaleInstance
     {
         $typeString = self::convertType($typeString);
         $match = array();

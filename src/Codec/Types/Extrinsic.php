@@ -129,7 +129,7 @@ class Extrinsic extends ScaleInstance
     function encode ($param): string
     {
         // check is signed or unsigned Extrinsic
-        foreach (["extrinsic_length", "version", "look_up", "params"] as $v) {
+        foreach (["extrinsic_length", "version", "params"] as $v) {
             if (!array_key_exists($v, $param)) {
                 throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param));
             }
@@ -152,11 +152,18 @@ class Extrinsic extends ScaleInstance
             }
             // encode sign extrinsic
         }
-        $value = $value . $param["look_up"];
-        foreach ($param["params"] as $arg) {
-            $value = $value . $this->createTypeByTypeString($arg["type"])->encode($arg["value"]);
+        foreach ($this->metadata["call_index"] as $call_index => $call) {
+            if ($call["module"]["name"] == $param["module_id"] and $call["call"]["name"] == $param["call_name"]) {
+                $value = $value . $call_index;
+                foreach ($call["call"]["args"] as $index => $arg) {
+                    $value = $value . $this->createTypeByTypeString($arg["type"])->encode(
+                            array_key_exists("value", $param["params"][$index]) ? $param["params"][$index]["value"] : $param["params"][$index]
+                        );
+                }
+                return $value;
+            }
         }
-        return $value;
+        throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param["call_name"]));
     }
 
 }

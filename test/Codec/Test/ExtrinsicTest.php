@@ -26,7 +26,7 @@ final class ExtrinsicTest extends TestCase
             'call_name' => 'set',
             'params' => [["name" => "now", "type" => "Compact<T::Moment>", "value" => "1625708208001"]],
         ], $decodeExtrinsic);
-        $this->assertEquals($raw, "0x" . $codec->createTypeByTypeString("Extrinsic")->encode($decodeExtrinsic));
+        $this->assertEquals($raw, "0x" . $codec->createTypeByTypeString("Extrinsic")->setMetadata($metadataInstant["metadata"])->encode($decodeExtrinsic));
     }
 
     public function testSignerExtrinsicDecoder ()
@@ -97,7 +97,7 @@ final class ExtrinsicTest extends TestCase
             true),
             $decodeExtrinsic);
         // encode
-        $this->assertEquals($raw, "0x" . $codec->createTypeByTypeString("Extrinsic")->encode($decodeExtrinsic));
+        $this->assertEquals($raw, "0x" . $codec->createTypeByTypeString("Extrinsic")->setMetadata($metadataInstant["metadata"])->encode($decodeExtrinsic));
 
         $raw = $codec->createTypeByTypeString("Call")->setMetadata($metadataInstant["metadata"])->encode(["module_id" => "Balances", "call_name" => "transfer", "params" => [
             ["Id" => "ae8bde916d81d9525267dde07517510be474a76781daa4921bda39e5f8f8a767"], "1000000000000"

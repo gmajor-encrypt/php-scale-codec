@@ -129,14 +129,14 @@ class Extrinsic extends ScaleInstance
     function encode ($param): string
     {
         // check is signed or unsigned Extrinsic
-        foreach (["extrinsic_length", "version", "params"] as $v) {
+        foreach (["version", "params"] as $v) {
             if (!array_key_exists($v, $param)) {
                 throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param));
             }
         }
-        $value = $this->createTypeByTypeString("Compact<u32>")->encode($param["extrinsic_length"]);
+
         // version
-        $value = $value . $param["version"];
+        $value = $param["version"];
         if (array_key_exists("signature", $param)) {
             foreach (["account_id", "era", "nonce"] as $v) {
                 if (!array_key_exists($v, $param)) {
@@ -160,7 +160,7 @@ class Extrinsic extends ScaleInstance
                             array_key_exists("value", $param["params"][$index]) ? $param["params"][$index]["value"] : $param["params"][$index]
                         );
                 }
-                return $value;
+                return $this->createTypeByTypeString("Compact<u32>")->encode(count(Utils::hexToBytes($value))) . $value;
             }
         }
         throw new \InvalidArgumentException(sprintf('Extrinsic %s not exist', $param["call_name"]));

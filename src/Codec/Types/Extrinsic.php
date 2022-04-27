@@ -157,7 +157,7 @@ class Extrinsic extends ScaleInstance
                 $value = $value . $call_index;
                 foreach ($call["call"]["args"] as $index => $arg) {
                     $value = $value . $this->createTypeByTypeString($arg["type"])->encode(
-                            array_key_exists("value", $param["params"][$index]) ? $param["params"][$index]["value"] : $param["params"][$index]
+                            is_array($param["params"][$index]) && array_key_exists("value", $param["params"][$index]) ? $param["params"][$index]["value"] : $param["params"][$index]
                         );
                 }
                 return $this->createTypeByTypeString("Compact<u32>")->encode(count(Utils::hexToBytes($value))) . $value;

@@ -22,19 +22,19 @@ class VecU8Fixed extends ScaleInstance
 
     /**
      * @param array $param
-     * @return mixed|string|null
+     * @return string
      */
     function encode ($param): string
     {
         $value = "";
-        if (is_string($param) && ctype_xdigit($param)) {
-            $param = Utils::hexToBytes($param);
+        if (is_string($param) && ctype_xdigit(Utils::trimHex($param))) {
+            $param = Utils::hexToBytes(Utils::trimHex($param));
         }
         if (!is_array($param)) {
             throw new InvalidArgumentException('param not array');
         }
-        foreach ($param as $index => $item) {
-            $value .= $this->createTypeByTypeString(sprintf("U8"))->encode($item);
+        foreach ($param as $item) {
+            $value .= $this->createTypeByTypeString("U8")->encode($item);
         }
         return $value;
     }

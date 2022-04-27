@@ -2,7 +2,6 @@
 
 namespace Codec\Types;
 
-use Codec\Types\ScaleInstance;
 use Codec\Utils;
 
 /**
@@ -51,7 +50,7 @@ class Enum extends ScaleInstance
     {
         if (!empty($this->typeStruct)) {
             if (!is_array($param)) {
-                return new \InvalidArgumentException(sprintf('%s not array', $param));
+                throw new \InvalidArgumentException(sprintf('%s not array', $param));
             }
             foreach ($param as $enumKey => $enumValue) {
                 $index = 0;

@@ -235,7 +235,10 @@ use Codec\Types\ScaleInstance;
 $metadataV13 = "..."; // from json rpc state_getMetadata
 $codec = new ScaleInstance(Base::create());
 $metadataInstant = $codec->process("metadata", new ScaleBytes($metadataV13));
+// decode
 $decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes("0x280403000b819fc2837a01"), $metadataInstant);
+// encode
+$codec->createTypeByTypeString("Extrinsic")->setMetadata($metadataInstant["metadata"])->encode($decodeExtrinsic);
 ?>
 ```
 

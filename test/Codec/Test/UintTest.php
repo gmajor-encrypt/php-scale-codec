@@ -54,6 +54,7 @@ final class UintTest extends TestCase
         $this->assertEquals(0, gmp_cmp(gmp_init("739571955075788261"), $codec->process("U128", new ScaleBytes("e52d2254c67c430a0000000000000000"))));
         $codec = $codec->createTypeByTypeString("U128");
         $this->assertEquals("e52d2254c67c430a0000000000000000", $codec->encode(739571955075788261));
+        $this->assertEquals("ffffffffffffffffffffffffffffffff", $codec->encode("340282366920938463463374607431768211455"));
 
     }
 }

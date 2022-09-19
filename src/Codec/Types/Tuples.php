@@ -17,7 +17,7 @@ class Tuples extends ScaleInstance
     public function decode (): array
     {
         $result = array();
-        foreach ($this->typeStruct as $index => $item) {
+        foreach ($this->typeStruct as $item) {
             $result[] = $this->process($item);
         }
         return $result;

@@ -19,7 +19,7 @@ use InvalidArgumentException;
 class Struct extends ScaleInstance
 {
 
-    public function decode(): array
+    public function decode (): array
     {
         $result = array();
         foreach ($this->typeStruct as $index => $item) {
@@ -28,12 +28,18 @@ class Struct extends ScaleInstance
         return $result;
     }
 
-    public function encode($param)
+    public function encode ($param)
     {
         $value = "";
+        if (!is_array($param)) {
+            throw new InvalidArgumentException('param not Struct');
+        }
+        if (count($param) == 0) {
+            return $value;
+        }
         foreach ($this->typeStruct as $index => $dataType) {
             if (!array_key_exists($index, $param)) {
-                return new InvalidArgumentException(sprintf('%d not in Struct', $index));
+                throw new InvalidArgumentException(sprintf('%d not in Struct', $index));
             }
             $subInstant = $this->createTypeByTypeString($dataType);
             $value = $value . $subInstant->encode($param[$index]);

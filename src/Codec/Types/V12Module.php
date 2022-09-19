@@ -94,13 +94,13 @@ class V12Module extends Struct
 
         // decode ModuleStorage
         $storage = $this->process("Option<ModuleStorage>");
-        $this->storage = !empty($storage) ? $storage : [];
+        $this->storage = !empty($storage) ? $storage : null;
 
         $calls = $this->process("Option<Vec<MetadataModuleCall>>");
-        $this->calls = !empty($calls) ? $calls : [];
+        $this->calls = !empty($calls) ? $calls : null;
 
         $events = $this->process("Option<Vec<MetadataModuleEvent>>");
-        $this->events = !empty($events) ? $events : [];
+        $this->events = !empty($events) ? $events : null;
 
 
         $constants = $this->process("Vec<MetadataModuleConstants>");

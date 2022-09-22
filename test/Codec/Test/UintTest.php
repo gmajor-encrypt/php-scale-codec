@@ -42,9 +42,9 @@ final class UintTest extends TestCase
     {
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals(184467440737095, $codec->process("U64", new ScaleBytes("471b47acc5a70000")));
-        $codec = $codec->createTypeByTypeString("U64")        
+        $codec = $codec->createTypeByTypeString("U64");
         $this->assertEquals("471b47acc5a70000", $codec->encode(184467440737095));
-        $this->assertEquals("ffffffffffffffff", $codec->encode("18446744073709551615"))
+        $this->assertEquals("ffffffffffffffff", $codec->encode("18446744073709551615"));
         $this->expectException(\InvalidArgumentException::class);
         $codec->encode("18446744073709552000");
     }

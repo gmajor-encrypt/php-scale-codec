@@ -23,7 +23,7 @@ class U64 extends Uint
 
     public function encode($param)
     {
-        if ($param >= 0 && gmp_cmp(strval($param), "18446744073709551615") == -1) {
+        if ($param >= 0 && gmp_cmp(strval($param), "18446744073709551615") != 1) {
             $u64 = new Uint64(ByteOrder::LE);
             $buffer = new Buffer($u64->write($param));
             return Utils::trimHex($buffer->getHex());

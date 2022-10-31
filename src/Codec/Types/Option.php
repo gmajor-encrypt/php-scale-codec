@@ -21,9 +21,6 @@ class Option extends ScaleInstance
         $optionData = $this->nextBytes(1);
         if (!empty($this->subType) && Utils::bytesToHex($optionData) != '00') {
             // As an exception, in the case that the type is a boolean, then it is always one byte
-            if ($this->subType == "bool") {
-                return Utils::bytesToHex($optionData) == '01';
-            }
             return $this->process($this->subType, $this->data);
         }
         return null;
@@ -32,9 +29,6 @@ class Option extends ScaleInstance
     function encode ($param)
     {
         if (!is_null($param)) {
-            if ($this->subType == "bool") {
-                return $param == true ? "01" : "02";
-            }
             $instant = $this->createTypeByTypeString($this->subType);
             return "01" . $instant->encode($param);
         }

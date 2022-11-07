@@ -217,7 +217,8 @@ final class TypeTest extends TestCase
     {
         $codec = new ScaleInstance(Base::create());
         $this->assertEquals(null, $codec->process("Option<Option<bool>>", new ScaleBytes("0x00")));
-        $this->assertEquals(null, $codec->process("Option<Option<bool>>", new ScaleBytes("0x0100")));
+        $this->assertEquals(Some::create(null), $codec->process("Option<Option<bool>>", new ScaleBytes("0x0100")));
+        $this->assertEquals(true, $codec->process("Option<Option<bool>>", new ScaleBytes("0x010101")));
         $this->assertEquals("0100", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(null)));
         $this->assertEquals("0101", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(new Some(null))));
     }

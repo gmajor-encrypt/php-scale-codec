@@ -22,7 +22,8 @@ class Option extends ScaleInstance
         $optionData = $this->nextBytes(1);
         if (!empty($this->subType) && Utils::bytesToHex($optionData) != '00') {
             // As an exception, in the case that the type is a boolean, then it is always one byte
-            return $this->process($this->subType, $this->data);
+            $value = $this->process($this->subType, $this->data);
+            return is_null($value) ? Some::create(null) : $value;
         }
         return null;
     }

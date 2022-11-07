@@ -4,6 +4,7 @@ namespace Codec\Types;
 
 use Codec\Types\ScaleInstance;
 use Codec\Utils;
+use PhpOption\Some;
 
 /**
  * Class Option
@@ -30,6 +31,9 @@ class Option extends ScaleInstance
     {
         if (!is_null($param)) {
             $instant = $this->createTypeByTypeString($this->subType);
+            if ($param instanceof Some) {
+                $param = $param->get();
+            }
             return "01" . $instant->encode($param);
         }
         return "00";

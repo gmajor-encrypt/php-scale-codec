@@ -13,7 +13,8 @@
     "bitwasp/buffertools": "dev-master",
     "ext-gmp": "*",
     "ext-json": "*",
-    "ext-sodium": "*"
+    "ext-sodium": "*",
+    "phpoption/phpoption": "1.9.x-dev"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7 || ^9.3.0",

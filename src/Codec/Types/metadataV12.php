@@ -21,10 +21,8 @@ class metadataV12 extends Struct
     public function decode (): array
     {
         $result = [
-            "pallets" => null,
             "call_index" => null,
             "event_index" => null,
-            "extrinsic" => null,
         ];
 
         $modules = $this->process("Vec<V12Module>");

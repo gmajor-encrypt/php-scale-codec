@@ -10,13 +10,13 @@ class ScaleBytes
      * ScaleBytes data
      * @var array $data
      */
-    public $data;
+    public array $data;
 
     /**
      * current decode offset
      * @var int $offset
      */
-    public $offset;
+    public int $offset;
 
     /**
      * ScaleBytes constructor.
@@ -34,9 +34,11 @@ class ScaleBytes
                 throw new InvalidArgumentException(sprintf('"%s" is not a hex string', $hexData));
             }
             $this->data = Utils::hexToBytes($hexData);
+            $this->offset = 0;
             // check param is byte array
         } elseif (is_array($hexData)) {
             $this->data = $hexData;
+            $this->offset = 0;
         } else {
             throw new InvalidArgumentException(sprintf('"%s" not support for ScaleBytes', gettype($hexData)));
         }

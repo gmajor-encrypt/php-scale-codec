@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Codec\ScaleBytes;
 use Codec\Types\ScaleInstance;
 use Codec\Base;
+use PhpOption\Some;
 
 final class TypeTest extends TestCase
 {
@@ -209,6 +210,16 @@ final class TypeTest extends TestCase
         $this->assertEquals("37", $codec->process("BitVec", new ScaleBytes("0x0837")));
         $this->assertEquals("7b", $codec->process("BitVec", new ScaleBytes("0x087b")));
         $this->assertEquals("33", $codec->process("BitVec", new ScaleBytes("0x0c33")));
+    }
+
+
+    public function testComplexOption ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $this->assertEquals(null, $codec->process("Option<Option<bool>>", new ScaleBytes("0x00")));
+        $this->assertEquals(null, $codec->process("Option<Option<bool>>", new ScaleBytes("0x0100")));
+        $this->assertEquals("0100", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(null)));
+        $this->assertEquals("0101", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(new Some(null))));
     }
 }
 

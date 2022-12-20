@@ -12,6 +12,15 @@ require_once "const.php";
 
 final class ExtrinsicTest extends TestCase
 {
+    public function testDecodingExtrinsic ()
+    {
+        $codec = new ScaleInstance(Base::create());
+        $metadataInstant = $codec->process("metadata", new ScaleBytes(Constant::$efinityRuntime3011));
+        $raw = "0x7d02840068b427dda4f3894613e113b570d5878f3eee981196133e308c0a82584cf2e16001bab3ed699808a8f2cae97b4545972b0125a7cdb65e183e4e00dfe0e5c7f9e55de2203d13520d4f14bf8b62dcf2a82e1a7215796f1873446b4203c1fd2a0cbd8083006d0c0028040068b427dda4f3894613e113b570d5878f3eee981196133e308c0a82584cf2e160bd2c001110041300008a5d784563010101140000";
+        $decodeExtrinsic = $codec->process("Extrinsic", new ScaleBytes($raw), $metadataInstant["metadata"]);
+        $this->assertEquals([], $decodeExtrinsic);
+    }
+
     public function testSampleExtrinsicDecoder ()
     {
         $codec = new ScaleInstance(Base::create());

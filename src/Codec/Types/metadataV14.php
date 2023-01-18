@@ -265,10 +265,17 @@ class metadataV14 extends Struct
      *
      * @param array $path
      * @param int $siTypeId
+     * @param void $one
+     * @param void $id2Portable
      * @return string
      */
-    private function genPathName (array $path, int $siTypeId): string
+    private function genPathName (array $path, int $siTypeId,  $one, $id2Portable): string
     {
+        if (is_array($one)) {
+            if (array_key_exists("Variant", $one["type"]["def"]) && $one["type"]["path"][0] == "Option") {
+                return self::expandOption($siTypeId, (array)$one["type"], (array)$id2Portable);
+            }
+        }
         $genName = join(":", $path);
         if (in_array($genName, $this->registeredTypeNames)) {
             $genName = $genName . "@" . $siTypeId;
@@ -297,7 +304,7 @@ class metadataV14 extends Struct
             // check subType
             $subType = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
                 $this->dealOnePortableType($siType, $id2Portable[$siType], $id2Portable);
-            $typeString = self::genPathName($one["path"], $id);
+            $typeString = self::genPathName($one["path"], $id,null,null);
             $this->registeredTypeNames[] = $typeString;
             Base::regCustom($this->generator, [$typeString => $subType]);
             $this->registeredSiType[$id] = $typeString;
@@ -310,7 +317,7 @@ class metadataV14 extends Struct
         }
         $instant = clone $this->generator->getRegistry("struct");
         $instant->typeStruct = $tempStruct;
-        $typeString = self::genPathName($one["path"], $id);
+        $typeString = self::genPathName($one["path"], $id,null,null);
         $this->registeredTypeNames[] = $typeString;
         $this->generator->addScaleType($typeString, $instant);
         $this->registeredSiType[$id] = $typeString;
@@ -477,7 +484,7 @@ class metadataV14 extends Struct
                 case 1:
                     $siType = $variant["fields"][0]["type"];
                     $enumValueList[$name] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
-                        self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
+                        self::genPathName($id2Portable[$siType]["type"]["path"], $siType,null,null);
                     break;
 
                 default:
@@ -490,7 +497,7 @@ class metadataV14 extends Struct
 
                             $typeMapping !== "" && $typeMapping .= ", ";
                             $typeMapping .= array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] :
-                                self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
+                                self::genPathName($id2Portable[$siType]["type"]["path"], $siType,null,null);
                         }
                         $enumValueList[$name] = sprintf("(%s)", $typeMapping);
                         break;
@@ -500,7 +507,7 @@ class metadataV14 extends Struct
                     foreach ($variant["fields"] as $field) {
                         $valueName = $field["name"];
                         $siType = $field["type"];
-                        $typeMapping[$valueName] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] : self::genPathName($id2Portable[$siType]["type"]["path"], $siType);
+                        $typeMapping[$valueName] = array_key_exists($siType, $this->registeredSiType) ? $this->registeredSiType[$siType] : self::genPathName($id2Portable[$siType]["type"]["path"], $siType,$id2Portable[$siType],$id2Portable);
                     }
                     $enumValueList[$name] = json_encode($typeMapping);
                     break;
@@ -510,7 +517,7 @@ class metadataV14 extends Struct
 
         $instant = clone $this->generator->getRegistry("enum");
         $instant->typeStruct = $enumValueList;
-        $typeString = self::genPathName($one["path"], $id);
+        $typeString = self::genPathName($one["path"], $id,null,null);
         $this->registeredTypeNames[] = $typeString;
         $this->generator->addScaleType($typeString, $instant);
         $this->registeredSiType[$id] = $typeString;

@@ -29,6 +29,7 @@ class Base
         "U8", "U16", "U32", "U64", "U128",
         "Int", "I8", "I16", "I32", "I64", "I128",
         "StorageHasher",
+        "OptionBool",
         "Metadata", "metadataV12", "metadataV13", "V12Module", "ModuleStorage", "MetadataModuleStorageEntry", "MetadataModuleCall",
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
         "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic","BitVec",

@@ -40,10 +40,12 @@ final class TypeTest extends TestCase
         $this->assertEquals(null, $codec->process("Option", new ScaleBytes("00")));
         $this->assertEquals("00", $codec->createTypeByTypeString("Option")->encode(null));
         $this->assertEquals("01fc", $codec->createTypeByTypeString("option<Compact>")->encode(63));
-        $this->assertEquals(true, $codec->process("Option<bool>", new ScaleBytes("0101")));
-        $this->assertEquals(false, $codec->process("Option<bool>", new ScaleBytes("0100")));
-        $this->assertEquals("0101", $codec->createTypeByTypeString("Option<bool>")->encode(true));
-        $this->assertEquals("0100", $codec->createTypeByTypeString("Option<bool>")->encode(false));
+        $this->assertEquals(true, $codec->process("OptionBool", new ScaleBytes("01")));
+        $this->assertEquals(false, $codec->process("OptionBool", new ScaleBytes("02")));
+        $this->assertEquals(null, $codec->process("OptionBool", new ScaleBytes("00")));
+        $this->assertEquals("01", $codec->createTypeByTypeString("OptionBool")->encode(true));
+        $this->assertEquals("02", $codec->createTypeByTypeString("OptionBool")->encode(false));
+        $this->assertEquals("00", $codec->createTypeByTypeString("OptionBool")->encode(null));
         $this->assertEquals("0101000000000000000000000000000000", $codec->createTypeByTypeString("Option<u128>")->encode(gmp_init(1)));
     }
 

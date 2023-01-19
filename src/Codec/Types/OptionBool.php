@@ -7,6 +7,8 @@ use Codec\Utils;
 /**
  * Class OptionBool
  *
+ * A specific implementation of OptionBool allows for single byte encode
+ *
  * @package Codec\Types
  *
  * Special option structure

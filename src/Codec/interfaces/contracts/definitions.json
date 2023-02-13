@@ -53,25 +53,39 @@
     }
   },
   "ContractExecResultOk": {
-    "flags": "u32",
+    "flags": "ContractReturnFlags",
     "data": "Bytes"
   },
   "ContractExecResultResult": {
     "_enum": {
       "Ok": "ContractExecResultOk",
-      "Err": "ContractExecResultErr"
+      "Err": "DispatchError"
     }
   },
+  "ContractReturnFlags": {
+    "_set": {
+      "_bitLength": 32,
+      "Revert": 1
+    }
+  },
+  "Text": "String",
   "ContractExecResultTo267": {
     "gasConsumed": "u64",
     "debugMessage": "Text",
     "result": "ContractExecResultResult"
   },
   "ContractExecResult": {
-    "gasConsumed": "u64",
-    "gasRequired": "u64",
+    "gasConsumed": "Weight",
+    "gasRequired": "Weight",
+    "StorageDeposit": "StorageDeposit",
     "debugMessage": "Text",
     "result": "ContractExecResultResult"
+  },
+  "StorageDeposit": {
+    "_enum": {
+      "Refund": "Balance",
+      "Charge": "Balance"
+    }
   },
   "ContractInfo": {
     "_enum": {

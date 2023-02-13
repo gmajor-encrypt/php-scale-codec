@@ -249,7 +249,7 @@ class Base
                 // set
                 if (array_key_exists("_set", $value)) {
                     $instant = clone $generator->getRegistry("set");
-                    array_key_exists("_bitLength", $value) ? $instant->BitLength = intval($value["_bitLength"]) : $instant->BitLength = 16;
+                    array_key_exists("_bitLength", $value["_set"]) ? $instant->BitLength = intval($value["_set"]["_bitLength"]) : $instant->BitLength = 16;
                     unset($value["_set"]["_bitLength"]);
                     $instant->valueList = array_keys($value["_set"]);
                     $generator->addScaleType($key, $instant);

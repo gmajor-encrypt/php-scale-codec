@@ -62,7 +62,11 @@
       "ConsumerRemaining": "Null",
       "NoProviders": "Null",
       "Token": "TokenError",
-      "Arithmetic": "ArithmeticError"
+      "Arithmetic": "ArithmeticError",
+      "Transactional": "TransactionalError",
+      "Exhausted": "Null",
+      "Corruption": "Null",
+      "Unavailable": "Null"
     }
   },
   "DispatchErrorModule": {

@@ -148,7 +148,13 @@
   },
   "ValidatorId": "AccountId",
   "ValidatorIdOf": "ValidatorId",
-  "Weight": "u64",
+  "WeightV0": "U32",
+  "WeightV1": "U64",
+  "WeightV2": {
+    "refTime": "Compact<u64>",
+    "proofSize": "Compact<u64>"
+  },
+  "Weight": "WeightV2",
   "WeightMultiplier": "Fixed64",
   "PreRuntime": "(ConsensusEngineId, Bytes)",
   "SealV0": "(u64, Signature)",

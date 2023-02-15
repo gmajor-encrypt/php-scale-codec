@@ -91,6 +91,17 @@ class ScaleInstance implements CodecInterface
         }
     }
 
+
+    /**
+     * get generator instance
+     *
+     * @return Generator
+     */
+    public function getGenerator (): Generator
+    {
+        return $this->generator;
+    }
+
     /**
      *
      * @param array $metadata

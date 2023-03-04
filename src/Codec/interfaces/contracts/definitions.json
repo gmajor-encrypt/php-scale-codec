@@ -212,16 +212,17 @@
     "data": "Bytes",
     "salt": "Bytes"
   },
-  "ContractInstantiateResult": {
-    "_enum": {
-      "Ok": "InstantiateReturnValue",
-      "Err": "Null"
-    }
-  },
-  "InstantiateReturnValue": {
+  "InstantiateReturnValue": "Result<InstantiateReturnValueOk, DispatchError>",
+  "InstantiateReturnValueOk": {
     "result": "ExecReturnValue",
-    "accountId": "AccountId",
-    "rentProjection": "Option<RentProjection>"
+    "accountId": "AccountId"
+  },
+  "ContractInstantiateResult": {
+    "gasConsumed": "WeightV2",
+    "gasRequired": "WeightV2",
+    "storageDeposit": "StorageDeposit",
+    "debugMessage": "Text",
+    "result": "InstantiateReturnValue"
   },
   "InstructionWeights": {
     "i64const": "u32",

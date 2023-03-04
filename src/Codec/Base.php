@@ -209,8 +209,13 @@ class Base
                                 $generator->addScaleType($key, $instant);
                                 break;
                             // BTreeMap
-                            case "BTreeMap":
+                            case "btreemap":
                                 $instant = clone $generator->getRegistry("bTreeMap");
+                                $instant->subType = $match[2];
+                                $generator->addScaleType($key, $instant);
+                                break;
+                            case "result":
+                                $instant = clone $generator->getRegistry("Result");
                                 $instant->subType = $match[2];
                                 $generator->addScaleType($key, $instant);
                                 break;

@@ -1,5 +1,5 @@
 {
-  "name": "gmajor/substrate-codec-php",
+  "name": "selaz/substrate-codec-php",
   "description": "For substrate scale codec",
   "keywords": [
     "substrate",

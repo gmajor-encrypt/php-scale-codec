@@ -135,7 +135,7 @@ class Compact extends ScaleInstance
         } elseif (gmp_sub($value, gmp_pow("2", 536)) < 0) {
             foreach (range(4, 67) as $i) {
                 if (gmp_cmp($value, gmp_pow("2", 8 * ($i - 1))) != -1 && gmp_cmp($value, gmp_pow("2", 8 * $i)) == -1) {
-                    return Utils::LittleIntToBytes(($i - 4) << 2 | 3, 1) . Utils::LittleIntToHex($value, $i);
+                    return Utils::LittleIntToBytes(($i - 4) << 2 | 3, 1) . Utils::LittleIntToHex(gmp_init($value), $i);
                 }
             }
         } else {

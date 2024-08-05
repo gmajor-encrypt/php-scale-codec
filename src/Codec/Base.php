@@ -34,7 +34,7 @@ class Base
         "MetadataModuleCallArgument", "MetadataModuleConstants", "MetadataModuleEvent", "MetadataModuleConstants",
         "MetadataModuleError", "EraExtrinsic", "EventRecord", "Extrinsic","BitVec",
         "FixedArray", "Null", "Result","metadataV14","V14Module","MetadataV14ModuleStorage","MetadataV14ModuleStorageEntry",
-        "Call"
+        "Call","Data"
     );
 
     /**

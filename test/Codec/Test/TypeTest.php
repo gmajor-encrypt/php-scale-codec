@@ -223,6 +223,8 @@ final class TypeTest extends TestCase
         $this->assertEquals(true, $codec->process("Option<Option<bool>>", new ScaleBytes("0x010101")));
         $this->assertEquals("0100", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(null)));
         $this->assertEquals("0101", $codec->createTypeByTypeString("Option<Option<null>>")->encode(new Some(new Some(null))));
+        $data = $codec->process("Registration", new ScaleBytes("0x00a41a130d84010000000000000000000000076f6e64696e33000000136f6e64696e37373740676d61696c2e636f6d000000"));
+        $this->assertEquals("00a41a130d84010000000000000000000000076f6e64696e33000000136f6e64696e37373740676d61696c2e636f6d000000", $codec->createTypeByTypeString("Registration")->encode($data));
     }
 }
 

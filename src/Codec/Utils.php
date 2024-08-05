@@ -27,7 +27,7 @@ class Utils
      * @param string $str
      * @return array|false
      */
-    public static function string2ByteArray (string $str): array|bool
+    public static function string2ByteArray(string $str): array|bool
     {
         return unpack('C*', $str);
     }
@@ -39,7 +39,7 @@ class Utils
      * @param $bytes
      * @return string
      */
-    public static function byteArray2String ($bytes): string
+    public static function byteArray2String($bytes): string
     {
         $chars = array_map("chr", $bytes);
         return join($chars);
@@ -51,7 +51,7 @@ class Utils
      * @param array $bytes
      * @return string
      */
-    public static function bytesToHex (array $bytes): string
+    public static function bytesToHex(array $bytes): string
     {
         $chars = array_map("chr", $bytes);
         $bin = join($chars);
@@ -64,7 +64,7 @@ class Utils
      * @param $hex
      * @return array
      */
-    public static function hexToBytes ($hex): array
+    public static function hexToBytes($hex): array
     {
         $string = hex2bin($hex);
         $value = unpack('C*', $string);
@@ -77,7 +77,7 @@ class Utils
      * @param string $string
      * @return string
      */
-    public static function string2Hex (string $string): string
+    public static function string2Hex(string $string): string
     {
         return bin2hex($string);
     }
@@ -88,7 +88,7 @@ class Utils
      * @param string $hexString
      * @return bool|string
      */
-    public static function hex2String (string $hexString)
+    public static function hex2String(string $hexString)
     {
         return hex2bin($hexString);
     }
@@ -98,7 +98,7 @@ class Utils
      * @param $hexString string
      * @return string|string[]|null
      */
-    public static function trimHex (string $hexString)
+    public static function trimHex(string $hexString)
     {
         return preg_replace('/0x/', '', $hexString);
     }
@@ -113,7 +113,7 @@ class Utils
      *
      *
      */
-    public static function bytesToLittleInt (array $byteArray): int
+    public static function bytesToLittleInt(array $byteArray): int
     {
         switch (count($byteArray)) {
             case 1:
@@ -136,7 +136,7 @@ class Utils
      * @param int $length
      * @return string
      */
-    public static function LittleIntToBytes (int $value, int $length)
+    public static function LittleIntToBytes(int $value, int $length)
     {
         switch ($length) {
             case 1:
@@ -159,7 +159,7 @@ class Utils
      * @param int $length
      * @return mixed
      */
-    public static function padLeft (string $val, int $length): string
+    public static function padLeft(string $val, int $length): string
     {
         $fillUp = $length - strlen($val);
         return str_repeat("0", $fillUp) . $val;
@@ -173,7 +173,7 @@ class Utils
      * @return string
      * @throws Exception
      */
-    public static function LittleIntToHex (GMP $value, int $length)
+    public static function LittleIntToHex(GMP $value, int $length)
     {
         $buffer = new Buffer(pack(
             "H*",
@@ -203,7 +203,7 @@ class Utils
      * @return string
      * @throws Exception
      */
-    private static function flipBits (string $bitString): string
+    private static function flipBits(string $bitString): string
     {
         $length = strlen($bitString);
 
@@ -226,7 +226,7 @@ class Utils
      * @return GMP
      */
 
-    public static function ConvertGMP ($value): GMP
+    public static function ConvertGMP($value): GMP
     {
         if (!in_array(gettype($value), ["integer", "string", "object"])) {
             throw new InvalidArgumentException("value must be one of type GMP|string|int");
@@ -246,7 +246,7 @@ class Utils
      * @param array $results
      * @return array
      */
-    public static function getDirContents (string $dir, array &$results = array()): array
+    public static function getDirContents(string $dir, array &$results = array()): array
     {
         $files = scandir($dir);
         foreach ($files as $value) {
@@ -266,8 +266,24 @@ class Utils
      * @param array $var
      * @return bool
      */
-    public static function is_assoc (array $var): bool
+    public static function is_assoc(array $var): bool
     {
         return is_array($var) && array_diff_key($var, array_keys(array_keys($var)));
     }
+
+    /**
+     * string add prefix 0x
+     *
+     * @param string $s
+     * @return string
+     */
+    public static function add_hex(string $s): string
+    {
+        // if string has prefix 0x, return directly
+        if (str_starts_with($s, '0x')) {
+            return $s;
+        }
+        return '0x' . $s;
+    }
 }
+

@@ -150,6 +150,9 @@ class Extrinsic extends ScaleInstance
             if (array_key_exists("tip", $param)) {
                 $value = $value . $this->createTypeByTypeString("Compact<Balance>")->encode($param["tip"]);
             }
+            if (array_key_exists("CheckMetadataHash", $param)) {
+                $value = $value . $this->createTypeByTypeString("bool")->encode(false);
+            }
             // encode sign extrinsic
         }
         foreach ($this->metadata["call_index"] as $call_index => $call) {

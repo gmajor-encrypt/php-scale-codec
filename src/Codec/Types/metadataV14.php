@@ -37,7 +37,7 @@ class metadataV14 extends Struct
      *
      * @param Generator $generator
      */
-    public function __construct (Generator $generator)
+    public function __construct(Generator $generator)
     {
         parent::__construct($generator);
         $this->typeStruct = [
@@ -48,7 +48,7 @@ class metadataV14 extends Struct
         ];
     }
 
-    public function decode (): array
+    public function decode(): array
     {
         $metadataRaw = parent::decode();
 
@@ -88,7 +88,7 @@ class metadataV14 extends Struct
                     foreach ($variant["fields"] as $v) {
                         $args[] = ["name" => $v["name"], "type" => $this->registeredSiType[$v["type"]]];
                     }
-                    $calls[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]];
+                    $calls[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"], "lookup_index" => $variant["index"]];
                 }
             }
 
@@ -106,8 +106,8 @@ class metadataV14 extends Struct
             }
 
             // call lookup
-            foreach ($calls as $callIndex => $call) {
-                $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($callIndex), 2);
+            foreach ($calls as $call) {
+                $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($call["lookup_index"]), 2);
                 $metadataRaw["call_index"][$lookup] = ["module" => ["name" => $pallet["name"]], "call" => $call];
             }
             // event lookup
@@ -139,7 +139,7 @@ class metadataV14 extends Struct
      * @param $param
      * @return \InvalidArgumentException|string
      */
-    public function encode ($param): \InvalidArgumentException|string
+    public function encode($param): \InvalidArgumentException|string
     {
         return parent::encode($param);
     }

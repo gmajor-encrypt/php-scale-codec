@@ -101,7 +101,7 @@ class metadataV14 extends Struct
                     foreach ($variant["fields"] as $v) {
                         $args[] = $this->registeredSiType[$v["type"]];
                     }
-                    $events[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"]];
+                    $events[] = ["name" => $variant["name"], "args" => $args, "docs" => $variant["docs"], "lookup_index" => $variant["index"]];
                 }
             }
 
@@ -112,7 +112,7 @@ class metadataV14 extends Struct
             }
             // event lookup
             foreach ($events as $eventIndex => $event) {
-                $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($eventIndex), 2);
+                $lookup = Utils::padLeft(dechex($pallet["index"]), 2) . Utils::padLeft(dechex($event["lookup_index"]), 2);
                 $metadataRaw["event_index"][$lookup] = ["module" => ["name" => $pallet["name"]], "call" => $event];
             }
 

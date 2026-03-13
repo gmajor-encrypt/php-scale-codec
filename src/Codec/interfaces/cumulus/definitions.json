@@ -1,0 +1,13 @@
+{
+  "ConfigData": {
+    "maxIndividual": "Weight"
+  },
+  "MessageId": "[u8; 32]",
+  "OverweightIndex": "u64",
+  "PageCounter": "u32",
+  "PageIndexData": {
+    "beginUsed": "PageCounter",
+    "endUsed": "PageCounter",
+    "overweightCount": "OverweightIndex"
+  }
+}

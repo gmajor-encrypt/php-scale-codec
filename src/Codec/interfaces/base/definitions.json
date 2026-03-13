@@ -1,0 +1,22 @@
+{
+  "StorageModify": {
+    "_enum": [
+      "Optional",
+      "Default"
+    ]
+  },
+  "StorageFunctionType": {
+    "_enum": [
+      "PlainType",
+      "MapType",
+      "DoubleMapType",
+      "NMap"
+    ]
+  },
+  "ExtrinsicMetadata": {
+    "version": "u8",
+    "signedExtensions": "Vec<String>"
+  },
+  "Moment": "Compact<u32>",
+  "AccountIndex": "u32"
+}

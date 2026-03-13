@@ -1,0 +1,33 @@
+{
+  "PalletCallMetadataV14": {
+    "type": "SiLookupTypeId"
+  },
+  "PalletEventMetadataV14": {
+    "type": "SiLookupTypeId"
+  },
+  "PalletErrorMetadataV14": {
+    "type": "SiLookupTypeId"
+  },
+  "ExtrinsicMetadataV14": {
+    "type": "SiLookupTypeId",
+    "version": "u8",
+    "signedExtensions": "Vec<SignedExtensionMetadataV14>"
+  },
+  "PalletConstantMetadataV14": {
+    "name": "String",
+    "type": "SiLookupTypeId",
+    "value": "Bytes",
+    "docs": "Vec<String>"
+  },
+  "SignedExtensionMetadataV14": {
+    "identifier": "String",
+    "type": "SiLookupTypeId",
+    "additionalSigned": "SiLookupTypeId"
+  },
+  "StorageFunctionTypeV14": {
+    "_enum": [
+      "PlainType",
+      "Map"
+    ]
+  }
+}

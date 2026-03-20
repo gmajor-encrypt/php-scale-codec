@@ -63,11 +63,11 @@ abstract class AbstractUintType extends AbstractType
         $value = $this->bytesToUint($rawBytes);
 
         // Return as string if it exceeds PHP_INT_MAX
-        if ($this->byteSize > 8 && $value > PHP_INT_MAX) {
-            return (string) $value;
+        if ($this->byteSize > 8 && gmp_cmp($value, PHP_INT_MAX) > 0) {
+            return gmp_strval($value);
         }
 
-        return (int) $value;
+        return (int) gmp_intval($value);
     }
 
     /**
@@ -109,7 +109,10 @@ abstract class AbstractUintType extends AbstractType
     {
         $bytes = [];
         for ($i = 0; $i < $this->byteSize; $i++) {
-            $bytes[] = gmp_intval(gmp_and(gmp_shr($value, $i * 8), 0xFF));
+            // Shift right by $i * 8 bits (divide by 256^i)
+            $shifted = gmp_div_q($value, gmp_pow(256, $i));
+            // Get lowest byte
+            $bytes[] = gmp_intval(gmp_and($shifted, 0xFF));
         }
         return ScaleBytes::fromBytes($bytes);
     }
@@ -121,7 +124,8 @@ abstract class AbstractUintType extends AbstractType
     {
         $value = gmp_init(0);
         for ($i = 0; $i < count($bytes); $i++) {
-            $value = gmp_or($value, gmp_shl(gmp_init($bytes[$i]), $i * 8));
+            // Multiply current value by 256 and add byte
+            $value = gmp_add($value, gmp_mul(gmp_init($bytes[$i]), gmp_pow(256, $i)));
         }
         return $value;
     }

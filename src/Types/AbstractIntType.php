@@ -70,10 +70,10 @@ abstract class AbstractIntType extends AbstractType
 
         // Return as string if it exceeds PHP_INT_MAX or is less than PHP_INT_MIN
         if ($this->byteSize > 8) {
-            return (string) $value;
+            return gmp_strval($value);
         }
 
-        return (int) $value;
+        return (int) gmp_intval($value);
     }
 
     /**
@@ -126,7 +126,10 @@ abstract class AbstractIntType extends AbstractType
         
         $bytes = [];
         for ($i = 0; $i < $this->byteSize; $i++) {
-            $bytes[] = gmp_intval(gmp_and(gmp_shr($value, $i * 8), 0xFF));
+            // Shift right by $i * 8 bits (divide by 256^i)
+            $shifted = gmp_div_q($value, gmp_pow(256, $i));
+            // Get lowest byte
+            $bytes[] = gmp_intval(gmp_and($shifted, 0xFF));
         }
         return ScaleBytes::fromBytes($bytes);
     }
@@ -138,12 +141,13 @@ abstract class AbstractIntType extends AbstractType
     {
         $value = gmp_init(0);
         for ($i = 0; $i < count($bytes); $i++) {
-            $value = gmp_or($value, gmp_shl(gmp_init($bytes[$i]), $i * 8));
+            // Multiply current value by 256 and add byte
+            $value = gmp_add($value, gmp_mul(gmp_init($bytes[$i]), gmp_pow(256, $i)));
         }
         
         // Check if the sign bit is set (MSB of the last byte)
         $bitWidth = $this->byteSize * 8;
-        $signBit = gmp_shl(gmp_init(1), $bitWidth - 1);
+        $signBit = gmp_pow(2, $bitWidth - 1);
         
         if (gmp_cmp(gmp_and($value, $signBit), 0) !== 0) {
             // Negative number: convert from two's complement

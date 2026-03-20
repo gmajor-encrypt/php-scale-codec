@@ -10,10 +10,10 @@ cs: vendor/autoload.php ## Fix code style
 	vendor/bin/phpcbf --standard=PSR12 src tests
 
 coverage: vendor/autoload.php ## Run tests with coverage
-	XDEBUG_MODE=coverage vendor/bin/phpunit --verbose --coverage-text
+	XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text
 
 test: vendor/autoload.php ## Run unit tests
-	vendor/bin/phpunit --verbose
+	vendor/bin/phpunit
 
 vendor/autoload.php:
 	composer install --no-interaction --prefer-dist

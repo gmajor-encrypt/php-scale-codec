@@ -10,7 +10,7 @@ namespace Substrate\ScaleCodec\Types;
 class U16 extends AbstractUintType
 {
     protected int $byteSize = 2;
-    protected int $maxValue = 65535;
+    protected int|string $maxValue = 65535;
 
     public function getTypeName(): string
     {

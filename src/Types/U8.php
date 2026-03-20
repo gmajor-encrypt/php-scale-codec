@@ -10,7 +10,7 @@ namespace Substrate\ScaleCodec\Types;
 class U8 extends AbstractUintType
 {
     protected int $byteSize = 1;
-    protected int $maxValue = 255;
+    protected int|string $maxValue = 255;
 
     public function getTypeName(): string
     {

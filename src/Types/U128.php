@@ -10,7 +10,7 @@ namespace Substrate\ScaleCodec\Types;
 class U128 extends AbstractUintType
 {
     protected int $byteSize = 16;
-    protected string $maxValue = '340282366920938463463374607431768211455';
+    protected int|string $maxValue = '340282366920938463463374607431768211455';
 
     public function getTypeName(): string
     {

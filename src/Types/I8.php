@@ -10,8 +10,8 @@ namespace Substrate\ScaleCodec\Types;
 class I8 extends AbstractIntType
 {
     protected int $byteSize = 1;
-    protected int $minValue = -128;
-    protected int $maxValue = 127;
+    protected int|string $minValue = -128;
+    protected int|string $maxValue = 127;
 
     public function getTypeName(): string
     {

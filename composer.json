@@ -1,28 +1,42 @@
 {
-  "name": "gmajor/substrate-codec-php",
-  "description": "For substrate scale codec",
-  "keywords": [
-    "substrate",
-    "codec"
-  ],
-  "type": "library",
-  "license": "MIT",
-  "minimum-stability": "dev",
-  "require": {
-    "php": ">=8.0",
-    "bitwasp/buffertools": "dev-master",
-    "ext-gmp": "*",
-    "ext-json": "*",
-    "ext-sodium": "*",
-    "phpoption/phpoption": "1.9.x-dev"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^5.7 || ^9.3.0",
-    "squizlabs/php_codesniffer": "3.*"
-  },
-  "autoload": {
-    "psr-4": {
-      "Codec\\": "src/Codec/"
+    "name": "gmajor/substrate-codec-php",
+    "description": "PHP SCALE Codec for Substrate - v2.0",
+    "keywords": ["substrate", "polkadot", "scale", "codec", "blockchain"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gmajor-encrypt"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.2",
+        "ext-gmp": "*",
+        "ext-json": "*",
+        "ext-sodium": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Substrate\\ScaleCodec\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Substrate\\ScaleCodec\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "stan": "phpstan analyse",
+        "cs": "phpcs --standard=PSR12 src tests"
+    },
+    "config": {
+        "sort-packages": true
     }
-  }
 }

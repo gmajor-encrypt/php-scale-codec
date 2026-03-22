@@ -23,9 +23,9 @@ use GMP;
 class Compact extends AbstractType
 {
     /**
-     * @var int|string Maximum value for this compact type
+     * @var int|string|null Maximum value for validation
      */
-    protected int|string $maxValue;
+    protected int|string|null $maxValue = null;
 
     /**
      * @var string|null Inner type for parameterized compacts like Compact<Balance>
@@ -147,21 +147,21 @@ class Compact extends AbstractType
      */
     protected function encodeGmp(GMP $value): ScaleBytes
     {
-        // Get the byte representation
+        // Convert to little-endian bytes
         $hex = gmp_strval($value, 16);
         if (strlen($hex) % 2 !== 0) {
             $hex = '0' . $hex;
         }
         
         $bytes = [];
-        for ($i = 0; $i < strlen($hex); $i += 2) {
+        for ($i = strlen($hex) - 2; $i >= 0; $i -= 2) {
             $bytes[] = hexdec(substr($hex, $i, 2));
         }
-
+        
         $byteLength = count($bytes);
         
         // Big integer mode: 0b11
-        // First byte: (byteLength - 4) << 2 | 0b03
+        // First byte: (byteLength - 4) << 2 | 0b11
         $prefix = (($byteLength - 4) << 2) | 0x03;
         
         return ScaleBytes::fromBytes(array_merge([$prefix], $bytes));
@@ -199,7 +199,7 @@ class Compact extends AbstractType
         
         $rawBytes = $bytes->readBytes($byteLength);
         
-        // Convert bytes to GMP
+        // Convert little-endian bytes to GMP
         $value = gmp_init(0);
         for ($i = 0; $i < $byteLength; $i++) {
             $value = gmp_add($value, gmp_mul(gmp_init($rawBytes[$i]), gmp_pow(256, $i)));

@@ -233,7 +233,8 @@ class SpecialTypeTest extends TestCase
     public function testNullDecode(): void
     {
         $null = new NullType($this->registry);
-        $result = $null->decode(ScaleBytes::fromHex('0x'));
+        // Null type doesn't read any bytes, so we can use empty bytes
+        $result = $null->decode(ScaleBytes::empty());
         $this->assertNull($result);
     }
 }

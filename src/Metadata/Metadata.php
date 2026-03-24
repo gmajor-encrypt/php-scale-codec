@@ -118,9 +118,14 @@ class Metadata
             $this->typeCache = [];
             foreach ($this->types as $type) {
                 if (!empty($type->path)) {
-                    $path = implode('::', $type->path);
-                    $this->typeCache[$path] = $type->id;
-                    $this->typeCache[end($type->path)] = $type->id; // Also index by last segment
+                    // path is already a string like "frame_system::AccountInfo"
+                    $this->typeCache[$type->path] = $type->id;
+                    // Also index by last segment
+                    $parts = explode('::', $type->path);
+                    $lastName = end($parts);
+                    if ($lastName) {
+                        $this->typeCache[$lastName] = $type->id;
+                    }
                 }
             }
         }

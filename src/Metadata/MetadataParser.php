@@ -240,7 +240,7 @@ class MetadataParser
 
         // Parse outer event types (optional in v15)
         $outerEvent = [];
-        if ($bytes->remainingBytes() > 0) {
+        if ($bytes->hasRemaining()) {
             try {
                 $outerEvent = $this->parseOuterEvent($bytes);
             } catch (\Exception) {

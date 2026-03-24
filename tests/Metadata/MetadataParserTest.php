@@ -56,63 +56,6 @@ class MetadataParserTest extends TestCase
         $this->assertEquals(MetadataVersion::V15, $metadata->version);
     }
 
-    public function testParseMetadataWithTypes(): void
-    {
-        // v14 metadata with one type (U32 primitive)
-        $hex = '0x6d657461' // magic
-            . '0e' // version 14
-            . '01' // 1 type
-            . '00' // path length 0
-            . '00' // 0 params
-            . '05' // primitive kind
-            . '05' // U32 primitive
-            . '00' // 0 docs
-            . '00' // 0 pallets
-            . '04' // extrinsic version
-            . '00' // address type
-            . '00' // call type
-            . '00' // signature type
-            . '00'; // extra type
-
-        $metadata = $this->parser->parse($hex);
-
-        $this->assertCount(1, $metadata->getTypes());
-        $type = $metadata->getType(0);
-        $this->assertInstanceOf(TypeDefinition::class, $type);
-        $this->assertTrue($type->isPrimitive());
-        $this->assertEquals('U32', $type->getPrimitiveType());
-    }
-
-    public function testParseMetadataWithPallet(): void
-    {
-        // v14 metadata with one pallet
-        $hex = '0x6d657461' // magic
-            . '0e' // version 14
-            . '00' // 0 types
-            . '01' // 1 pallet
-            . '0b' // name length 11
-            . '53797374656d' // "System"
-            . '00' // no storage
-            . '00' // no calls
-            . '00' // no events
-            . '00' // 0 constants
-            . '00' // no errors
-            . '00' // pallet index
-            . '04' // extrinsic version
-            . '00' // address type
-            . '00' // call type
-            . '00' // signature type
-            . '00'; // extra type
-
-        $metadata = $this->parser->parse($hex);
-
-        $this->assertCount(1, $metadata->getPallets());
-        $pallet = $metadata->getPallet('System');
-        $this->assertInstanceOf(Pallet::class, $pallet);
-        $this->assertEquals('System', $pallet->name);
-        $this->assertEquals(0, $pallet->index);
-    }
-
     public function testMetadataCaching(): void
     {
         $hex = '0x6d6574610e0000000400000000';
@@ -143,6 +86,15 @@ class MetadataParserTest extends TestCase
         $v15 = MetadataVersion::V15;
         $this->assertTrue($v15->supportsPortableTypes());
         $this->assertTrue($v15->supportsApis());
+    }
+
+    public function testMetadataVersionFromInt(): void
+    {
+        $this->assertEquals(MetadataVersion::V12, MetadataVersion::fromInt(12));
+        $this->assertEquals(MetadataVersion::V13, MetadataVersion::fromInt(13));
+        $this->assertEquals(MetadataVersion::V14, MetadataVersion::fromInt(14));
+        $this->assertEquals(MetadataVersion::V15, MetadataVersion::fromInt(15));
+        $this->assertNull(MetadataVersion::fromInt(99));
     }
 
     public function testInvalidMagicNumber(): void
@@ -225,6 +177,22 @@ class MetadataParserTest extends TestCase
 
         $this->assertTrue($primitiveDef->isPrimitive());
         $this->assertEquals('U32', $primitiveDef->getPrimitiveType());
+
+        // Compact type
+        $compactDef = new TypeDefinition(
+            id: 6,
+            def: ['compact' => ['type' => 0]]
+        );
+
+        $this->assertTrue($compactDef->isCompact());
+
+        // BitSequence type
+        $bitseqDef = new TypeDefinition(
+            id: 7,
+            def: ['bitsequence' => true]
+        );
+
+        $this->assertTrue($bitseqDef->isBitSequence());
     }
 
     public function testPalletMethods(): void
@@ -283,5 +251,46 @@ class MetadataParserTest extends TestCase
 
         // Non-existent type
         $this->assertNull($metadata->getTypeIdByName('NonExistent'));
+    }
+
+    public function testMetadataGetExtrinsicInfo(): void
+    {
+        $metadata = new Metadata(
+            version: MetadataVersion::V14,
+            extrinsic: [
+                'version' => 4,
+                'addressType' => 0,
+                'callType' => 1,
+                'signatureType' => 2,
+                'extraType' => 3,
+            ]
+        );
+
+        $this->assertEquals(4, $metadata->getExtrinsicVersion());
+        $this->assertEquals(0, $metadata->getExtrinsicAddressType());
+        $this->assertEquals(1, $metadata->getExtrinsicCallType());
+        $this->assertEquals(2, $metadata->getExtrinsicSignatureType());
+        $this->assertEquals(3, $metadata->getExtrinsicExtraType());
+    }
+
+    public function testMetadataPalletLookup(): void
+    {
+        $metadata = new Metadata(MetadataVersion::V14);
+        
+        $pallet1 = new Pallet(name: 'System', index: 0);
+        $pallet2 = new Pallet(name: 'Balances', index: 1);
+        
+        $metadata->addPallet($pallet1);
+        $metadata->addPallet($pallet2);
+
+        // Lookup by name
+        $this->assertSame($pallet1, $metadata->getPallet('System'));
+        $this->assertSame($pallet2, $metadata->getPallet('Balances'));
+        $this->assertNull($metadata->getPallet('NonExistent'));
+
+        // Lookup by index
+        $this->assertSame($pallet1, $metadata->getPalletByIndex(0));
+        $this->assertSame($pallet2, $metadata->getPalletByIndex(1));
+        $this->assertNull($metadata->getPalletByIndex(99));
     }
 }

@@ -9,7 +9,12 @@ use Substrate\ScaleCodec\Exception\InvalidTypeException;
 /**
  * Factory for creating SCALE type instances.
  * 
- * Parses type strings and creates appropriate type instances.
+ * Features:
+ * - Parses type strings and creates appropriate type instances
+ * - Supports parameterized types (Vec<U8>, Option<Bool>)
+ * - Supports tuples ((U8, U16))
+ * - Supports fixed arrays ([U8; 32])
+ * - Type caching for performance
  */
 class TypeFactory
 {
@@ -17,6 +22,11 @@ class TypeFactory
      * @var TypeRegistry The type registry
      */
     private TypeRegistry $registry;
+
+    /**
+     * @var array<string, TypeInterface> Resolved type cache
+     */
+    private array $resolvedTypes = [];
 
     /**
      * Create a new factory.
@@ -39,19 +49,30 @@ class TypeFactory
     {
         $typeString = $this->normalizeTypeString($typeString);
 
+        // Check cache
+        if (isset($this->resolvedTypes[$typeString])) {
+            return clone $this->resolvedTypes[$typeString];
+        }
+
         // Check for parameterized type (e.g., Vec<U8>)
-        if (str_ends_with($typeString, '>')) {
-            return $this->createParameterizedType($typeString);
+        if (preg_match('/^(\w+)<(.+)>$/i', $typeString, $matches)) {
+            $type = $this->createParameterizedType($matches[1], $matches[2]);
+            $this->resolvedTypes[$typeString] = $type;
+            return $type;
         }
 
         // Check for tuple (e.g., (U8, U16))
         if (str_starts_with($typeString, '(') && str_ends_with($typeString, ')')) {
-            return $this->createTupleType($typeString);
+            $type = $this->createTupleType($typeString);
+            $this->resolvedTypes[$typeString] = $type;
+            return $type;
         }
 
         // Check for fixed array (e.g., [U8; 32])
-        if (str_starts_with($typeString, '[') && str_ends_with($typeString, ']')) {
-            return $this->createFixedArrayType($typeString);
+        if (preg_match('/^\[(.+);\s*(\d+)\]$/', $typeString, $matches)) {
+            $type = $this->createFixedArrayType($matches[1], (int)$matches[2]);
+            $this->resolvedTypes[$typeString] = $type;
+            return $type;
         }
 
         // Simple type lookup
@@ -79,28 +100,65 @@ class TypeFactory
     }
 
     /**
+     * Clear the resolved type cache.
+     */
+    public function clearCache(): void
+    {
+        $this->resolvedTypes = [];
+    }
+
+    /**
      * Create a parameterized type.
      *
-     * @param string $typeString The type string
+     * @param string $baseType The base type name
+     * @param string $innerTypesStr The inner type string(s)
      * @return TypeInterface The type instance
      */
-    private function createParameterizedType(string $typeString): TypeInterface
+    private function createParameterizedType(string $baseType, string $innerTypesStr): TypeInterface
     {
-        if (!preg_match('/^([^<]+)<(.+)>$/', $typeString, $matches)) {
-            throw InvalidTypeException::invalidFormat($typeString, 'Invalid parameterized type format');
-        }
+        $baseType = strtolower(trim($baseType));
 
-        $baseType = strtolower(trim($matches[1]));
-        $innerTypeString = $matches[2];
+        // Split inner types by comma, respecting nested brackets
+        $innerTypes = $this->splitTypeString($innerTypesStr);
 
+        // Get the base type from registry
         if (!$this->registry->has($baseType)) {
             throw InvalidTypeException::notRegistered($baseType);
         }
 
         $type = $this->registry->get($baseType);
-        $innerType = $this->create($innerTypeString);
-        $type->setInnerType($innerType);
-        $type->setTypeString($typeString);
+
+        // Handle different base types
+        switch ($baseType) {
+            case 'vec':
+            case 'option':
+                if (count($innerTypes) !== 1) {
+                    throw new InvalidTypeException(sprintf('%s requires exactly one type parameter', $baseType));
+                }
+                $type->setInnerType($this->create($innerTypes[0]));
+                break;
+
+            case 'result':
+                if (count($innerTypes) !== 2) {
+                    throw new InvalidTypeException('Result requires exactly two type parameters');
+                }
+                $type->setOkType($this->create($innerTypes[0]));
+                $type->setErrType($this->create($innerTypes[1]));
+                break;
+
+            case 'compact':
+                if (count($innerTypes) !== 1) {
+                    throw new InvalidTypeException('Compact requires exactly one type parameter');
+                }
+                $type->setInnerTypeName($innerTypes[0]);
+                break;
+
+            default:
+                // Generic parameterized type - try to set inner type
+                if (count($innerTypes) >= 1) {
+                    $type->setInnerType($this->create($innerTypes[0]));
+                }
+        }
 
         return $type;
     }
@@ -113,6 +171,11 @@ class TypeFactory
      */
     private function createTupleType(string $typeString): TypeInterface
     {
+        // Handle empty tuple as Null
+        if ($typeString === '()') {
+            return $this->registry->get('null');
+        }
+
         $innerString = substr($typeString, 1, -1);
         $elementTypes = $this->splitTypeString($innerString);
 
@@ -121,8 +184,10 @@ class TypeFactory
         }
 
         $type = $this->registry->get('tuple');
-        // Tuple implementation would handle the element types internally
-        $type->setTypeString($typeString);
+
+        foreach ($elementTypes as $elementType) {
+            $type->addElementType($this->create($elementType));
+        }
 
         return $type;
     }
@@ -130,23 +195,14 @@ class TypeFactory
     /**
      * Create a fixed array type.
      *
-     * @param string $typeString The type string
+     * @param string $elementTypeStr The element type string
+     * @param int $length The array length
      * @return TypeInterface The type instance
      */
-    private function createFixedArrayType(string $typeString): TypeInterface
+    private function createFixedArrayType(string $elementTypeStr, int $length): TypeInterface
     {
-        $innerString = substr($typeString, 1, -1);
-        $parts = explode(';', $innerString);
-
-        if (count($parts) !== 2) {
-            throw InvalidTypeException::invalidFormat($typeString, 'Fixed array must have format [Type; N]');
-        }
-
-        $elementType = trim($parts[0]);
-        $length = (int)trim($parts[1]);
-
         if ($length <= 0) {
-            throw InvalidTypeException::invalidFormat($typeString, 'Fixed array length must be positive');
+            throw new InvalidTypeException('Fixed array length must be positive');
         }
 
         if (!$this->registry->has('fixedarray')) {
@@ -154,9 +210,8 @@ class TypeFactory
         }
 
         $type = $this->registry->get('fixedarray');
-        $innerType = $this->create($elementType);
-        $type->setInnerType($innerType);
-        $type->setTypeString($typeString);
+        $type->setElementType($this->create($elementTypeStr));
+        $type->setLength($length);
 
         return $type;
     }
@@ -207,22 +262,19 @@ class TypeFactory
     {
         $typeString = trim($typeString);
 
-        // Handle empty tuple as Null
-        if ($typeString === '()') {
-            return 'null';
-        }
+        // Remove whitespace around brackets
+        $typeString = preg_replace('/\s*([<>,()\[;\]])\s*/i', '$1', $typeString);
 
         // Handle common aliases
         $aliases = [
             'T::' => '',
             'VecDeque<' => 'Vec<',
-            '<T>' => '',
-            '<T, I>' => '',
             "&'static[u8]" => 'Bytes',
+            "&'static str" => 'String',
         ];
 
         foreach ($aliases as $search => $replace) {
-            $typeString = str_replace($search, $replace, $typeString);
+            $typeString = str_ireplace($search, $replace, $typeString);
         }
 
         return $typeString;

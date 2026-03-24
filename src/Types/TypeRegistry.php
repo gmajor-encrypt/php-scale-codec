@@ -465,18 +465,14 @@ class TypeRegistry
         $this->register('struct', new StructType($this));
         $this->register('enum', new EnumType($this));
         $this->register('result', new ResultType($this));
+        $this->register('fixedarray', new FixedArrayType($this));
 
         // Type aliases
         $this->registerAliases([
-            'bool' => 'bool',
             'boolean' => 'bool',
             'int' => 'i32',
             'uint' => 'u32',
-            'float' => 'f32',
-            'double' => 'f64',
             'str' => 'string',
-            'vec<u8>' => 'bytes',
-            'option<bool>' => 'bool',
         ]);
     }
 }

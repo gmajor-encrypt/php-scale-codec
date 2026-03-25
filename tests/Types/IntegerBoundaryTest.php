@@ -90,10 +90,10 @@ class IntegerBoundaryTest extends TestCase
     public function testU64MaxValue(): void
     {
         $u64 = new U64($this->registry);
-        $max = '18446744073709551615';
+        $max = '18446744073709551615'; // As string for GMP
         $encoded = $u64->encode($max);
-        $decoded = $u64->decode(ScaleBytes::fromBytes($encoded->toBytes()));
-        $this->assertEquals($max, $decoded);
+        $decoded = (string) $u64->decode(ScaleBytes::fromBytes($encoded->toBytes()));
+        $this->assertEquals($max, $decoded, 'Decoded value should exactly match the encoded U64 string representation.');
     }
 
     public function testU64StringInput(): void

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpbench xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpbench/phpbench/phpbench.xsd"
+    bootstrap="vendor/autoload.php"
+>
+    <runner>
+        <iterations>10</iterations>
+        <revs>100</revs>
+        <warmup>2</warmup>
+    </runner>
+    
+    <reporters>
+        <reporter name="default">
+            <output>console</output>
+        </reporter>
+    </reporters>
+    
+    <profiles>
+        <profile name="quick">
+            <runner iterations="3" revs="10" warmup="1"/>
+        </profile>
+        <profile name="full">
+            <runner iterations="20" revs="200" warmup="5"/>
+        </profile>
+    </profiles>
+</phpbench>

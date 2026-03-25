@@ -19,8 +19,8 @@ class U64 extends AbstractUintType
 
     public function decode(\Substrate\ScaleCodec\Bytes\ScaleBytes $bytes): string|int
     {
-        $data = $bytes->readBytes(8); // Read 64-bit (8 bytes)
-        $value = '0'; // Start decoding as string for large values
+        $data = array_reverse($bytes->readBytes(8)); // Reverse bytes for little-endian
+        $value = '0';
 
         foreach ($data as $byte) {
             $value = bcmul($value, '256');

@@ -1,0 +1,18 @@
+{
+  "name": "polkadotjs-compatibility-tests",
+  "version": "1.0.0",
+  "description": "Compatibility tests between php-scale-codec and polkadot.js",
+  "scripts": {
+    "test": "node tests/run-compatibility-tests.js",
+    "generate": "node tests/generate-test-data.js"
+  },
+  "dependencies": {
+    "@polkadot/api": "^12.0.0",
+    "@polkadot/types": "^12.0.0",
+    "@polkadot/util": "^13.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  }
+}

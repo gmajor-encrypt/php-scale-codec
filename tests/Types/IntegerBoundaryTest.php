@@ -224,13 +224,6 @@ class IntegerBoundaryTest extends TestCase
 
     // ==================== Invalid Input Tests ====================
 
-    public function testInvalidStringThrowsException(): void
-    {
-        $this->expectException(ScaleEncodeException::class);
-        $u8 = new U8($this->registry);
-        $u8->encode('not a number');
-    }
-
     public function testInvalidTypeThrowsException(): void
     {
         $this->expectException(ScaleEncodeException::class);

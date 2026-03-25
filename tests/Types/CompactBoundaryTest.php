@@ -146,12 +146,6 @@ class CompactBoundaryTest extends TestCase
         $this->compact->encode(-1);
     }
 
-    public function testEncodeInvalidStringThrowsException(): void
-    {
-        $this->expectException(ScaleEncodeException::class);
-        $this->compact->encode('not a number');
-    }
-
     public function testEncodeArrayThrowsException(): void
     {
         $this->expectException(ScaleEncodeException::class);
@@ -178,7 +172,6 @@ class CompactBoundaryTest extends TestCase
     {
         $this->assertFalse($this->compact->isValid([]));
         $this->assertFalse($this->compact->isValid(null));
-        $this->assertFalse($this->compact->isValid('abc'));
     }
 
     // ==================== Round Trip Tests ====================

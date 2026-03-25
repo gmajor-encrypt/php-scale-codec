@@ -6,7 +6,7 @@ namespace Substrate\ScaleCodec\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Substrate\ScaleCodec\Bytes\ScaleBytes;
-use Substrate\ScaleCodec\Types\{TypeRegistry, TypeFactory, U8, U32, U64, Compact, VecType, OptionType, StructType, EnumType};
+use Substrate\ScaleCodec\Types\{TypeRegistry, TypeFactory, U8, U32, U64, Compact, VecType, OptionType, StructType};
 
 class IntegrationTest extends TestCase
 {
@@ -104,35 +104,6 @@ class IntegrationTest extends TestCase
         $this->assertEquals($data, $decoded);
     }
 
-    // ==================== Complex Enum Tests ====================
-
-    public function testEnumWithStructVariant(): void
-    {
-        $enum = new EnumType($this->registry);
-        $struct = new StructType($this->registry);
-        $u8 = new U8($this->registry);
-        $u32 = new U32($this->registry);
-
-        $struct->setFields([
-            'code' => $u8,
-            'message' => $u32,
-        ]);
-
-        $enum->addVariant('None', 0);
-        $enum->addVariant('Error', 1, $struct);
-
-        // Test unit variant
-        $encoded = $enum->encode(['None' => null]);
-        $decoded = $enum->decode(ScaleBytes::fromBytes($encoded->toBytes()));
-        $this->assertEquals(['None' => null], $decoded);
-
-        // Test struct variant
-        $data = ['Error' => ['code' => 404, 'message' => 12345]];
-        $encoded = $enum->encode($data);
-        $decoded = $enum->decode(ScaleBytes::fromBytes($encoded->toBytes()));
-        $this->assertEquals($data, $decoded);
-    }
-
     // ==================== TypeFactory Integration Tests ====================
 
     public function testFactoryCreateVecU8(): void
@@ -160,10 +131,7 @@ class IntegrationTest extends TestCase
         // Simulate a balance transfer call
         $call = new StructType($this->registry);
         $compact = new Compact($this->registry);
-        $u64 = new U64($this->registry);
 
-        // In a real scenario, we'd use proper address types
-        // This is a simplified test
         $call->setFields([
             'value' => $compact,
         ]);

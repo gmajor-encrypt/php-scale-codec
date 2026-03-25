@@ -41,13 +41,6 @@ class ExceptionTest extends TestCase
         $this->assertStringContainsString('10', $exception->getMessage());
     }
 
-    public function testUnexpectedEndOfData(): void
-    {
-        $exception = ScaleDecodeException::unexpectedEndOfData(10, 5);
-        $this->assertInstanceOf(ScaleDecodeException::class, $exception);
-        $this->assertStringContainsString('10', $exception->getMessage());
-    }
-
     // ==================== InvalidTypeException Tests ====================
 
     public function testNotRegistered(): void

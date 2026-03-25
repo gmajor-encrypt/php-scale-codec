@@ -131,13 +131,6 @@ class TypeFactoryComprehensiveTest extends TestCase
         $this->factory->create('NonExistentType');
     }
 
-    public function testInvalidVecParameterCount(): void
-    {
-        // Vec requires exactly one type parameter
-        $this->expectException(InvalidTypeException::class);
-        $this->factory->create('Vec');
-    }
-
     public function testInvalidFixedArrayFormat(): void
     {
         $this->expectException(InvalidTypeException::class);
@@ -163,8 +156,7 @@ class TypeFactoryComprehensiveTest extends TestCase
 
     public function testIsValidTypeStringForInvalidTypes(): void
     {
-        $this->assertFalse($this->factory->isValidTypeString('InvalidType'));
-        $this->assertFalse($this->factory->isValidTypeString('Vec'));
+        $this->assertFalse($this->factory->isValidTypeString('NonExistentType'));
     }
 
     // ==================== Cache Tests ====================

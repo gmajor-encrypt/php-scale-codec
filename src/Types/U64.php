@@ -16,4 +16,17 @@ class U64 extends AbstractUintType
     {
         return 'U64';
     }
+
+    public function decode(\Substrate\ScaleCodec\Bytes\ScaleBytes $bytes): string|int
+    {
+        $data = array_reverse($bytes->readBytes(8)); // Reverse bytes for little-endian
+        $value = '0';
+
+        foreach ($data as $byte) {
+            $value = bcmul($value, '256');
+            $value = bcadd($value, (string)$byte);
+        }
+
+        return $value;
+    }
 }

@@ -1,4 +1,4 @@
-.PHONY: sniff test coverage stan cs bench bench-full bench-quick all compat
+.PHONY: sniff test coverage stan cs bench bench-full bench-quick all compat docs
 
 sniff: vendor/autoload.php ## Detects code style issues with phpcs
 	vendor/bin/phpcs --standard=PSR12 src tests -n
@@ -24,10 +24,13 @@ bench-full: vendor/autoload.php ## Run full benchmarks for CI
 bench-quick: vendor/autoload.php ## Run quick benchmarks
 	vendor/bin/phpbench run --profile=quick --report=default
 
-all: test stan cs ## Run all checks (tests, static analysis, code style)
-
 compat: vendor/autoload.php ## Run polkadot.js compatibility tests
 	php compat/tests/php-compatibility-test.php
+
+docs: ## Generate API documentation
+	vendor/bin/phpdoc
+
+all: test stan cs ## Run all checks (tests, static analysis, code style)
 
 vendor/autoload.php:
 	composer install --no-interaction --prefer-dist

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+    configVersion="3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://www.phpdoc.org"
+    xsi:noNamespaceSchemaLocation="https://www.phpdoc.org/xml/xsd/phpdocumentor.xsd"
+>
+    <paths>
+        <output>docs/api</output>
+        <cache>cache/phpdocumentor</cache>
+    </paths>
+    
+    <version number="2.0.0">
+        <api format="php">
+            <source dsn=".">
+                <path>src</path>
+            </source>
+            
+            <output format="html">
+                <directory>docs/api</directory>
+            </output>
+            
+            <ignore hidden="true" symlinks="true">
+                <path>src/autoload.php</path>
+                <path>tests/*</path>
+            </ignore>
+            
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+            
+            <default-package-name>Substrate\ScaleCodec</default-package-name>
+            
+            <markers>
+                <marker>TODO</marker>
+                <marker>FIXME</marker>
+            </markers>
+        </api>
+        
+        <guide format="rst">
+            <source dsn=".">
+                <path>docs/guides</path>
+            </source>
+        </guide>
+    </version>
+    
+    <title>php-scale-codec API Documentation</title>
+    
+    <template name="clean"/>
+</phpdocumentor>
